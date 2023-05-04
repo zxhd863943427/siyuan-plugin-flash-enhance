@@ -12,7 +12,7 @@ module.exports = (env, argv) => {
             filename: "[name].js",
         },
         entry: {
-            "index": "./index.ts",
+            "index": "./src/index.ts",
         },
         optimization: {
             minimize: true,
