@@ -1,0 +1,12 @@
+{
+  "name": "Plugin Sample",
+  "author": "Vanessa",
+  "url": "https://github.com/OpaqueGlass/listChildDocs",
+  "version": "0.2.0",
+  "funding": {
+    "openCollective": "",
+    "patreon": "",
+    "github": "",
+    "custom": "https://ld246.com/sponsor"
+  }
+}
