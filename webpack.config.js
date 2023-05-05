@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const {EsbuildPlugin} = require("esbuild-loader");
 const webpack = require("webpack");
 const fs = require("fs");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (env, argv) => {
     return {
@@ -66,7 +67,14 @@ module.exports = (env, argv) => {
                 banner: () => {
                     return fs.readFileSync("LICENSE").toString();
                 },
-            })
+            }),
+            new CopyPlugin({
+                patterns: [
+                    { from: "preview.png", to: "preview.png" },
+                    { from: "README.md", to: "README.md" },
+                    { from: "plugin.json", to: "plugin.json" },
+                ],
+            }),
         ],
     };
 };
