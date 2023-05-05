@@ -40,6 +40,9 @@ devDependencies:
   webpack-cli:
     specifier: ^5.0.2
     version: 5.0.2(webpack@5.76.0)
+  zip-webpack-plugin:
+    specifier: ^4.0.1
+    version: 4.0.1(webpack-sources@3.2.3)(webpack@5.76.0)
 
 packages:
 
@@ -801,6 +804,10 @@ packages:
       electron-to-chromium: 1.4.382
       node-releases: 2.0.10
       update-browserslist-db: 1.0.11(browserslist@4.21.5)
+    dev: true
+
+  /buffer-crc32@0.2.13:
+    resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
     dev: true
 
   /buffer-from@1.1.2:
@@ -2262,7 +2269,24 @@ packages:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
     dev: true
 
+  /yazl@2.5.1:
+    resolution: {integrity: sha512-phENi2PLiHnHb6QBVot+dJnaAZ0xosj7p3fWl+znIjBDlnMI2PsZCJZ306BPTFOaHf5qdDEI8x5qFrSOBN5vrw==}
+    dependencies:
+      buffer-crc32: 0.2.13
+    dev: true
+
   /yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+    dev: true
+
+  /zip-webpack-plugin@4.0.1(webpack-sources@3.2.3)(webpack@5.76.0):
+    resolution: {integrity: sha512-G041Q4qUaog44Ynit6gs4o+o3JIv0WWfOLvc8Q3IxvPfuqd2KBHhpJWAXUB9Cm1JcWHTIOp9vS3oGMWa1p1Ehw==}
+    peerDependencies:
+      webpack: ^4.0.0 || ^5.0.0
+      webpack-sources: '*'
+    dependencies:
+      webpack: 5.76.0(webpack-cli@5.0.2)
+      webpack-sources: 3.2.3
+      yazl: 2.5.1
     dev: true
