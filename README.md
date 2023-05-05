@@ -10,7 +10,7 @@
 
 ## Development
 
-* Update plugin.json, README.md, icon.png (96 * 96) and preview.png (1024 * 768)
+* Update plugin.json, README.md, icon.png (160 * 160) and preview.png (1024 * 768)
 * [API](https://github.com/siyuan-note/petal)
 
 ## List on the marketplace
