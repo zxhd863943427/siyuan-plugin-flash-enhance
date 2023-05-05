@@ -8,12 +8,19 @@ const ZipPlugin = require('zip-webpack-plugin');
 const pluginJSON = require("./plugin.json");
 
 module.exports = (env, argv) => {
+    const isPro = argv.mode === "production"
     const plugins = [
         new MiniCssExtractPlugin({
-            filename: "dist/index.css",
+            filename: isPro ? "dist/index.css" : "index.css",
         })
     ]
-    if (argv.mode === "production") {
+    let entry = {
+        "index": "./src/index.ts",
+    }
+    if (isPro) {
+        entry = {
+            "dist/index": "./src/index.ts",
+        }
         plugins.push(new webpack.BannerPlugin({
             banner: () => {
                 return fs.readFileSync("LICENSE").toString();
@@ -39,8 +46,8 @@ module.exports = (env, argv) => {
     }
     return {
         mode: argv.mode || "development",
-        watch: argv.mode !== "production",
-        devtool: argv.mode !== "production" ? "eval" : false,
+        watch: !isPro,
+        devtool: isPro ? false : "eval",
         output: {
             filename: "[name].js",
             libraryTarget: "commonjs",
@@ -49,9 +56,7 @@ module.exports = (env, argv) => {
         externals: {
             siyuan: "siyuan",
         },
-        entry: {
-            "dist/index": "./src/index.ts",
-        },
+        entry,
         optimization: {
             minimize: true,
             minimizer: [
