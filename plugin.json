@@ -4,13 +4,16 @@
   "url": "https://github.com/siyuan-note/plugin-sample",
   "version": "0.0.1",
   "description": {
-    "default": "This is a plugin sample"
+    "default": "This is a plugin sample",
+    "zh_CN": "这是一个插件示例"
   },
   "readme": {
-    "default": "README.md"
+    "default": "README.md",
+    "zh_CN": "README_zh_CN.md"
   },
   "i18n": [
-    "en_US"
+    "en_US",
+    "zh_CN"
   ],
   "funding": {
     "openCollective": "b3log",
