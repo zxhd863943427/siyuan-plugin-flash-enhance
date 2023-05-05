@@ -6,7 +6,7 @@
 * Clone your repo to a local development folder. For convenience, you can place this folder in your `{workspace}/data/plugins` folder
 * Install [NodeJS](https://nodejs.org/en/download) and [pnpm](https://pnpm.io/installation), then run `pnpm i` in the command line under your repo folder
 * Run `pnpm run dev` to compile your plugin from `index.ts`
-* Open Marketplace and enable plugin
+* Open SiYuan marketplace and enable plugin
 
 ## Development
 
@@ -29,8 +29,3 @@ If it is the first release, please create a pull request to the [Community Bazaa
    ]
 }
 ```
-
-## Manually installing the plugin
-
-* `pnpm run build` to general dist
-* Copy all files under `dist` to `{workspace}/data/plugins/plugin-name/`
