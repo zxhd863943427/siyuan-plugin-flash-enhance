@@ -4,8 +4,10 @@
   "url": "https://github.com/siyuan-note/plugin-sample",
   "version": "0.0.1",
   "description": {
-    "zh_CN": "这是一个插件示例",
-    "en_US": "This is a plugin sample"
+    "default": "This is a plugin sample"
+  },
+  "readme": {
+    "default": "README.md"
   },
   "funding": {
     "openCollective": "b3log",
