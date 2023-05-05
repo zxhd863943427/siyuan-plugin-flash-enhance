@@ -1,12 +1,12 @@
 {
   "name": "plugin-sample",
   "author": "Vanessa",
-  "url": "https://github.com/OpaqueGlass/listChildDocs",
+  "url": "https://github.com/siyuan-note/plugin-sample",
   "version": "0.0.1",
   "funding": {
     "openCollective": "",
     "patreon": "",
     "github": "",
-    "custom": "https://ld246.com/sponsor"
+    "custom": ""
   }
 }
