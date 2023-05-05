@@ -64,9 +64,7 @@ module.exports = (env, argv) => {
             }),
             new webpack.BannerPlugin({
                 banner: () => {
-                    const license = fs.readFileSync("LICENSE").toString();
-                    console.log(license)
-                    return license;
+                    return fs.readFileSync("LICENSE").toString();
                 },
             })
         ],
