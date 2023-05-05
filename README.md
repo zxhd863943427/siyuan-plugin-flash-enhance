@@ -8,4 +8,4 @@ SiYuan plugin sample
 
 ## Manually installing the plugin
 
-- Copy over `dist` to your vault `Workspace/data/plugins/your-plugin-name/`.
+- Copy all files under `dist` to `Workspace/data/plugins/your-plugin-name/`.
