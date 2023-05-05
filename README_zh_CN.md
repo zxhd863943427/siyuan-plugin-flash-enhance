@@ -8,12 +8,12 @@
 * Run `pnpm run dev` to compile your plugin from `index.ts`
 * Open SiYuan marketplace and enable plugin
 
-## Development
+## 开发
 
 * Update plugin.json, README.md, icon.png (160 * 160) and preview.png (1024 * 768)
 * [API](https://github.com/siyuan-note/petal)
 
-## List on the marketplace
+## 上架集市
 
 * `pnpm run build` to generate package.zip
 * Create a new GitHub release using your new version number as the "Tag version". See here for an example: https://github.com/siyuan-note/plugin-sample/releases
