@@ -9,6 +9,9 @@
   "readme": {
     "default": "README.md"
   },
+  "i18n": [
+    "en_US"
+  ],
   "funding": {
     "openCollective": "b3log",
     "patreon": "",
