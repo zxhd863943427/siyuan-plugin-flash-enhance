@@ -35,10 +35,9 @@ module.exports = (env, argv) => {
             ],
         }))
         plugins.push(new ZipPlugin({
-            filename: `${pluginJSON.name}-${pluginJSON.version}.zip`,
+            filename: "package.zip",
             algorithm: "gzip",
             include: [/dist/],
-            pathPrefix: `${pluginJSON.name}`,
             pathMapper: (assetPath) => {
                 return assetPath.replace("dist/", "")
             },
