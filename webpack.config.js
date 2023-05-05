@@ -4,27 +4,27 @@ const webpack = require("webpack");
 const {EsbuildPlugin} = require("esbuild-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
-const ZipPlugin = require('zip-webpack-plugin');
+const ZipPlugin = require("zip-webpack-plugin");
 
 module.exports = (env, argv) => {
-    const isPro = argv.mode === "production"
+    const isPro = argv.mode === "production";
     const plugins = [
         new MiniCssExtractPlugin({
             filename: isPro ? "dist/index.css" : "index.css",
         })
-    ]
+    ];
     let entry = {
         "index": "./src/index.ts",
-    }
+    };
     if (isPro) {
         entry = {
             "dist/index": "./src/index.ts",
-        }
+        };
         plugins.push(new webpack.BannerPlugin({
             banner: () => {
                 return fs.readFileSync("LICENSE").toString();
             },
-        }))
+        }));
         plugins.push(new CopyPlugin({
             patterns: [
                 {from: "preview.png", to: "./dist/preview.png"},
@@ -32,15 +32,15 @@ module.exports = (env, argv) => {
                 {from: "README.md", to: "./dist/README.md"},
                 {from: "plugin.json", to: "./dist/plugin.json"},
             ],
-        }))
+        }));
         plugins.push(new ZipPlugin({
             filename: "package.zip",
             algorithm: "gzip",
             include: [/dist/],
             pathMapper: (assetPath) => {
-                return assetPath.replace("dist/", "")
+                return assetPath.replace("dist/", "");
             },
-        }))
+        }));
     }
     return {
         mode: argv.mode || "development",
@@ -51,7 +51,7 @@ module.exports = (env, argv) => {
             path: path.resolve(__dirname),
             libraryTarget: "commonjs2",
             library: {
-                type: 'commonjs2',
+                type: "commonjs2",
             },
         },
         externals: {
