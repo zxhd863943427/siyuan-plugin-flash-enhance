@@ -1,4 +1,4 @@
-/*!
+(()=>{var d=(r,e)=>()=>(e||r((e={exports:{}}).exports,e),e.exports);var b=d(n=>{/*!
  * MIT License
  *
  * Copyright (c) 2023 SiYuan 思源笔记
@@ -21,17 +21,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- */
-
-import {Plugin} from "siyuan";
-import "./index.scss";
-
-export default class MyPlugin extends Plugin {
-    onload() {
-        console.log("Hello Plugin!");
-    }
-
-    onunload() {
-        console.log("Bye Plugin!");
-    }
-}
+ */(()=>{"use strict";var r={};r.d=(o,l)=>{for(var t in l)r.o(l,t)&&!r.o(o,t)&&Object.defineProperty(o,t,{enumerable:!0,get:l[t]})},r.o=(o,l)=>Object.prototype.hasOwnProperty.call(o,l),r.r=o=>{typeof Symbol!="undefined"&&Symbol.toStringTag&&Object.defineProperty(o,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(o,"__esModule",{value:!0})};var e={};r.r(e),r.d(e,{default:()=>c});const u=require("siyuan");class c extends u.Plugin{onload(){console.log("Hello Plugin!")}onunload(){console.log("Bye Plugin!")}}var a=n;for(var _ in e)a[_]=e[_];e.__esModule&&Object.defineProperty(a,"__esModule",{value:!0})})()});b();})();

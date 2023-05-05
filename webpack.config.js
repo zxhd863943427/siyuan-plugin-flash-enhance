@@ -1,6 +1,8 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const {EsbuildPlugin} = require("esbuild-loader");
+const webpack = require("webpack");
+const fs = require("fs");
 
 module.exports = (env, argv) => {
     return {
@@ -8,8 +10,12 @@ module.exports = (env, argv) => {
         watch: argv.mode !== "production",
         devtool: argv.mode !== "production" ? "eval" : false,
         output: {
-            publicPath: "auto",
             filename: "[name].js",
+            libraryTarget: "commonjs",
+            path: path.resolve(__dirname, "./dist/"),
+        },
+        externals: {
+            siyuan: "siyuan",
         },
         entry: {
             "index": "./src/index.ts",
@@ -39,9 +45,7 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: /\.scss$/,
-                    include: [
-                        path.resolve(__dirname, "src/assets/scss"),
-                    ],
+                    include: [path.resolve(__dirname, "src")],
                     use: [
                         MiniCssExtractPlugin.loader,
                         {
@@ -58,6 +62,13 @@ module.exports = (env, argv) => {
             new MiniCssExtractPlugin({
                 filename: "index.css",
             }),
+            new webpack.BannerPlugin({
+                banner: () => {
+                    const license = fs.readFileSync("LICENSE").toString();
+                    console.log(license)
+                    return license;
+                },
+            })
         ],
     };
 };
