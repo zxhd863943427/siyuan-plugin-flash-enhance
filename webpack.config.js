@@ -1,11 +1,10 @@
 const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const {EsbuildPlugin} = require("esbuild-loader");
-const webpack = require("webpack");
 const fs = require("fs");
+const webpack = require("webpack");
+const {EsbuildPlugin} = require("esbuild-loader");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ZipPlugin = require('zip-webpack-plugin');
-const pluginJSON = require("./plugin.json");
 
 module.exports = (env, argv) => {
     const isPro = argv.mode === "production"
