@@ -48,8 +48,11 @@ module.exports = (env, argv) => {
         devtool: isPro ? false : "eval",
         output: {
             filename: "[name].js",
-            libraryTarget: "commonjs",
             path: path.resolve(__dirname),
+            libraryTarget: "commonjs2",
+            library: {
+                type: 'commonjs2',
+            },
         },
         externals: {
             siyuan: "siyuan",
@@ -58,7 +61,7 @@ module.exports = (env, argv) => {
         optimization: {
             minimize: true,
             minimizer: [
-                new EsbuildPlugin({target: "es6"}),
+                new EsbuildPlugin(),
             ],
         },
         resolve: {
