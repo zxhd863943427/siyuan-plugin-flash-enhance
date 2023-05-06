@@ -65,22 +65,22 @@
 
 ```
 
-* name：插件名称，必须和库名一致，且全局唯一（集市中不能有重名插件）
-* author：插件作者名
-* url：插件仓库地址
-* version：插件版本号，建议遵循 [semver](https://semver.org/lang/zh-CN/) 规范
-* description：插件描述，主要用于插件集市列表中显示，支持多语言
-  * default：默认语言，必须存在
-  * zh_CN、enUS 等其他语言：可选，建议至少提供中文和英文
-* readme：自述文件名，主要用于插件集市详情页中显示，支持多语言
-  * default：默认语言，必须存在
-  * zh_CN、enUS 等其他语言：可选，建议至少提供中文和英文
-* i18n：插件支持的语言列表
-* funding：插件赞助信息
-  * openCollective：Open Collective 名称
-  * patreon：Patreon 名称
-  * github：GitHub 登录名
-  * custom：自定义赞助链接列表
+* `name`：插件名称，必须和库名一致，且全局唯一（集市中不能有重名插件）
+* `author`：插件作者名
+* `url`：插件仓库地址
+* `version`：插件版本号，建议遵循 [semver](https://semver.org/lang/zh-CN/) 规范
+* `description`：插件描述，主要用于插件集市列表中显示，支持多语言
+  * `default`：默认语言，必须存在
+  * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
+* `readme`：自述文件名，主要用于插件集市详情页中显示，支持多语言
+  * `default`：默认语言，必须存在
+  * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
+* `i18n`：插件支持的语言列表
+* `funding`：插件赞助信息
+  * `openCollective`：Open Collective 名称
+  * `patreon`：Patreon 名称
+  * `github`：GitHub 登录名
+  * `custom`：自定义赞助链接列表
 
 ## 打包
 
