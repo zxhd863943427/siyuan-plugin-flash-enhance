@@ -16,7 +16,7 @@
 * icon.png (160*160)
 * preview.png (1024*768)
 * src/*
-* README.md
+* README*.md
 * [API](https://github.com/siyuan-note/petal)
 
 ## 国际化
@@ -35,11 +35,12 @@
 无论使用何种方式编译打包，我们最终需要生成一个 package.zip，它至少包含如下文件：
 
 * icon.png
-* index.css (optional)
 * index.js
 * plugin.json
 * preview.png
 * README.md
+* index.css (optional)
+* i18n/* (optional)
 
 ## 上架集市
 

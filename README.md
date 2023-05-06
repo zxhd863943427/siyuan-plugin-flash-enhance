@@ -16,7 +16,7 @@
 * icon.png (160*160)
 * preview.png (1024*768)
 * src/*
-* README.md
+* README*.md
 * [API](https://github.com/siyuan-note/petal)
 
 ## I18n
