@@ -10,8 +10,19 @@
 
 ## 开发
 
-* Update plugin.json, README.md, icon.png (160 * 160) and preview.png (1024 * 768)
+* Update plugin.json, README.md, icon.png (160*160) and preview.png (1024*768)
 * [API](https://github.com/siyuan-note/petal)
+
+## 打包
+
+无论使用何种方式编译打包，我们最终需要生成一个 package.zip，它至少包含如下文件：
+
+* icon.png
+* index.css (optional)
+* index.js
+* plugin.json
+* preview.png
+* README.md
 
 ## 上架集市
 

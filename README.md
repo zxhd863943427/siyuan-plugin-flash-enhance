@@ -6,12 +6,25 @@
 * Clone your repo to a local development folder. For convenience, you can place this folder in your `{workspace}/data/plugins` folder
 * Install [NodeJS](https://nodejs.org/en/download) and [pnpm](https://pnpm.io/installation), then run `pnpm i` in the command line under your repo folder
 * Run `pnpm run dev` to compile your plugin from `index.ts`
-* Open SiYuan marketplace and enable plugin
+* Open SiYuan marketplace and enable plugin in downloaded tab
 
 ## Development
 
-* Update plugin.json, README.md, icon.png (160 * 160) and preview.png (1024 * 768)
 * [API](https://github.com/siyuan-note/petal)
+* plugin.json
+* 
+* README.md, icon.png (160*160) and preview.png (1024*768)
+
+## Package
+
+No matter which method is used to compile and package, we finally need to generate a package.zip, which contains at least the following files:
+
+* icon.png
+* index.css (optional)
+* index.js
+* plugin.json
+* preview.png
+* README.md
 
 ## List on the marketplace
 

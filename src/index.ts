@@ -3,10 +3,10 @@ import "./index.scss";
 
 export default class MyPlugin extends Plugin {
     onload() {
-        console.log("Hello Plugin!");
+        console.log(this.i18n.helloPlugin);
     }
 
     onunload() {
-        console.log("Bye Plugin!");
+        console.log(this.i18n.byePlugin);
     }
 }
