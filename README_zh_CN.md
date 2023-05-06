@@ -1,3 +1,5 @@
+[英文](https://github.com/siyuan-note/plugin-sample/blob/main/README.md)
+
 # 思源笔记插件示例
 
 ## 开始
