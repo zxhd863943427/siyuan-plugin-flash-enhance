@@ -15,7 +15,8 @@
 * preview.png (1024*768)
 * src/*
 * README*.md
-* [API](https://github.com/siyuan-note/petal)
+* [前端 API](https://github.com/siyuan-note/petal)
+* [后端 API](https://github.com/siyuan-note/siyuan/blob/master/API_zh_CN.md)
 
 ## 国际化
 
@@ -27,6 +28,57 @@
     * src/i18n/*.json 语言配置文件
     * 代码中使用 `this.i18.key` 获取文本
 * 最后在 plugin.json 中的 `i18n` 字段中声明该插件支持的语言
+
+建议插件至少支持英文和简体中文，这样可以方便更多人使用。
+
+## plugin.json
+
+```json
+{
+  "name": "plugin-sample",
+  "author": "Vanessa",
+  "url": "https://github.com/siyuan-note/plugin-sample",
+  "version": "0.0.1",
+  "description": {
+    "default": "This is a plugin sample",
+    "zh_CN": "这是一个插件示例"
+  },
+  "readme": {
+    "default": "README.md",
+    "zh_CN": "README_zh_CN.md"
+  },
+  "i18n": [
+    "en_US",
+    "zh_CN"
+  ],
+  "funding": {
+    "openCollective": "b3log",
+    "patreon": "",
+    "github": "",
+    "custom": [
+      "https://ld246.com/sponsor"
+    ]
+  }
+}
+
+```
+
+* name：插件名称，必须和库名一致，且全局唯一（集市中不能有重名插件）
+* author：插件作者名
+* url：插件仓库地址
+* version：插件版本号，建议遵循 [semver](https://semver.org/lang/zh-CN/) 规范
+* description：插件描述，主要用于插件集市列表中显示，支持多语言
+  * default：默认语言，必须存在
+  * zh_CN、enUS 等其他语言：可选，建议至少提供中文和英文
+* readme：自述文件名，主要用于插件集市详情页中显示，支持多语言
+  * default：默认语言，必须存在
+  * zh_CN、enUS 等其他语言：可选，建议至少提供中文和英文
+* i18n：插件支持的语言列表
+* funding：插件赞助信息
+  * openCollective：Open Collective 名称
+  * patreon：Patreon 名称
+  * github：GitHub 登录名
+  * custom：自定义赞助链接列表
 
 ## 打包
 

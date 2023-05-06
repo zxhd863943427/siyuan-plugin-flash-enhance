@@ -18,7 +18,8 @@
 * preview.png (1024*768)
 * src/*
 * README*.md
-* [API](https://github.com/siyuan-note/petal)
+* [Fontend API](https://github.com/siyuan-note/petal)
+* [Backend API](https://github.com/siyuan-note/siyuan/blob/master/API.md)
 
 ## I18n
 
@@ -31,6 +32,59 @@ complete the following tasks:
     * src/i18n/*.json language configuration files
     * Use `this.i18.key` to get the text in the code
 * Finally, declare the language supported by the plugin in the `i18n` field in plugin.json
+
+It is recommended that the plugin supports at least English and Simplified Chinese, so that more people can use it more
+conveniently.
+
+## plugin.json
+
+```json
+{
+  "name": "plugin-sample",
+  "author": "Vanessa",
+  "url": "https://github.com/siyuan-note/plugin-sample",
+  "version": "0.0.1",
+  "description": {
+    "default": "This is a plugin sample",
+    "zh_CN": "这是一个插件示例"
+  },
+  "readme": {
+    "default": "README.md",
+    "zh_CN": "README_zh_CN.md"
+  },
+  "i18n": [
+    "en_US",
+    "zh_CN"
+  ],
+  "funding": {
+    "openCollective": "b3log",
+    "patreon": "",
+    "github": "",
+    "custom": [
+      "https://ld246.com/sponsor"
+    ]
+  }
+}
+
+```
+
+* name: Plugin name, must be the same as the repo name, and must be unique globally (no duplicate plugin names in the
+  marketplace)
+* author: Plugin author name
+* url: Plugin repo URL
+* version: Plugin version number, it is recommended to follow the [semver](https://semver.org/) specification
+* description: Plugin description, mainly used for display in the marketplace list, supports multiple languages
+    * default: Default language, must exist
+    * zh_CN, enUS and other languages: optional, it is recommended to provide at least Chinese and English
+* readme: readme file name, mainly used to display in the marketplace details page, supports multiple languages
+    * default: Default language, must exist
+    * zh_CN, enUS and other languages: optional, it is recommended to provide at least Chinese and English
+* i18n: Plugin supported language list
+* funding: Plugin sponsorship information
+    * openCollective: Open Collective name
+    * patreon: Patreon name
+    * github: GitHub login name
+    * custom: Custom sponsorship link list
 
 ## Package
 
