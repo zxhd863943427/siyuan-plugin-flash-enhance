@@ -97,7 +97,7 @@ least the following files:
 * index.js
 * plugin.json
 * preview.png
-* README.md
+* README*.md
 * index.css (optional)
 * i18n/* (optional)
 
