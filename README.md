@@ -55,7 +55,7 @@ least the following files:
 
 If it is the first release, please create a pull request to
 the [Community Bazaar](https://github.com/siyuan-note/bazaar) repository and modify the plugins.json file in it. This
-file is the index of all community theme repositories, the format is:
+file is the index of all community plugin repositories, the format is:
 
 ```json
 {
@@ -64,3 +64,10 @@ file is the index of all community theme repositories, the format is:
   ]
 }
 ```
+
+After the PR is merged, the bazaar will automatically update the index and deploy through GitHub Actions. When releasing
+a new version of the plugin in the future, you only need to follow the above steps to create a new release, and you
+don't need to PR the community bazaar repo.
+
+Under normal circumstances, the community bazaar repo will automatically update the index and deploy every hour,
+and you can check the deployment status at https://github.com/siyuan-note/bazaar/actions.
