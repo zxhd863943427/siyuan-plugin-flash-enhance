@@ -2,12 +2,13 @@
 
 ## Get started
 
-* Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it)
+* Make a copy of this repo as a template with the <kbd>Use this template</kbd> button, please note that the repo name
+  must be the same as the plugin name
 * Clone your repo to a local development folder. For convenience, you can place this folder in
-  your `{workspace}/data/plugins` folder
+  your `{workspace}/data/plugins/` folder
 * Install [NodeJS](https://nodejs.org/en/download) and [pnpm](https://pnpm.io/installation), then run `pnpm i` in the
   command line under your repo folder
-* Run `pnpm run dev` to compile your plugin from `index.ts`
+* Execute `pnpm run dev` for real-time compilation
 * Open SiYuan marketplace and enable plugin in downloaded tab
 
 ## Development

@@ -2,13 +2,11 @@
 
 ## 开始
 
-* Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it)
-* Clone your repo to a local development folder. For convenience, you can place this folder in
-  your `{workspace}/data/plugins` folder
-* Install [NodeJS](https://nodejs.org/en/download) and [pnpm](https://pnpm.io/installation), then run `pnpm i` in the
-  command line under your repo folder
-* Run `pnpm run dev` to compile your plugin from `index.ts`
-* Open SiYuan marketplace and enable plugin
+* 通过 <kbd>Use this template</kbd> 按钮将该库文件复制到你自己的库中，请注意库名必须和插件名称一致
+* 将你的库克隆到本地开发文件夹中，为了方便可以直接将开发文件夹放置在 `{工作空间}/data/plugins/` 下
+* 安装 [NodeJS](https://nodejs.org/en/download) 和 [pnpm](https://pnpm.io/installation)，然后在开发文件夹下执行 `pnpm i`
+* 执行 `pnpm run dev` 进行实时编译 
+* 在思源中打开集市并在下载选项卡中启用插件
 
 ## 开发
 
