@@ -27,11 +27,11 @@ module.exports = (env, argv) => {
         }));
         plugins.push(new CopyPlugin({
             patterns: [
-                {from: "preview.png", to: "./dist/preview.png"},
-                {from: "icon.png", to: "./dist/icon.png"},
-                {from: "README.md", to: "./dist/README.md"},
-                {from: "plugin.json", to: "./dist/plugin.json"},
-                {from: "src/i18n", to: "./dist/i18n"},
+                {from: "preview.png", to: "./dist/"},
+                {from: "icon.png", to: "./dist/"},
+                {from: "README*.md", to: "./dist/"},
+                {from: "plugin.json", to: "./dist/"},
+                {from: "src/i18n/", to: "./dist/i18n/"},
             ],
         }));
         plugins.push(new ZipPlugin({
