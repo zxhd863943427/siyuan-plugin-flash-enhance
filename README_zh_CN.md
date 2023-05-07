@@ -41,6 +41,10 @@
   "author": "Vanessa",
   "url": "https://github.com/siyuan-note/plugin-sample",
   "version": "0.0.1",
+  "displayName": {
+    "default": "Plugin Sample",
+    "zh_CN": "插件示例"
+  },
   "description": {
     "default": "This is a plugin sample",
     "zh_CN": "这是一个插件示例"
@@ -62,13 +66,15 @@
     ]
   }
 }
-
 ```
 
 * `name`：插件名称，必须和库名一致，且全局唯一（集市中不能有重名插件）
 * `author`：插件作者名
 * `url`：插件仓库地址
 * `version`：插件版本号，建议遵循 [semver](https://semver.org/lang/zh-CN/) 规范
+* `displayName`：模板显示名称，主要用于模板集市列表中显示，支持多语言
+    * `default`：默认语言，必须存在
+    * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
 * `description`：插件描述，主要用于插件集市列表中显示，支持多语言
     * `default`：默认语言，必须存在
     * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文

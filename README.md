@@ -46,6 +46,10 @@ conveniently.
   "author": "Vanessa",
   "url": "https://github.com/siyuan-note/plugin-sample",
   "version": "0.0.1",
+  "displayName": {
+    "default": "Plugin Sample",
+    "zh_CN": "插件示例"
+  },
   "description": {
     "default": "This is a plugin sample",
     "zh_CN": "这是一个插件示例"
@@ -67,7 +71,6 @@ conveniently.
     ]
   }
 }
-
 ```
 
 * `name`: Plugin name, must be the same as the repo name, and must be unique globally (no duplicate plugin names in the
@@ -75,6 +78,9 @@ conveniently.
 * `author`: Plugin author name
 * `url`: Plugin repo URL
 * `version`: Plugin version number, it is recommended to follow the [semver](https://semver.org/) specification
+* `displayName`: Template display name, mainly used for display in the marketplace list, supports multiple languages
+    * `default`: Default language, must exist
+    * `zh_CN`, `en_US` and other languages: optional, it is recommended to provide at least Chinese and English
 * `description`: Plugin description, mainly used for display in the marketplace list, supports multiple languages
     * `default`: Default language, must exist
     * `zh_CN`, `en_US` and other languages: optional, it is recommended to provide at least Chinese and English
