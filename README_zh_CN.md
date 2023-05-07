@@ -1,4 +1,4 @@
-[英文](https://github.com/siyuan-note/plugin-sample/blob/main/README.md)
+[English](https://github.com/siyuan-note/plugin-sample/blob/main/README.md)
 
 # 思源笔记插件示例
 
@@ -70,17 +70,17 @@
 * `url`：插件仓库地址
 * `version`：插件版本号，建议遵循 [semver](https://semver.org/lang/zh-CN/) 规范
 * `description`：插件描述，主要用于插件集市列表中显示，支持多语言
-  * `default`：默认语言，必须存在
-  * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
+    * `default`：默认语言，必须存在
+    * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
 * `readme`：自述文件名，主要用于插件集市详情页中显示，支持多语言
-  * `default`：默认语言，必须存在
-  * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
+    * `default`：默认语言，必须存在
+    * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
 * `i18n`：插件支持的语言列表
 * `funding`：插件赞助信息
-  * `openCollective`：Open Collective 名称
-  * `patreon`：Patreon 名称
-  * `github`：GitHub 登录名
-  * `custom`：自定义赞助链接列表
+    * `openCollective`：Open Collective 名称
+    * `patreon`：Patreon 名称
+    * `github`：GitHub 登录名
+    * `custom`：自定义赞助链接列表
 
 ## 打包
 
@@ -113,6 +113,7 @@ plugins.json。该文件是所有社区插件库的索引，格式为：
 }
 ```
 
-PR 被合并以后集市会通过 GitHub Actions 自动更新索引并部署。后续发布新版本插件时只需要按照上述步骤创建新的发布即可，不需要再 PR 社区集市仓库。
+PR 被合并以后集市会通过 GitHub Actions 自动更新索引并部署。后续发布新版本插件时只需要按照上述步骤创建新的发布即可，不需要再
+PR 社区集市仓库。
 
 正常情况下，社区集市仓库每隔 1 小时会自动更新索引并部署，可在 https://github.com/siyuan-note/bazaar/actions 查看部署状态。
