@@ -7,8 +7,7 @@ interface IObject {
 export const Confirm: (title: string, text: string, confirmCB?: () => void, cancelCB?: () => void) => void;
 
 /**
- * @param timeout - 毫秒；0 手动关闭；-1 用不关闭; 6000 默认关闭时间
- * @param messageId - 设置相同 id 时，会覆盖之前的消息
+ * @param timeout - ms. 0: manual close；-1: always show; 6000: default
  */
 export const Message: (text: string, timeout: number, type: "info" | "error", id?: string) => void;
 
