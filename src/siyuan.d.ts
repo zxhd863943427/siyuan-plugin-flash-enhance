@@ -23,7 +23,7 @@ export function confirm(title: string, text: string, confirmCB?: () => void, can
 
 /**
  * @param timeout - ms. 0: manual close；-1: always show; 6000: default
- * @param type - defalut: "info"
+ * @param {string} [type=info]
  */
 export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
 
@@ -46,11 +46,14 @@ export abstract class Plugin {
 
     onunload(): void;
 
+    /*
+     * @param {string} [options.position=right]
+     */
     addTopBar(options: {
         icon: string,
         title: string,
         callback: (evt: MouseEvent) => void
-        position: "right" | "left"
+        position?: "right" | "left"
     }): HTMLDivElement;
 
     // registerCommand(command: IPluginCommand): void;
@@ -118,7 +121,10 @@ export class Menu {
 
     open(options: { x: number, y: number, h?: number, w?: number, isLeft?: boolean }): void;
 
-    fullscreen(position: { x: number; y: number }): void;
+    /*
+     * @param {string} [position=all]
+     */
+    fullscreen(position: "bottom" | "all"): void;
 
     close(): void;
 }
