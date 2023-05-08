@@ -34,6 +34,7 @@ export class App {
 export abstract class Plugin {
     eventBus: EventBus;
     i18n: IObject;
+    data: any
 
     constructor(options: {
         app: App,
@@ -56,11 +57,13 @@ export abstract class Plugin {
         position?: "right" | "left"
     }): HTMLDivElement;
 
+    openSetting(): boolean
+
     // registerCommand(command: IPluginCommand): void;
 
     // registerSettingRender(settingRender: SettingRender): void;
 
-    loadStorage(filename: string): Promise<any>;
+    loadData(storageName: string): Promise<any>;
 
     writeStorage(filename: string, content: any): Promise<void>;
 }
