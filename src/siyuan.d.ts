@@ -30,6 +30,13 @@ export abstract class Plugin {
 
     onunload(): void;
 
+    addTopBar(options: {
+        icon: string,
+        title: string,
+        callback: (evt: MouseEvent) => void
+        position: "right" | "left"
+    }): HTMLDivElement;
+
     // registerCommand(command: IPluginCommand): void;
 
     // registerSettingRender(settingRender: SettingRender): void;

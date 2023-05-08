@@ -1,4 +1,5 @@
 {
+  "addTopBarIcon": "使用插件添加一个顶栏按钮",
   "helloPlugin": "你好，插件！",
   "byePlugin": "再见，插件！"
 }

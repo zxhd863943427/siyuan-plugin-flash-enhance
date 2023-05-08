@@ -1,4 +1,5 @@
 {
+  "addTopBarIcon": "Add a top bar icon by plugin",
   "helloPlugin": "Hello, Plugin!",
   "byePlugin": "Bye, Plugin!"
 }
