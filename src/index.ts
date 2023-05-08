@@ -11,10 +11,10 @@ export default class PluginSample extends Plugin {
             icon: "iconList",
             title: this.i18n.addTopBarIcon,
             position: "right",
-            callback: (event: MouseEvent) => {
+            callback: () => {
                 this.addMenu(topBarElement.getBoundingClientRect());
             }
-        })
+        });
     }
 
     onunload() {
@@ -27,42 +27,42 @@ export default class PluginSample extends Plugin {
     private addMenu(rect: DOMRect) {
         const menu = new Menu("topBarSample", () => {
             console.log(this.i18n.byeMenu);
-        })
+        });
         menu.addItem({
             label: "confirm",
-            click(element: HTMLElement) {
+            click() {
                 confirm("Confirm", "Is this a confirm?", () => {
                     console.log("confirm");
                 }, () => {
                     console.log("cancel");
-                })
+                });
             }
-        })
+        });
         menu.addItem({
             label: "showMessage",
-            click: (element: HTMLElement) => {
+            click: () => {
                 showMessage(this.i18n.helloPlugin);
             }
-        })
+        });
         menu.addItem({
             label: "Dialog",
-            click: (element: HTMLElement) => {
+            click: () => {
                 new Dialog({
                     title: "Info",
-                    content: "This is a dialog",
+                    content: '<div class="b3-dialog__content">This is a dialog</div>',
                     width: "360px",
                 });
             }
-        })
+        });
         menu.addSeparator();
         menu.addItem({
             label: "readonly",
             type: "readonly",
-        })
+        });
         menu.open({
             x: rect.right,
             y: rect.bottom,
             isLeft: true,
-        })
+        });
     }
 }

@@ -4,6 +4,21 @@ interface IObject {
     [key: string]: string;
 }
 
+interface IWebSocketData {
+    cmd: string
+    callback?: string
+    data: any
+    msg: string
+    code: number
+    sid: string
+}
+
+export function fetchPost(url: string, data?: any, cb?: (response: IWebSocketData) => void, headers?: IObject): void;
+
+export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
+
+export function fetchGet(url: string, cb: (response: IWebSocketData) => void): void;
+
 export function confirm(title: string, text: string, confirmCB?: () => void, cancelCB?: () => void): void;
 
 /**
