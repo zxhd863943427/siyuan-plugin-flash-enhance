@@ -8,8 +8,9 @@ export function confirm(title: string, text: string, confirmCB?: () => void, can
 
 /**
  * @param timeout - ms. 0: manual close；-1: always show; 6000: default
+ * @param type - defalut: "info"
  */
-export function showMessage(text: string, timeout: number, type: "info" | "error", id?: string): void;
+export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
 
 export class App {
     plugins: Plugin[];
@@ -74,4 +75,35 @@ export class Dialog {
     destroy(options?: IObject): void;
 
     bindInput(inputElement: HTMLInputElement | HTMLTextAreaElement, enterEvent?: () => void): void;
+}
+
+export interface IMenuItemOption {
+    label?: string,
+    click?: (element: HTMLElement) => void,
+    type?: "separator" | "submenu" | "readonly",
+    accelerator?: string,
+    action?: string,
+    id?: string,
+    submenu?: IMenuItemOption[]
+    disabled?: boolean
+    icon?: string
+    iconHTML?: string
+    current?: boolean
+    bind?: (element: HTMLElement) => void
+}
+
+export class Menu {
+    constructor(id?: string, closeCB?: () => void);
+
+    showSubMenu(subMenuElement: HTMLElement): void;
+
+    addItem(options: IMenuItemOption): HTMLElement;
+
+    addSeparator(): void;
+
+    open(options: { x: number, y: number, h?: number, w?: number, isLeft?: boolean }): void;
+
+    fullscreen(position: { x: number; y: number }): void;
+
+    close(): void;
 }
