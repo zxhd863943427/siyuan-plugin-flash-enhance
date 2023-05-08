@@ -3,9 +3,9 @@ import "./index.scss";
 
 export default class PluginSample extends Plugin {
     onload() {
-        this.eventBus.on("ws-main", ({detail}: any) => {
-            console.log("on ws-main", detail);
-        });
+        console.log(this.i18n.helloPlugin);
+
+        this.eventBus.on("ws-main", this.wsEvent);
 
         const topBarElement = this.addTopBar({
             icon: "iconList",
@@ -19,9 +19,10 @@ export default class PluginSample extends Plugin {
 
     onunload() {
         console.log(this.i18n.byePlugin);
-        this.eventBus.off("ws-main", ({detail}: any) => {
-            console.log(detail);
-        });
+    }
+
+    private wsEvent({detail}: any) {
+        console.log(detail);
     }
 
     private addMenu(rect: DOMRect) {
@@ -32,9 +33,9 @@ export default class PluginSample extends Plugin {
             label: "confirm",
             click() {
                 confirm("Confirm", "Is this a confirm?", () => {
-                    console.log("confirm");
+                    showMessage("confirm");
                 }, () => {
-                    console.log("cancel");
+                    showMessage("cancel");
                 });
             }
         });
@@ -52,6 +53,12 @@ export default class PluginSample extends Plugin {
                     content: '<div class="b3-dialog__content">This is a dialog</div>',
                     width: "360px",
                 });
+            }
+        });
+        menu.addItem({
+            label: "off ws-main",
+            click: () => {
+                this.eventBus.off("ws-main", this.wsEvent);
             }
         });
         menu.addSeparator();
