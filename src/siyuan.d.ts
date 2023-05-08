@@ -35,6 +35,7 @@ export abstract class Plugin {
     eventBus: EventBus;
     i18n: IObject;
     data: any
+    name: string
 
     constructor(options: {
         app: App,
@@ -57,7 +58,7 @@ export abstract class Plugin {
         position?: "right" | "left"
     }): HTMLDivElement;
 
-    openSetting(): boolean
+    openSetting(): void
 
     // registerCommand(command: IPluginCommand): void;
 
@@ -65,7 +66,7 @@ export abstract class Plugin {
 
     loadData(storageName: string): Promise<any>;
 
-    writeStorage(filename: string, content: any): Promise<void>;
+    saveData(storageName: string, content: any): Promise<void>;
 }
 
 export class EventBus {
