@@ -1,7 +1,10 @@
 import {Plugin, showMessage, confirm, Dialog, Menu, isMobile} from "siyuan";
 import "./index.scss";
 
+const STORAGE_NAME = "menu-config";
+
 export default class PluginSample extends Plugin {
+
     onload() {
         console.log(this.i18n.helloPlugin);
 
@@ -41,7 +44,7 @@ export default class PluginSample extends Plugin {
             dialog.destroy();
         });
         btnsElement[1].addEventListener("click", () => {
-            this.saveData("menu-config", inputElement.value);
+            this.saveData(STORAGE_NAME, inputElement.value);
             dialog.destroy();
         });
     }
@@ -50,57 +53,59 @@ export default class PluginSample extends Plugin {
         console.log(detail);
     }
 
-    private addMenu(rect: DOMRect) {
-        this.loadData("menu-config").then((config) => {
-            const menu = new Menu("topBarSample", () => {
-                console.log(this.i18n.byeMenu);
-            });
-            menu.addItem({
-                label: "confirm",
-                click() {
-                    confirm("Confirm", "Is this a confirm?", () => {
-                        showMessage("confirm");
-                    }, () => {
-                        showMessage("cancel");
-                    });
-                }
-            });
-            menu.addItem({
-                label: "showMessage",
-                click: () => {
-                    showMessage(this.i18n.helloPlugin);
-                }
-            });
-            menu.addItem({
-                label: "Dialog",
-                click: () => {
-                    new Dialog({
-                        title: "Info",
-                        content: '<div class="b3-dialog__content">This is a dialog</div>',
-                        width: isMobile() ? "92vw" : "520px",
-                    });
-                }
-            });
-            menu.addItem({
-                label: "off ws-main",
-                click: () => {
-                    this.eventBus.off("ws-main", this.wsEvent);
-                }
-            });
-            menu.addSeparator();
-            menu.addItem({
-                label: config || "readonly",
-                type: "readonly",
-            });
-            if (isMobile()) {
-                menu.fullscreen()
-            } else {
-                menu.open({
-                    x: rect.right,
-                    y: rect.bottom,
-                    isLeft: true,
+    private async addMenu(rect: DOMRect) {
+        if (!this.data) {
+            await this.loadData(STORAGE_NAME)
+        }
+
+        const menu = new Menu("topBarSample", () => {
+            console.log(this.i18n.byeMenu);
+        });
+        menu.addItem({
+            label: "confirm",
+            click() {
+                confirm("Confirm", "Is this a confirm?", () => {
+                    showMessage("confirm");
+                }, () => {
+                    showMessage("cancel");
                 });
             }
-        })
+        });
+        menu.addItem({
+            label: "showMessage",
+            click: () => {
+                showMessage(this.i18n.helloPlugin);
+            }
+        });
+        menu.addItem({
+            label: "Dialog",
+            click: () => {
+                new Dialog({
+                    title: "Info",
+                    content: '<div class="b3-dialog__content">This is a dialog</div>',
+                    width: isMobile() ? "92vw" : "520px",
+                });
+            }
+        });
+        menu.addItem({
+            label: "off ws-main",
+            click: () => {
+                this.eventBus.off("ws-main", this.wsEvent);
+            }
+        });
+        menu.addSeparator();
+        menu.addItem({
+            label: this.data[STORAGE_NAME] || "readonly",
+            type: "readonly",
+        });
+        if (isMobile()) {
+            menu.fullscreen()
+        } else {
+            menu.open({
+                x: rect.right,
+                y: rect.bottom,
+                isLeft: true,
+            });
+        }
     }
 }
