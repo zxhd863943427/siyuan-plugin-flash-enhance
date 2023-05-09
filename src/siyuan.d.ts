@@ -64,8 +64,8 @@ export class App {
 export abstract class Plugin {
     eventBus: EventBus;
     i18n: IObject;
-    data: any
-    name: string
+    data: any;
+    name: string;
 
     constructor(options: {
         app: App,

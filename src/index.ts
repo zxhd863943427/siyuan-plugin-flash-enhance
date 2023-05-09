@@ -25,9 +25,9 @@ export default class PluginSample extends Plugin {
         this.customTab = this.createTab({
             type: TAB_TYPE,
             init() {
-                this.element.innerHTML = `<div class="plugin-sample__custom-tab">${this.data.text}</div>`
+                this.element.innerHTML = `<div class="plugin-sample__custom-tab">${this.data.text}</div>`;
             }
-        })
+        });
     }
 
     onunload() {
@@ -65,7 +65,7 @@ export default class PluginSample extends Plugin {
 
     private async addMenu(rect: DOMRect) {
         if (!this.data) {
-            await this.loadData(STORAGE_NAME)
+            await this.loadData(STORAGE_NAME);
         }
 
         const menu = new Menu("topBarSample", () => {
@@ -124,7 +124,7 @@ export default class PluginSample extends Plugin {
             type: "readonly",
         });
         if (isMobile()) {
-            menu.fullscreen()
+            menu.fullscreen();
         } else {
             menu.open({
                 x: rect.right,
