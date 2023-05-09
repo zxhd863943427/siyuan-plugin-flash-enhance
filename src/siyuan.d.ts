@@ -13,11 +13,39 @@ interface IWebSocketData {
     sid: string
 }
 
+interface IMenuItemOption {
+    label?: string,
+    click?: (element: HTMLElement) => void,
+    type?: "separator" | "submenu" | "readonly",
+    accelerator?: string,
+    action?: string,
+    id?: string,
+    submenu?: IMenuItemOption[]
+    disabled?: boolean
+    icon?: string
+    iconHTML?: string
+    current?: boolean
+    bind?: (element: HTMLElement) => void
+}
+
 export function fetchPost(url: string, data?: any, cb?: (response: IWebSocketData) => void, headers?: IObject): void;
 
 export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
 
 export function fetchGet(url: string, cb: (response: IWebSocketData) => void): void;
+
+export function openTab(options: {
+    custom?: {
+        title: string,
+        icon: string,
+        data?: any
+        fn?: () => any,
+    }   // card 和自定义页签 必填
+    position?: "right" | "bottom",
+    keepCursor?: boolean // 是否跳转到新 tab 上
+    removeCurrentTab?: boolean // 在当前页签打开时需移除原有页签
+    afterOpen?: () => void // 打开后回调
+}): void
 
 export function isMobile(): boolean;
 
@@ -69,6 +97,14 @@ export abstract class Plugin {
     loadData(storageName: string): Promise<any>;
 
     saveData(storageName: string, content: any): Promise<void>;
+
+    createTab(options: {
+        type: string,
+        destroy?: () => void,
+        resize?: () => void,
+        update?: () => void,
+        init: () => void
+    }): () => any
 }
 
 export class EventBus {
@@ -99,21 +135,6 @@ export class Dialog {
     destroy(options?: IObject): void;
 
     bindInput(inputElement: HTMLInputElement | HTMLTextAreaElement, enterEvent?: () => void): void;
-}
-
-export interface IMenuItemOption {
-    label?: string,
-    click?: (element: HTMLElement) => void,
-    type?: "separator" | "submenu" | "readonly",
-    accelerator?: string,
-    action?: string,
-    id?: string,
-    submenu?: IMenuItemOption[]
-    disabled?: boolean
-    icon?: string
-    iconHTML?: string
-    current?: boolean
-    bind?: (element: HTMLElement) => void
 }
 
 export class Menu {

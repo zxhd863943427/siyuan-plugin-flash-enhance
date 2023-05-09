@@ -1,9 +1,12 @@
-import {Plugin, showMessage, confirm, Dialog, Menu, isMobile} from "siyuan";
+import {Plugin, showMessage, confirm, Dialog, Menu, isMobile, openTab} from "siyuan";
 import "./index.scss";
 
 const STORAGE_NAME = "menu-config";
+const TAB_TYPE = "custom_tab";
 
 export default class PluginSample extends Plugin {
+
+    private customTab: () => any;
 
     onload() {
         console.log(this.i18n.helloPlugin);
@@ -18,6 +21,13 @@ export default class PluginSample extends Plugin {
                 this.addMenu(topBarElement.getBoundingClientRect());
             }
         });
+
+        this.customTab = this.createTab({
+            type: TAB_TYPE,
+            init() {
+                this.element.innerHTML = `<div class="plugin-sample__custom-tab">${this.data.text}</div>`
+            }
+        })
     }
 
     onunload() {
@@ -84,6 +94,21 @@ export default class PluginSample extends Plugin {
                     title: "Info",
                     content: '<div class="b3-dialog__content">This is a dialog</div>',
                     width: isMobile() ? "92vw" : "520px",
+                });
+            }
+        });
+        menu.addItem({
+            label: "open Tab",
+            click: () => {
+                openTab({
+                    custom: {
+                        icon: "iconEmoji",
+                        title: "Custom Tab",
+                        data: {
+                            text: "This is my custom tab",
+                        },
+                        fn: this.customTab
+                    },
                 });
             }
         });
