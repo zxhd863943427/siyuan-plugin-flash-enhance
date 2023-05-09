@@ -19,6 +19,8 @@ export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
 
 export function fetchGet(url: string, cb: (response: IWebSocketData) => void): void;
 
+export function isMobile(): boolean;
+
 export function confirm(title: string, text: string, confirmCB?: () => void, cancelCB?: () => void): void;
 
 /**
@@ -128,7 +130,7 @@ export class Menu {
     /*
      * @param {string} [position=all]
      */
-    fullscreen(position: "bottom" | "all"): void;
+    fullscreen(position?: "bottom" | "all"): void;
 
     close(): void;
 }

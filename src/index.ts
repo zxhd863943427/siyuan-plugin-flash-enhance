@@ -1,4 +1,4 @@
-import {Plugin, showMessage, confirm, Dialog, Menu} from "siyuan";
+import {Plugin, showMessage, confirm, Dialog, Menu, isMobile} from "siyuan";
 import "./index.scss";
 
 export default class PluginSample extends Plugin {
@@ -23,13 +23,13 @@ export default class PluginSample extends Plugin {
 
     openSetting() {
         const dialog = new Dialog({
-            title:this.name,
+            title: this.name,
             content: `<div class="b3-dialog__content"><textarea class="b3-text-field fn__block" placeholder="readonly text in the menu"></textarea></div>
 <div class="b3-dialog__action">
     <button class="b3-button b3-button--cancel">${this.i18n.cancel}</button><div class="fn__space"></div>
     <button class="b3-button b3-button--text">${this.i18n.save}</button>
 </div>`,
-            width: "520px",
+            width: isMobile() ? "92vw" : "520px",
         });
         const inputElement = dialog.element.querySelector("textarea");
         const btnsElement = dialog.element.querySelectorAll(".b3-button");
@@ -77,7 +77,7 @@ export default class PluginSample extends Plugin {
                     new Dialog({
                         title: "Info",
                         content: '<div class="b3-dialog__content">This is a dialog</div>',
-                        width: "360px",
+                        width: isMobile() ? "92vw" : "520px",
                     });
                 }
             });
@@ -92,11 +92,15 @@ export default class PluginSample extends Plugin {
                 label: config || "readonly",
                 type: "readonly",
             });
-            menu.open({
-                x: rect.right,
-                y: rect.bottom,
-                isLeft: true,
-            });
+            if (isMobile()) {
+                menu.fullscreen()
+            } else {
+                menu.open({
+                    x: rect.right,
+                    y: rect.bottom,
+                    isLeft: true,
+                });
+            }
         })
     }
 }
