@@ -13,6 +13,14 @@ interface IWebSocketData {
     sid: string
 }
 
+declare interface IPluginDockTab {
+    position: "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight",
+    size: { width: number, height: number },
+    icon: string,
+    hotkey?: string,
+    title: string,
+}
+
 interface IMenuItemOption {
     label?: string,
     click?: (element: HTMLElement) => void,
@@ -48,6 +56,8 @@ export function openTab(options: {
 }): void
 
 export function isMobile(): boolean;
+
+export function adaptHotkey(hotkey: string): string;
 
 export function confirm(title: string, text: string, confirmCB?: () => void, cancelCB?: () => void): void;
 
@@ -98,13 +108,23 @@ export abstract class Plugin {
 
     saveData(storageName: string, content: any): Promise<void>;
 
-    createTab(options: {
+    addTab(options: {
         type: string,
         destroy?: () => void,
         resize?: () => void,
         update?: () => void,
         init: () => void
     }): () => any
+
+    addDock(options: {
+        config: IPluginDockTab,
+        data: any,
+        type: string,
+        destroy?: () => void,
+        resize?: () => void,
+        update?: () => void,
+        init: () => void
+    }): any
 }
 
 export class EventBus {
