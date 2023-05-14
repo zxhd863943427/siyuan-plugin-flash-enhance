@@ -13,7 +13,7 @@ export default class PluginSample extends Plugin {
         console.log(this.i18n.helloPlugin);
 
         const topBarElement = this.addTopBar({
-            icon: "iconList",
+            icon: "iconEmoji",
             title: this.i18n.addTopBarIcon,
             position: "right",
             callback: () => {
