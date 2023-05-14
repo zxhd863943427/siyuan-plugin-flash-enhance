@@ -101,7 +101,7 @@ export default class PluginSample extends Plugin {
         });
         menu.addItem({
             icon: "iconHelp",
-            label: "confirm",
+            label: "Confirm",
             click() {
                 confirm("Confirm", "Is this a confirm?", () => {
                     showMessage("confirm");
@@ -112,7 +112,7 @@ export default class PluginSample extends Plugin {
         });
         menu.addItem({
             icon: "iconFeedback",
-            label: "showMessage",
+            label: "Message",
             click: () => {
                 showMessage(this.i18n.helloPlugin);
             }
@@ -130,7 +130,7 @@ export default class PluginSample extends Plugin {
         });
         menu.addItem({
             icon: "iconLayoutBottom",
-            label: "open Tab",
+            label: "Open Tab",
             click: () => {
                 openTab({
                     custom: {
@@ -146,14 +146,14 @@ export default class PluginSample extends Plugin {
         });
         menu.addItem({
             icon: "iconSelect",
-            label: "on ws-main",
+            label: "On ws-main",
             click: () => {
                 this.eventBus.on("ws-main", this.wsEvent);
             }
         });
         menu.addItem({
             icon: "iconClose",
-            label: "off ws-main",
+            label: "Off ws-main",
             click: () => {
                 this.eventBus.off("ws-main", this.wsEvent);
             }
@@ -161,7 +161,7 @@ export default class PluginSample extends Plugin {
         menu.addSeparator();
         menu.addItem({
             icon: "iconSparkles",
-            label: this.data[STORAGE_NAME] || "readonly",
+            label: this.data[STORAGE_NAME] || "Readonly",
             type: "readonly",
         });
         if (isMobile()) {
