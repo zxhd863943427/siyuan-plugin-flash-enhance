@@ -2,7 +2,7 @@
   "name": "plugin-sample",
   "author": "Vanessa",
   "url": "https://github.com/siyuan-note/plugin-sample",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "displayName": {
     "default": "Plugin Sample",
     "zh_CN": "插件示例"
