@@ -5,7 +5,7 @@
 ## Get started
 
 * Make a copy of this repo as a template with the <kbd>Use this template</kbd> button, please note that the repo name
-  must be the same as the plugin name
+  must be the same as the plugin name, the default branch must be `main`
 * Clone your repo to a local development folder. For convenience, you can place this folder in
   your `{workspace}/data/plugins/` folder
 * Install [NodeJS](https://nodejs.org/en/download) and [pnpm](https://pnpm.io/installation), then run `pnpm i` in the
