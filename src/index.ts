@@ -145,6 +145,13 @@ export default class PluginSample extends Plugin {
             }
         });
         menu.addItem({
+            icon: "iconTrashcan",
+            label: "Remove Data",
+            click: () => {
+                this.removeData(STORAGE_NAME);
+            }
+        });
+        menu.addItem({
             icon: "iconSelect",
             label: "On ws-main",
             click: () => {

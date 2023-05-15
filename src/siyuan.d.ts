@@ -108,6 +108,8 @@ export abstract class Plugin {
 
     saveData(storageName: string, content: any): Promise<void>;
 
+    removeData(storageName: string): Promise<any>;
+
     addTab(options: {
         type: string,
         destroy?: () => void,
