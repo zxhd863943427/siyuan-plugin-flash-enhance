@@ -10,7 +10,7 @@ export default class PluginSample extends Plugin {
     private customTab: () => any;
 
     onload() {
-        console.log(this.i18n.helloPlugin);
+        this.data[STORAGE_NAME] = {readonlyText: "Readonly"};
 
         const topBarElement = this.addTopBar({
             icon: "iconEmoji",
@@ -62,6 +62,7 @@ export default class PluginSample extends Plugin {
             }
         });
 
+        console.log(this.i18n.helloPlugin);
     }
 
     onunload() {
@@ -79,6 +80,7 @@ export default class PluginSample extends Plugin {
             width: isMobile() ? "92vw" : "520px",
         });
         const inputElement = dialog.element.querySelector("textarea");
+        inputElement.value = this.data[STORAGE_NAME].readonlyText;
         const btnsElement = dialog.element.querySelectorAll(".b3-button");
         dialog.bindInput(inputElement, () => {
             (btnsElement[1] as HTMLButtonElement).click();
@@ -88,7 +90,7 @@ export default class PluginSample extends Plugin {
             dialog.destroy();
         });
         btnsElement[1].addEventListener("click", () => {
-            this.saveData(STORAGE_NAME, inputElement.value);
+            this.saveData(STORAGE_NAME, {readonlyText: inputElement.value});
             dialog.destroy();
         });
     }
@@ -98,10 +100,6 @@ export default class PluginSample extends Plugin {
     }
 
     private async addMenu(rect: DOMRect) {
-        if (!this.data) {
-            await this.loadData(STORAGE_NAME);
-        }
-
         const menu = new Menu("topBarSample", () => {
             console.log(this.i18n.byeMenu);
         });
@@ -154,7 +152,9 @@ export default class PluginSample extends Plugin {
             icon: "iconTrashcan",
             label: "Remove Data",
             click: () => {
-                this.removeData(STORAGE_NAME);
+                this.removeData(STORAGE_NAME).then(() => {
+                    this.data[STORAGE_NAME] = {readonlyText: "Readonly"};
+                });
             }
         });
         menu.addItem({
@@ -174,7 +174,7 @@ export default class PluginSample extends Plugin {
         menu.addSeparator();
         menu.addItem({
             icon: "iconSparkles",
-            label: this.data[STORAGE_NAME] || "Readonly",
+            label: this.data[STORAGE_NAME].readonlyText || "Readonly",
             type: "readonly",
         });
         if (isMobile()) {
