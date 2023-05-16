@@ -25,6 +25,9 @@ export default class PluginSample extends Plugin {
             type: TAB_TYPE,
             init() {
                 this.element.innerHTML = `<div class="plugin-sample__custom-tab">${this.data.text}</div>`;
+            },
+            destroy() {
+                console.log("destroy tab:", TAB_TYPE);
             }
         });
 
@@ -53,6 +56,9 @@ export default class PluginSample extends Plugin {
         ${this.data.text}
     </div>
 </div>`;
+            },
+            destroy() {
+                console.log("destroy dock:", DOCK_TYPE);
             }
         });
 
