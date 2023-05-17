@@ -88,6 +88,8 @@ export abstract class Plugin {
 
     onunload(): void;
 
+    onLayoutReady(): void;
+
     /*
      * @param {string} [options.position=right]
      */
