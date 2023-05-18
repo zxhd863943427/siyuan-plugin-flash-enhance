@@ -26,5 +26,9 @@
     "webpack": "^5.76.0",
     "webpack-cli": "^5.0.2",
     "zip-webpack-plugin": "^4.0.1"
+  },
+  "dependencies": {
+    "eslint": "^8.40.0",
+    "webpack-sources": "^3.2.3"
   }
 }
