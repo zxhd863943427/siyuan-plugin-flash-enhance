@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "eslint": "^8.40.0",
+    "vue": "^3.3.4",
     "webpack-sources": "^3.2.3"
   }
 }
