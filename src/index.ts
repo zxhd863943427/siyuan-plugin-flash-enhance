@@ -1,6 +1,7 @@
 import {Plugin, showMessage, confirm, Dialog, Menu, isMobile, openTab, adaptHotkey} from "siyuan";
 import "./index.scss";
 import { addMenu } from "./lib/menu";
+import { dyMakeCard } from "./api/dyCard";
 
 const STORAGE_NAME = "menu-config";
 const TAB_TYPE = "custom_tab";
@@ -9,7 +10,6 @@ const DOCK_TYPE = "dock_tab";
 export default class PluginSample extends Plugin {
 
     private customTab: () => any;
-    data:any;
     onload() {
         this.data = {}
         this.data[STORAGE_NAME] = {readonlyText: "Readonly"};
@@ -62,9 +62,7 @@ export default class PluginSample extends Plugin {
 
     private wsEvent({detail}: any) {
         if (detail.cmd === "transactions" ){
-            console.log("编辑操作")
-            console.log(detail)
+            dyMakeCard(detail,this)
         }
-        
     }
 }
