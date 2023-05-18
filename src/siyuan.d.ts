@@ -1,3 +1,4 @@
+declare module "siyuan"{
 type TEventBus = "ws-main"
 
 interface IObject {
@@ -13,7 +14,7 @@ interface IWebSocketData {
     sid: string
 }
 
-declare interface IPluginDockTab {
+interface IPluginDockTab {
     position: "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight",
     size: { width: number, height: number },
     icon: string,
@@ -178,4 +179,5 @@ export class Menu {
     fullscreen(position?: "bottom" | "all"): void;
 
     close(): void;
+}
 }
