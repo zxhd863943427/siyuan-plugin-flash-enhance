@@ -5,20 +5,14 @@ import { dyMakeCard } from "./api/dyCard";
 import { addCards } from "./utils/card";
 
 import { createApp,ref,watch } from 'vue'
-import App from './App.vue'
+import {settingList,getSetting} from "./utils/config"
 
-const STORAGE_NAME = "menu-config";
-const TAB_TYPE = "custom_tab";
-const DOCK_TYPE = "dock_tab";
 
 export default class PluginSample extends Plugin {
     private customTab: () => any;
     onload() {
         this.data = {}
-        let app = createApp(App)
-        console.log(app)
-        this.data[STORAGE_NAME] = {readonlyText: "Readonly"};
-
+        this.init()
         const topBarElement = this.addTopBar({
             icon: "iconEmoji",
             title: this.i18n.addTopBarIcon,
@@ -40,35 +34,20 @@ export default class PluginSample extends Plugin {
         console.log(this.i18n.byePlugin);
     }
 
-    openSetting() {
-        const dialog = new Dialog({
-            title: this.name,
-            content: `<div class="b3-dialog__content"><textarea class="b3-text-field fn__block" placeholder="readonly text in the menu"></textarea></div>
-<div class="b3-dialog__action">
-    <button class="b3-button b3-button--cancel">${this.i18n.cancel}</button><div class="fn__space"></div>
-    <button class="b3-button b3-button--text">${this.i18n.save}</button>
-</div>`,
-            width: isMobile() ? "92vw" : "520px",
-        });
-        const inputElement = dialog.element.querySelector("textarea");
-        inputElement.value = this.data[STORAGE_NAME].readonlyText;
-        const btnsElement = dialog.element.querySelectorAll(".b3-button");
-        dialog.bindInput(inputElement, () => {
-            (btnsElement[1] as HTMLButtonElement).click();
-        });
-        inputElement.focus();
-        btnsElement[0].addEventListener("click", () => {
-            dialog.destroy();
-        });
-        btnsElement[1].addEventListener("click", () => {
-            this.saveData(STORAGE_NAME, {readonlyText: inputElement.value});
-            dialog.destroy();
-        });
-    }
+
 
     private wsEvent({detail}: any) {
         if (detail.cmd === "transactions" ){
             dyMakeCard(detail,this)
         }
+    }
+    async updateConfig(){
+        this.saveData("enhanceConfig.json",JSON.stringify(settingList.getSetting()))
+    }
+    private async init(){
+        let localConfig = await this.loadData("enhanceConfig.json")
+        this.data["settingConfig"] = await getSetting(localConfig)
+        console.log(this.data)
+        this.updateConfig()
     }
 }

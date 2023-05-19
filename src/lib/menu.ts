@@ -3,20 +3,10 @@ import { createApp } from "vue";
 import * as App from "../App.vue";
 import {getSetting} from "../utils/config"
 
-const testConfig={"闪卡样式增强":true,
-"复习挖空增强":true,
-"类remnote复习界面":true,
-"层级闪卡":true,
-"内置卡包制卡":true,
-"数学块遮挡制卡":true,
-"沉浸式制卡":false}
-
 
 export async function addMenu(ev: MouseEvent,plugin:any) {
     const menuHtml = document.createElement('div')
-    let setting = await getSetting(null)
-    let tempApp = App
-    const app = createApp(App.default,setting)
+    const app = createApp(App.default,plugin.data["settingConfig"])
     app.mount(menuHtml)
     console.log(menuHtml)
     console.log(app)
