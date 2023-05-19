@@ -14,7 +14,7 @@ function fliterListCard(node) {
 function fliterMarkCard(node) {
     return {
         status: "ok",
-        data: node.parentElement.parentElement.getAttribute("data-node-id")
+        data: getBlock(node).getAttribute("data-node-id")
     }
 }
 
@@ -25,6 +25,13 @@ function fliterSuperBlockCard(node) {
     }
 }
 
+
+function getBlock(node){
+    if(node!=null && node.getAttribute("data-node-id") === null){
+        return getBlock(node.parentElement)
+    }
+    return node
+}
 
 
 // 添加多个卡片
@@ -66,7 +73,7 @@ export async function addCards(useBulitIn = true) {
     // 获取需要被制成卡片的块的ID
     const currentPage = getCurrentPage()
     //标记块
-    const markList = currentPage.querySelectorAll("span[data-type='mark']")
+    const markList = currentPage.querySelectorAll("span[data-type*='mark']")
     //超级块
     const superBlockList = currentPage.querySelectorAll("div[class='sb']")
     //列表块
