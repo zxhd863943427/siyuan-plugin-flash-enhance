@@ -6,10 +6,21 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ZipPlugin = require("zip-webpack-plugin");
 const { VueLoaderPlugin } = require('vue-loader')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = (env, argv) => {
     const isPro = argv.mode === "production";
     const plugins = [
+        new UglifyJsPlugin({
+            uglifyOptions:{
+                compress:{
+                    drop_console:true
+                }
+            },
+            sourceMap:true,
+            parallel:true    
+        
+        }),
         new MiniCssExtractPlugin({
             filename: isPro ? "dist/index.css" : "index.css",
         }),
