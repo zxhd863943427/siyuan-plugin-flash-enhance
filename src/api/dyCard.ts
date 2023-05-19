@@ -43,7 +43,7 @@ async function addCard(id: string){
         blockIDs: [id],
     };
     fetchPost("/api/riff/addRiffCards", body, (res)=>{
-        showMessage(`${res.data.name}卡包的总卡片数：${res.data.size}`);
+        // showMessage(`${res.data.name}卡包的总卡片数：${res.data.size}`);
     });
 }
 
@@ -53,6 +53,6 @@ async function removeCard(id: string){
         blockIDs: [id],
     };
     fetchPost("/api/riff/removeRiffCards", body, (res)=>{
-        showMessage(`${res.data.name}卡包的剩余卡片数：${res.data.size}`);
+        // showMessage(`${res.data.name}卡包的剩余卡片数：${res.data.size}`);
     });
 }
