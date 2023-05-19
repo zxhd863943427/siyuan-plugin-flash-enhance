@@ -28,8 +28,10 @@
     "zip-webpack-plugin": "^4.0.1"
   },
   "dependencies": {
+    "@vue/compiler-sfc": "^3.3.4",
     "eslint": "^8.40.0",
     "vue": "^3.3.4",
+    "vue-loader": "^17.0.1",
     "webpack-sources": "^3.2.3"
   }
 }
