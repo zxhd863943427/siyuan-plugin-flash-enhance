@@ -180,7 +180,7 @@
 </template>
 
 <script lang="ts" setup>
-import { valid, satisfies } from "semver"
+// import { valid, satisfies } from "semver"
 
 
 function enableNewVersion(version: string, needVersion: string) {
@@ -200,7 +200,8 @@ const props = defineProps({
     }>,
     dangerousFeature: Array<{ content: string, func: () => void }>
 })
-const needV2 = "< 2.8.1"
-const enableNew = enableNewVersion(eval("globalThis.siyuan.config.system.kernelVersion"), needV2)
-console.log("闪卡插件新版本要求拒绝:", needV2, ", 启用新版本：", enableNew)
+// const needV2 = "< 2.8.1"
+// const enableNew = enableNewVersion(eval("globalThis.siyuan.config.system.kernelVersion"), needV2)
+// console.log("闪卡插件新版本要求拒绝:", needV2, ", 启用新版本：", enableNew)
+const enableNew=true
 </script>
