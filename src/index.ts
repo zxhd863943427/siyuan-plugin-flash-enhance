@@ -12,6 +12,7 @@ import {settingList,getSetting} from "./utils/config"
 export default class PluginSample extends Plugin {
     private customTab: () => any;
     sheet:HTMLElement;
+    topBarElement:HTMLElement;
     onload() {
         this.data = {}
         this.init()
@@ -20,6 +21,8 @@ export default class PluginSample extends Plugin {
     }
 
     onunload() {
+        this.sheet.remove()
+        this.topBarElement.remove()
         console.log(this.i18n.byePlugin);
     }
 
@@ -39,7 +42,7 @@ export default class PluginSample extends Plugin {
         console.log(this.data)
         this.updateConfig()
         //添加一键制卡
-        const topBarElement = this.addTopBar({
+        this.topBarElement = this.addTopBar({
             icon: "iconEmoji",
             title: this.i18n.addTopBarIcon,
             position: "left",
@@ -50,7 +53,7 @@ export default class PluginSample extends Plugin {
         let that = this
         this.sheet = document.createElement('div')
         //添加右键菜单
-        topBarElement.addEventListener("contextmenu",(ev:MouseEvent)=>{
+        this.topBarElement.addEventListener("contextmenu",(ev:MouseEvent)=>{
             addMenu(ev,that)
         })
         addSheet(that)
