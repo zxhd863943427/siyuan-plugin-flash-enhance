@@ -8,13 +8,17 @@ const builtInDeck = '20230218211946-2kw8jgx'
 export function dyMakeCard(detail: any, plugin: any) {
     console.log("编辑操作")
     console.log(detail)
+    //判断是否打开功能
+    let open = settingList.getSetting()["沉浸式制卡"]
+    if (!open){
+        return;
+    }
     foreach(detail.data, (data: any) => {
         // console.log("是否为撤回操作:",isUndo(data))
         foreach(data.doOperations, (item: any) => {
             let type = item.action
             let marked = isDoMark(item)
             let carded = isCarded(item)
-            let open = settingList.getSetting()["沉浸式制卡"]
             let needMakeCard = ((type === "insert" || type === "update") && marked && !carded)
             let needDelCard = ((type === "update" && !marked && carded) || (type === "delete"))
             console.log(item.id, "操作类型:", item.action,
