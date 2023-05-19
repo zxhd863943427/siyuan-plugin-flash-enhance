@@ -17,7 +17,6 @@ export default class PluginSample extends Plugin {
         this.init()
         this.eventBus.on("ws-main", this.wsEvent)
         console.log(this.i18n.helloPlugin);
-        watch(settingList.setList,()=>{this.updateConfig()})
     }
 
     onunload() {
@@ -55,5 +54,6 @@ export default class PluginSample extends Plugin {
             addMenu(ev,that)
         })
         addSheet(that)
+        watch(settingList.setList,()=>{this.updateConfig()})
     }
 }
