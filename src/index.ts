@@ -2,16 +2,21 @@ import {Plugin, showMessage, confirm, Dialog, Menu, isMobile, openTab, adaptHotk
 import "./index.scss";
 import { addMenu } from "./lib/menu";
 import { dyMakeCard } from "./api/dyCard";
+import { addCards } from "./utils/card";
+
+import { createApp,ref,watch } from 'vue'
+import App from './App.vue'
 
 const STORAGE_NAME = "menu-config";
 const TAB_TYPE = "custom_tab";
 const DOCK_TYPE = "dock_tab";
 
 export default class PluginSample extends Plugin {
-
     private customTab: () => any;
     onload() {
         this.data = {}
+        let app = createApp(App)
+        console.log(app)
         this.data[STORAGE_NAME] = {readonlyText: "Readonly"};
 
         const topBarElement = this.addTopBar({
@@ -20,6 +25,7 @@ export default class PluginSample extends Plugin {
             position: "left",
             callback: () => {
                 console.log("一键制卡")
+                addCards(true)
             }
         });
         let that = this
