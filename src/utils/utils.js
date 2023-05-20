@@ -1,3 +1,5 @@
+import { isMobile } from 'siyuan';
+
 // 请求函数
 export function request(url, data = null, method = "POST") {
     return new Promise((resolve, reject) => {
@@ -27,6 +29,8 @@ export async function showMessage(msg) {
 
 // 获取当前文档id
 export function getFileID() {
+    if (isMobile())
+        return document.querySelector('#editor .protyle-content .protyle-background')?.getAttribute("data-node-id");
     //获取当前页面
     const currentPage = getCurrentPage();
     //获取当前页面id
