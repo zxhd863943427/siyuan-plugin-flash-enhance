@@ -1,15 +1,15 @@
 {
-  "name": "plugin-sample",
-  "author": "Vanessa",
-  "url": "https://github.com/siyuan-note/plugin-sample",
-  "version": "0.0.4",
+  "name": "siyuan-plugin-flash-enhance",
+  "author": "zxhd863943427",
+  "url": "https://github.com/zxhd863943427/siyuan-plugin-flash-enhance",
+  "version": "0.0.1",
   "displayName": {
-    "default": "Plugin Sample",
-    "zh_CN": "插件示例"
+    "default": "flash-enhance",
+    "zh_CN": "闪卡增强"
   },
   "description": {
-    "default": "This is a plugin sample",
-    "zh_CN": "这是一个插件示例"
+    "default": "This plugin can make the card-making experience in Siyuan as smooth as clouds and flowing water.",
+    "zh_CN": "使思源制卡的体验行云流水般流畅"
   },
   "readme": {
     "default": "README.md",

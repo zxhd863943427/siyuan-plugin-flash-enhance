@@ -1,125 +1,63 @@
-[English](https://github.com/siyuan-note/plugin-sample/blob/main/README.md)
+一个增强思源闪卡体验的插件
 
-# 思源笔记插件示例
+### 主要功能
 
-## 开始
+左键一键制卡，右键打卡菜单
 
-* 通过 <kbd>Use this template</kbd> 按钮将该库文件复制到你自己的库中，请注意库名必须和插件名称一致，默认分支必须为 `main`
-* 将你的库克隆到本地开发文件夹中，为了方便可以直接将开发文件夹放置在 `{工作空间}/data/plugins/` 下
-* 安装 [NodeJS](https://nodejs.org/en/download) 和 [pnpm](https://pnpm.io/installation)，然后在开发文件夹下执行 `pnpm i`
-* 执行 `pnpm run dev` 进行实时编译
-* 在思源中打开集市并在下载选项卡中启用插件
+#### 一键制卡
+![Alt text](img/%E4%B8%80%E9%94%AE%E5%88%B6%E5%8D%A1.gif)
 
-## 开发
+一键制卡类型：
 
-* plugin.json
-* icon.png (160*160)
-* preview.png (1024*768)
-* src/*
-* README*.md
-* [前端 API](https://github.com/siyuan-note/petal)
-* [后端 API](https://github.com/siyuan-note/siyuan/blob/master/API_zh_CN.md)
+**标记块**
 
-## 国际化
+**列表块**
 
-国际化方面我们主要考虑的是支持多语言，具体需要完成以下工作：
+末尾添加标记即可制卡
 
-* 插件自身的元信息，比如插件描述和自述文件
-    * plugin.json 中的 `description` 和 `readme` 字段，以及对应的 README*.md 文件
-* 插件中使用的文本，比如按钮文字和提示信息
-    * src/i18n/*.json 语言配置文件
-    * 代码中使用 `this.i18.key` 获取文本
-* 最后在 plugin.json 中的 `i18n` 字段中声明该插件支持的语言
+支持标记：？、?、》》、>>、||
 
-建议插件至少支持英文和简体中文，这样可以方便更多人使用。
+**超级块**
 
-## plugin.json
+垂直超级块、水平超级块
 
-```json
-{
-  "name": "plugin-sample",
-  "author": "Vanessa",
-  "url": "https://github.com/siyuan-note/plugin-sample",
-  "version": "0.0.1",
-  "displayName": {
-    "default": "Plugin Sample",
-    "zh_CN": "插件示例"
-  },
-  "description": {
-    "default": "This is a plugin sample",
-    "zh_CN": "这是一个插件示例"
-  },
-  "readme": {
-    "default": "README.md",
-    "zh_CN": "README_zh_CN.md"
-  },
-  "i18n": [
-    "en_US",
-    "zh_CN"
-  ],
-  "funding": {
-    "openCollective": "b3log",
-    "patreon": "",
-    "github": "",
-    "custom": [
-      "https://ld246.com/sponsor"
-    ]
-  }
-}
-```
 
-* `name`：插件名称，必须和库名一致，且全局唯一（集市中不能有重名插件）
-* `author`：插件作者名
-* `url`：插件仓库地址
-* `version`：插件版本号，建议遵循 [semver](https://semver.org/lang/zh-CN/) 规范
-* `displayName`：模板显示名称，主要用于模板集市列表中显示，支持多语言
-    * `default`：默认语言，必须存在
-    * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
-* `description`：插件描述，主要用于插件集市列表中显示，支持多语言
-    * `default`：默认语言，必须存在
-    * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
-* `readme`：自述文件名，主要用于插件集市详情页中显示，支持多语言
-    * `default`：默认语言，必须存在
-    * `zh_CN`、`en_US` 等其他语言：可选，建议至少提供中文和英文
-* `i18n`：插件支持的语言列表
-* `funding`：插件赞助信息
-    * `openCollective`：Open Collective 名称
-    * `patreon`：Patreon 名称
-    * `github`：GitHub 登录名
-    * `custom`：自定义赞助链接列表
+### 右键菜单内容
 
-## 打包
+#### 清除当前页面闪卡
+![Alt text](img/%E4%B8%80%E9%94%AE%E6%B8%85%E9%99%A4.gif)
 
-无论使用何种方式编译打包，我们最终需要生成一个 package.zip，它至少包含如下文件：
+#### 闪卡样式加强
+![Alt text](img/%E9%97%AA%E5%8D%A1%E6%A0%B7%E5%BC%8F%E5%A2%9E%E5%BC%BA.gif)
 
-* icon.png
-* index.js
-* plugin.json
-* preview.png
-* README*.md
-* index.css (optional)
-* i18n/* (optional)
+#### 挖空增强
+![Alt text](img/%E6%8C%96%E7%A9%BA%E5%A2%9E%E5%BC%BA.gif)
 
-## 上架集市
+#### 类remnote界面
+![Alt text](img/%E7%B1%BBremnote%E7%95%8C%E9%9D%A2.gif)
 
-* 执行 `pnpm run build` 生成 package.zip
-* 在 GitHub 上创建一个新的发布，使用插件版本号作为 “Tag
-  version”，示例 https://github.com/siyuan-note/plugin-sample/releases
-* 上传 package.zip 作为二进制附件
-* 提交发布
+#### 层级闪卡
+![Alt text](img/%E5%B1%82%E7%BA%A7%E9%97%AA%E5%8D%A1.gif)
 
-如果是第一次发布版本，还需要创建一个 PR 到 [Community Bazaar](https://github.com/siyuan-note/bazaar) 社区集市仓库，修改该库的
-plugins.json。该文件是所有社区插件库的索引，格式为：
+#### 自定义卡包制卡
+![Alt text](img/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8D%A1%E5%8C%85%E5%88%B6%E5%8D%A1.gif)
 
-```json
-{
-  "repos": [
-    "username/reponame"
-  ]
-}
-```
+#### 数学块制卡
+![Alt text](img/%E6%95%B0%E5%AD%A6%E5%9D%97%E5%88%B6%E5%8D%A1.gif)
 
-PR 被合并以后集市会通过 GitHub Actions 自动更新索引并部署。后续发布新版本插件时只需要按照上述步骤创建新的发布即可，不需要再
-PR 社区集市仓库。
+#### 沉浸式制卡（不稳定）
+![Alt text](img/%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%88%B6%E5%8D%A1.gif)
 
-正常情况下，社区集市仓库每隔 1 小时会自动更新索引并部署，可在 https://github.com/siyuan-note/bazaar/actions 查看部署状态。
+### 缺陷
+* [x] 配置不能保存
+* [x] 沉浸式制卡不够稳定, 移除卡片有概率无法移除样式（但是卡片确实已经从卡包移除）（已改进了部分）
+* [x] 无法一键制卡多种样式的标记
+
+### 感谢名单
+[zuoez02](https://github.com/zuoez02) 大佬创建的 [社区插件系统](https://github.com/zuoez02/siyuan-plugin-system)
+
+[svchord](https://github.com/svchord) 大佬 [日历插件项目](https://github.com/svchord/siyuan-arco-calendar) 的参考
+
+社区 [BryceAndJuly](https://ld246.com/member/BryceAndJuly) 大佬实现的原型 [【分享】使用当前文档的二级标题快速制作闪卡](https://ld246.com/article/1674135504898)
+
+社区 [RenaEmiya - 链滴](https://ld246.com/member/RenaEmiya) 大佬提供了[复习时隐藏最后一个块标](https://ld246.com/article/1680862515960/comment/1680866557430#comments)
