@@ -1,5 +1,6 @@
 import { fetchSyncPost } from "siyuan"
 import { getFileID, getHpath, getCurrentPage } from "../utils/utils"
+import { saveViaTransaction } from"../lib/utils"
 
 const luteEngine = globalThis.Lute.New()
 const builtInDeck = '20230218211946-2kw8jgx'
@@ -55,6 +56,7 @@ function getMultSelectionContent(root:HTMLElement,mode:string){
     .filter(chapter => chapter.classList.contains("protyle-wysiwyg--select"))
     const AllSelection = document.createElement("div")
     for (let se of select) {
+        updateBlockStyle(se)
         let item = se.cloneNode(true)
         AllSelection.appendChild(item)
     }
@@ -74,7 +76,10 @@ function getMonSelectionContent(mode:string){
     let md;
     let content;
 
-    let selected = getSelection().getRangeAt(0).cloneContents()
+    
+    let range = getSelection().getRangeAt(0)
+    let selected = range.cloneContents()
+    updateContentStyle(range)
     let element = document.createElement("div")
 
     element.appendChild(selected)
@@ -128,6 +133,32 @@ async function updateSubFile(id:string, content:string){
         return ""
     }
     return data.data
+}
+
+function updateBlockStyle(el:HTMLElement){
+    let ID = el.getAttribute("data-node-id")
+    fetchSyncPost("/api/attr/setBlockAttrs",{
+        "id": ID,
+        "attrs": {
+          "style": "background-color: var(--b3-font-background1);"
+        }
+      })
+}
+
+function updateContentStyle(range:Range){
+    let selection = getSelection()
+    let strongNode = document.createElement('span')
+    strongNode.append(range.cloneContents())
+    strongNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+    range.deleteContents()
+    range.insertNode(strongNode)
+    range.setStartAfter(strongNode)
+    range.collapse(true) //取消文本选择状态
+    selection.removeAllRanges()
+    selection.addRange(range)
+    //关闭toolbar
+    document.querySelector("#layouts  div.fn__flex-1.protyle > div.protyle-toolbar").classList.add('fn__none') 
+    saveViaTransaction()
 }
 
 async function addCard(id: string){
