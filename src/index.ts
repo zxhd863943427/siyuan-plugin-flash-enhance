@@ -3,6 +3,7 @@ import "./index.scss";
 import { addMenu } from "./lib/menu";
 import { addSheet } from "./lib/sheet";
 import { dyMakeCard } from "./api/dyCard";
+import { IRswitch } from "./api/IR";
 import { addCards } from "./utils/card";
 
 import { createApp,ref,watch } from 'vue'
@@ -63,5 +64,6 @@ export default class PluginSample extends Plugin {
         })
         addSheet(that)
         watch(settingList.setList,()=>{this.updateConfig()})
+        IRswitch()
     }
 }
