@@ -43,6 +43,9 @@ export function getFileID() {
 
 export function getCurrentPage() {
 
+    if (isMobile()){
+        return document.querySelector('#editor .protyle-content')
+    }
     try {
         //获取当前屏幕
         let currentScreen = document.querySelector(".layout__wnd--active");
