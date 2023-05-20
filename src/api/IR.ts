@@ -8,6 +8,13 @@ const luteEngine = globalThis.Lute.New()
 const builtInDeck = '20230218211946-2kw8jgx'
 
 export function IRswitch() {
+    let enable = settingList.getSetting()["渐进式阅读"]
+    if (enable) {
+        HotKeyHandler.Register(2, "Q", 摘录)
+        // HotKeyHandler.Register(2,"W",挖空)
+        // HotKeyHandler.Register(2,"E",问答)
+    }
+
     watch(settingList.setList,()=>{
         let enable = settingList.getSetting()["渐进式阅读"]
         if (enable) {
