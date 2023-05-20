@@ -3,6 +3,7 @@ import { getFileID, getHpath, getCurrentPage } from "../utils/utils"
 import { saveViaTransaction } from"../lib/utils"
 import { settingList } from "../utils/config"
 import { watch } from "vue"
+import { getBlock } from "../lib/utils"
 
 const luteEngine = globalThis.Lute.New()
 const builtInDeck = '20230218211946-2kw8jgx'
@@ -106,6 +107,7 @@ function getMonSelectionContent(mode:string){
     
     let range = getSelection().getRangeAt(0)
     let selected = range.cloneContents()
+    let source = getContentSource(range)
     updateContentStyle(range)
     let element = document.createElement("div")
 
@@ -119,6 +121,7 @@ function getMonSelectionContent(mode:string){
             break;
     }
     content = luteEngine.BlockDOM2Content(element.innerHTML)
+    md = md + `\n((${source} "来源"))`
     return [md,content];
 }
 
@@ -190,6 +193,10 @@ function updateContentStyle(range:Range){
 
 function getNewID(){
     return globalThis.Lute.NewNodeID()
+}
+
+function getContentSource(range:Range){
+    return getBlock(range.startContainer as HTMLElement).getAttribute("data-node-id")
 }
 
 async function addCard(id: string){

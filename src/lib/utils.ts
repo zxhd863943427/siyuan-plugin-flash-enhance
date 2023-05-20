@@ -15,3 +15,9 @@ export function saveViaTransaction() {
     protyle.dispatchEvent(e)
   }
   
+export function getBlock(node:HTMLElement):HTMLElement{
+    if(node!=null && ( !exist(node.getAttribute) || node.getAttribute("data-node-id") === null)){
+        return getBlock(node.parentElement)
+    }
+    return node
+}
