@@ -74,13 +74,16 @@ function getSelectionContent(mode:string){
 function getMultSelectionContent(root:HTMLElement,mode:string){
     let md;
     let content;
+    let source;
     const elemnet  = root.getElementsByTagName("div")
     const select = Array.from(elemnet)
     .filter(chapter => chapter.classList.contains("protyle-wysiwyg--select"))
     const AllSelection = document.createElement("div")
     for (let se of select) {
         updateBlockStyle(se)
-        let item = se.cloneNode(true)
+        let item = se.cloneNode(true) as HTMLElement
+        source = se.getAttribute("data-node-id")
+        item.setAttribute("data-node-id",getNewID())
         AllSelection.appendChild(item)
     }
     switch(mode){
@@ -92,6 +95,7 @@ function getMultSelectionContent(root:HTMLElement,mode:string){
             break;
     }
     content = luteEngine.BlockDOM2Content(AllSelection.innerHTML)
+    md = md + `\n((${source} "来源"))`
     return [md,content];
 }
 
@@ -182,6 +186,10 @@ function updateContentStyle(range:Range){
     //关闭toolbar
     document.querySelector("#layouts  div.fn__flex-1.protyle > div.protyle-toolbar").classList.add('fn__none') 
     saveViaTransaction()
+}
+
+function getNewID(){
+    return globalThis.Lute.NewNodeID()
 }
 
 async function addCard(id: string){
