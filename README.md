@@ -2,7 +2,18 @@ A plugin to enhance the SiYuan flashcard experience
 
 ### Main Features
 
-Left-click to create a card with one button, right-click to open the card menu.
+Left-click to generate card, right-click to open advanced options.
+
+* One-click card making
+* Clear current page flashcards
+* Enhanced flashcard styles
+* Enhanced cloze deletion
+* RemNote-like interface
+* Hierarchical flashcards
+* Customized card pack creation
+* Math block card creation
+* Immersive card creation
+* Incremental Reading
 
 #### One-click Card Making
 
@@ -53,6 +64,14 @@ Vertical Super Block, Horizontal Super Block
 #### Immersive Card Making (Unstable)
 
 ![Alt text](img/%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%88%B6%E5%8D%A1.gif)
+
+#### Incremental Reading
+
+Once opened, you can use the shortcut key Alt + Q to create flashcards by extracting information.
+
+![Alt text](img/%E6%B8%90%E8%BF%9B%E5%BC%8F%E9%98%85%E8%AF%BB.gif)
+
+
 
 ### Defects
 
