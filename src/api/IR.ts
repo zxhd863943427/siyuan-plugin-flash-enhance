@@ -12,7 +12,7 @@ export function IRswitch() {
     let enable = settingList.getSetting()["渐进式阅读"]
     if (enable) {
         HotKeyHandler.Register(2, "Q", 摘录)
-        // HotKeyHandler.Register(2,"W",挖空)
+        HotKeyHandler.Register(2,"W",挖空)
         // HotKeyHandler.Register(2,"E",问答)
     }
 
@@ -20,7 +20,7 @@ export function IRswitch() {
         let enable = settingList.getSetting()["渐进式阅读"]
         if (enable) {
             HotKeyHandler.Register(2, "Q", 摘录)
-            // HotKeyHandler.Register(2,"W",挖空)
+            HotKeyHandler.Register(2,"W",挖空)
             // HotKeyHandler.Register(2,"E",问答)
         }
     })
@@ -42,12 +42,20 @@ async function 摘录() {
     addCard(subFileID)
 }
 
-function 挖空() {
+async function 挖空() {
     let open = settingList.getSetting()["渐进式阅读"]
     if (!open){
         return;
     }
     console.log("挖空")
+    let selectionContent = 获取挖空内容("Md")
+    console.log(selectionContent)
+    if (selectionContent[0].length <= 1){
+        return
+    }
+    let subFileID = await createSubFile("挖空",selectionContent[2])
+    updateSubFile(subFileID,selectionContent[0])
+    addCard(selectionContent[3])
 }
 
 function 问答() {
@@ -213,6 +221,44 @@ async function getBlockInfo(id:string){
     let notebookId = queryData.data[0]["box"]
     let hpath = queryData.data[0]["hpath"]
     return [DocId,notebookId,hpath]
+}
+
+function 获取挖空内容(mode:string){
+    let md;
+    let content;
+    let range = getSelection().getRangeAt(0)
+    let block = getBlock(range.startContainer as HTMLElement)
+    设置挖空状态(range)
+    //设置块id
+    let cardID = getNewID()
+    let selected = block.cloneNode(true) as HTMLElement
+    selected.setAttribute("data-node-id",cardID)
+    console.log("start",selected)
+    let source = getContentSource(range)
+    updateContentStyle(range)
+    let element = document.createElement("div")
+
+    element.appendChild(selected)
+    switch(mode){
+        case "StdMd":
+            md = luteEngine.BlockDOM2StdMd(element.innerHTML)
+            break;
+        case "Md":
+            md = luteEngine.BlockDOM2Md(element.innerHTML)
+            break;
+    }
+    content = luteEngine.BlockDOM2Content(element.innerHTML)
+    md =  `((${source} "*"))` + md
+    return [md,content,source,cardID];
+}
+
+function 设置挖空状态(range:Range){
+    let selection = getSelection()
+    let strongNode = document.createElement('span')
+    strongNode.append(range.cloneContents())
+    strongNode.setAttribute('data-type', 'mark')
+    range.deleteContents()
+    range.insertNode(strongNode)
 }
 
 async function addCard(id: string){
