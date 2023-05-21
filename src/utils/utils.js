@@ -47,8 +47,10 @@ export function getCurrentPage() {
         return document.querySelector('#editor .protyle-content')
     }
     try {
-        //获取当前屏幕
-        let currentScreen = document.querySelector(".layout__wnd--active");
+        //判断是否打开dialog
+        let currentScreen = document.querySelector(".b3-dialog--open")
+        if (currentScreen === null)
+            currentScreen = document.querySelector(".layout__wnd--active"); //获取当前屏幕
         //获取当前页面
         let currentPage = currentScreen.querySelector(
             ".fn__flex-1.protyle:not(.fn__none)"
