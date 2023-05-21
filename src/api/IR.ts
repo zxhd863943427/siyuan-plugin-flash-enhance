@@ -4,24 +4,37 @@ import { saveViaTransaction } from"../lib/utils"
 import { settingList } from "../utils/config"
 import { watch } from "vue"
 import { getBlock } from "../lib/utils"
+import {Shortcuts} from 'shortcuts';
 
+const shortcuts = new Shortcuts ();
 const luteEngine = globalThis.Lute.New()
 const builtInDeck = '20230218211946-2kw8jgx'
 
 export function IRswitch() {
     let enable = settingList.getSetting()["渐进式阅读"]
     if (enable) {
-        HotKeyHandler.Register(2, "Q", 摘录)
-        HotKeyHandler.Register(2,"W",挖空)
-        // HotKeyHandler.Register(2,"E",问答)
+        shortcuts.add([ // Adding some shortcuts
+        {shortcut: 'ALT+Q', handler: event => {摘录();}},
+        {shortcut: 'ALT+W', handler: event => {挖空();}},
+        {shortcut: 'ALT+E', handler: event => {问答();}},
+    ]);
     }
 
     watch(settingList.setList,()=>{
         let enable = settingList.getSetting()["渐进式阅读"]
-        if (enable) {
-            HotKeyHandler.Register(2, "Q", 摘录)
-            HotKeyHandler.Register(2,"W",挖空)
-            // HotKeyHandler.Register(2,"E",问答)
+        if (!enable) {
+            shortcuts.remove([
+                { shortcut: 'ALT+E' },
+                { shortcut: 'ALT+W' },
+                { shortcut: 'ALT+E' }
+            ])
+        }
+        else{
+            shortcuts.add([ // Adding some shortcuts
+                {shortcut: 'ALT+Q', handler: event => {摘录();}},
+                {shortcut: 'ALT+W', handler: event => {挖空();}},
+                {shortcut: 'ALT+E', handler: event => {问答();}},
+    ])
         }
     })
 }
