@@ -9,7 +9,9 @@ export function exist(obj: any) {
 }
 
 export function saveViaTransaction() {
-    let protyle = document.querySelector('.fn__flex-1.protyle:not(.fn__none) .protyle-wysiwyg.protyle-wysiwyg--attr') //需要获取到当前正在编辑的 protyle
+    let protyle = document.querySelector(".card__block.fn__flex-1.protyle:not(.fn__none) .protyle-wysiwyg.protyle-wysiwyg--attr")
+    if (protyle === null)
+        protyle = document.querySelector('.fn__flex-1.protyle:not(.fn__none) .protyle-wysiwyg.protyle-wysiwyg--attr') //需要获取到当前正在编辑的 protyle
     let e = document.createEvent('HTMLEvents')
     e.initEvent('input', true, false)
     protyle.dispatchEvent(e)
