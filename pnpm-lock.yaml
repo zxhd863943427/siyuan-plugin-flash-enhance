@@ -11,6 +11,7 @@ specifiers:
   mini-css-extract-plugin: 2.3.0
   sass: ^1.62.1
   sass-loader: ^12.6.0
+  shortcuts: ^2.0.3
   siyuan: latest
   tslib: 2.4.0
   typescript: 4.7.4
@@ -25,6 +26,7 @@ specifiers:
 dependencies:
   '@vue/compiler-sfc': registry.npmmirror.com/@vue/compiler-sfc/3.3.4
   eslint: registry.npmmirror.com/eslint/8.40.0
+  shortcuts: registry.npmmirror.com/shortcuts/2.0.3
   vue: registry.npmmirror.com/vue/3.3.4
   vue-loader: registry.npmmirror.com/vue-loader/17.0.1_acvfnd3ayxxu4lxhdogtxu2txq
   webpack-sources: registry.npmmirror.com/webpack-sources/3.2.3
@@ -2931,6 +2933,12 @@ packages:
     name: shebang-regex
     version: 3.0.0
     engines: {node: '>=8'}
+
+  registry.npmmirror.com/shortcuts/2.0.3:
+    resolution: {integrity: sha512-8Cjrzz15LBDmknBokvY8aWoyjc4U2CdbmhU4Jg5axi8jpD0wlFUjqKMAdMU0DkOpVp64vn3ISxngAg3WmpUa5g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/shortcuts/-/shortcuts-2.0.3.tgz}
+    name: shortcuts
+    version: 2.0.3
+    dev: false
 
   registry.npmmirror.com/siyuan/0.7.1:
     resolution: {integrity: sha512-Q7OZqpJ8h+axLDkn6afoAdKD6mHPAona/jsoUpf8UgFqHuOscNS6ub8RudhTCPKppDnQzBy5o35xhlecxnrbjQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/siyuan/-/siyuan-0.7.1.tgz}
