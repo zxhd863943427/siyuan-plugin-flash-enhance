@@ -174,6 +174,7 @@ function updateBlockStyle(el:HTMLElement){
           "style": "background-color: var(--b3-font-background1);"
         }
       })
+      el.classList.remove("protyle-wysiwyg--select")
 }
 
 function updateContentStyle(range:Range){
