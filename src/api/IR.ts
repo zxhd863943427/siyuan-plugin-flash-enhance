@@ -37,7 +37,7 @@ async function 摘录() {
     if (selectionContent[0].length <= 1){
         return
     }
-    let subFileID = await createSubFile(selectionContent[1])
+    let subFileID = await createSubFile(selectionContent[1],selectionContent[2])
     updateSubFile(subFileID,selectionContent[0])
     addCard(subFileID)
 }
@@ -97,7 +97,7 @@ function getMultSelectionContent(root:HTMLElement,mode:string){
     }
     content = luteEngine.BlockDOM2Content(AllSelection.innerHTML)
     md = md + `\n((${source} "来源"))`
-    return [md,content];
+    return [md,content,source];
 }
 
 function getMonSelectionContent(mode:string){
@@ -122,25 +122,26 @@ function getMonSelectionContent(mode:string){
     }
     content = luteEngine.BlockDOM2Content(element.innerHTML)
     md = md + `\n((${source} "来源"))`
-    return [md,content];
+    return [md,content,source];
 }
 
-async function createSubFile(title:string){
-    let FileID = getFileID()
-    let Hpath = await getHpath()
-    console.log(FileID,Hpath)
-    let queryData = await fetchSyncPost("/api/query/sql", {
-        "stmt": `SELECT box FROM blocks WHERE id == \"${FileID}\"`
-    })
-    if (queryData.code != 0 ){
-        console.log("query fail！")
-        return
-    }
-    let NotebookId = queryData.data[0]["box"]
+async function createSubFile(title:string,id:string){
+    // let FileID = getFileID()
+    // let Hpath = await getHpath()
+    // console.log(FileID,Hpath)
+    // let queryData = await fetchSyncPost("/api/query/sql", {
+    //     "stmt": `SELECT box FROM blocks WHERE id == \"${FileID}\"`
+    // })
+    // if (queryData.code != 0 ){
+    //     console.log("query fail！")
+    //     return
+    // }
+    // let NotebookId = queryData.data[0]["box"]
+    let [FileID, NotebookId, Hpath] =  await getBlockInfo(id)
     console.log(NotebookId)
     let data = await fetchSyncPost("/api/filetree/createDocWithMd",{
         "notebook": NotebookId,
-        "path": Hpath+"/"+title.slice(0,50),
+        "path": Hpath+"/"+title.slice(0,15),
         "markdown": ""
     })
     if (data.code!=0){
@@ -197,6 +198,20 @@ function getNewID(){
 
 function getContentSource(range:Range){
     return getBlock(range.startContainer as HTMLElement).getAttribute("data-node-id")
+}
+
+async function getBlockInfo(id:string){
+    let queryData = await fetchSyncPost("/api/query/sql", {
+        "stmt": `SELECT root_id, box, hpath FROM blocks WHERE id == \"${id}\"`
+    })
+    if (queryData.code != 0 ){
+        console.log("query fail！")
+        return
+    }
+    let DocId = queryData.data[0]["root_id"]
+    let notebookId = queryData.data[0]["box"]
+    let hpath = queryData.data[0]["hpath"]
+    return [DocId,notebookId,hpath]
 }
 
 async function addCard(id: string){
