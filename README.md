@@ -67,7 +67,7 @@ Vertical Super Block, Horizontal Super Block
 
 #### Incremental Reading
 
-Once opened, you can use the shortcut key Alt + Q to create flashcards by extracting information.
+Once opened, you can use the shortcut key Alt + Q to create flashcards by extracting information, alt+W Generate a hollowed-out flash card
 
 ![Alt text](img/%E6%B8%90%E8%BF%9B%E5%BC%8F%E9%98%85%E8%AF%BB.gif)
 
