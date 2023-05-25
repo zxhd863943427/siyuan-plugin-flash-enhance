@@ -268,6 +268,8 @@ function 获取挖空内容(mode:string){
     let md;
     let content;
     let range = getSelection().getRangeAt(0)
+    let oldRange = range.cloneRange()
+    let oldContent = range.cloneContents()
     let block = getBlock(range.startContainer as HTMLElement)
     设置挖空状态(range.cloneRange())
     //设置块id
@@ -276,7 +278,9 @@ function 获取挖空内容(mode:string){
     selected.setAttribute("data-node-id",cardID)
     console.log("start",selected)
     let source = getContentSource(range)
-    updateContentStyle(range)
+
+    恢复挖空前状态(range.cloneRange(),oldContent)
+    updateContentStyle(oldRange)
     let element = document.createElement("div")
 
     element.appendChild(selected)
@@ -291,6 +295,16 @@ function 获取挖空内容(mode:string){
     content = luteEngine.BlockDOM2Content(element.innerHTML)
     md =  `((${source} "*"))` + md
     return [md,content,source,cardID];
+}
+
+function 恢复挖空前状态(range:Range, content:any){
+    range.deleteContents()
+    let cloneContents = content.childNodes
+    foreach(cloneContents,(item:any)=>{
+        let addStyleNode = item.cloneNode(true)
+        range.insertNode(addStyleNode)
+        range.setStartAfter(addStyleNode)
+    })
 }
 
 function 设置挖空状态(range:Range){
