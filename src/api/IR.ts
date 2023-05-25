@@ -1,6 +1,6 @@
 import { fetchSyncPost } from "siyuan"
 import { getFileID, getHpath, getCurrentPage } from "../utils/utils"
-import { saveViaTransaction } from"../lib/utils"
+import { foreach, saveViaTransaction } from"../lib/utils"
 import { settingList } from "../utils/config"
 import { watch } from "vue"
 import { getBlock } from "../lib/utils"
@@ -201,15 +201,42 @@ function updateBlockStyle(el:HTMLElement){
 
 function updateContentStyle(range:Range){
     let selection = getSelection()
-    let strongNode = document.createElement('span')
-    strongNode.append(range.cloneContents())
-    strongNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+    // let strongNode = document.createElement('span')
+    // strongNode.append(range.cloneContents())
+    // strongNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+    // range.deleteContents()
+    // range.insertNode(strongNode)
+    // range.setStartAfter(strongNode)
+    // range.collapse(true) //取消文本选择状态
+    // selection.removeAllRanges()
+    // selection.addRange(range)
+    
+    let cloneContents = range.cloneContents().childNodes
     range.deleteContents()
-    range.insertNode(strongNode)
-    range.setStartAfter(strongNode)
+    //遍历节点，增加样式
+    foreach(cloneContents,(item:any)=>{
+        let addStyleNode
+        if (item instanceof Text){
+            if(item.textContent == ""){
+                return;
+            }
+            addStyleNode = document.createElement('span')
+            addStyleNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+            addStyleNode.append(item)
+            console.log(addStyleNode)
+        }
+        else{
+            addStyleNode = item.cloneNode(true)
+            addStyleNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+            console.log(addStyleNode)
+        }
+        range.insertNode(addStyleNode)
+        range.setStartAfter(addStyleNode)
+    })
     range.collapse(true) //取消文本选择状态
     selection.removeAllRanges()
     selection.addRange(range)
+    console.log(cloneContents)
     //关闭toolbar
     document.querySelector("#layouts  div.fn__flex-1.protyle > div.protyle-toolbar").classList.add('fn__none') 
     saveViaTransaction()
@@ -242,7 +269,7 @@ function 获取挖空内容(mode:string){
     let content;
     let range = getSelection().getRangeAt(0)
     let block = getBlock(range.startContainer as HTMLElement)
-    设置挖空状态(range)
+    设置挖空状态(range.cloneRange())
     //设置块id
     let cardID = getNewID()
     let selected = block.cloneNode(true) as HTMLElement
@@ -267,12 +294,34 @@ function 获取挖空内容(mode:string){
 }
 
 function 设置挖空状态(range:Range){
-    let selection = getSelection()
-    let strongNode = document.createElement('span')
-    strongNode.append(range.cloneContents())
-    strongNode.setAttribute('data-type', 'mark')
+    // let selection = getSelection()
+    // let strongNode = document.createElement('span')
+    // strongNode.append(range.cloneContents())
+    // strongNode.setAttribute('data-type', 'mark')
+    // range.deleteContents()
+    // range.insertNode(strongNode)
+    let cloneContents = range.cloneContents().childNodes
     range.deleteContents()
-    range.insertNode(strongNode)
+    //遍历节点，增加样式
+    foreach(cloneContents,(item:any)=>{
+        let addStyleNode
+        if (item instanceof Text){
+            if(item.textContent == ""){
+                return;
+            }
+            addStyleNode = document.createElement('span')
+            addStyleNode.setAttribute('data-type', 'mark')
+            addStyleNode.append(item)
+            console.log(addStyleNode)
+        }
+        else{
+            addStyleNode = item.cloneNode(true)
+            addStyleNode.setAttribute('data-type', 'mark '+addStyleNode.getAttribute("data-type"))
+            console.log(addStyleNode)
+        }
+        range.insertNode(addStyleNode)
+        range.setStartAfter(addStyleNode)
+    })
 }
 
 async function addCard(id: string){
