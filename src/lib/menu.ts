@@ -1,6 +1,7 @@
-import { showMessage, confirm, Menu, isMobile } from "siyuan";
+import { showMessage, confirm, Menu } from "siyuan";
 import { createApp } from "vue";
 import * as App from "../App.vue";
+import { isMobile } from "../api/utils";
 import {getSetting} from "../utils/config"
 
 
@@ -22,7 +23,7 @@ export async function addMenu(ev: MouseEvent,plugin:any) {
     let container = html.parentElement
     container.innerHTML = ""
     container.append(menuHtml)
-    if (isMobile()) {
+    if (isMobile) {
         menu.fullscreen();
     } else {
         menu.open({
