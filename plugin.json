@@ -2,7 +2,8 @@
   "name": "siyuan-plugin-flash-enhance",
   "author": "zxhd863943427",
   "url": "https://github.com/zxhd863943427/siyuan-plugin-flash-enhance",
-  "version": "0.0.4",
+  "version": "0.0.5",
+  "minAppVersion": "2.8.10",
   "displayName": {
     "default": "flash-enhance",
     "zh_CN": "闪卡增强"
