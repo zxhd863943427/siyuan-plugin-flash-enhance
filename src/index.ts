@@ -1,4 +1,4 @@
-import {Plugin, showMessage, confirm, Dialog, Menu, isMobile, openTab, adaptHotkey} from "siyuan";
+import {Plugin} from "siyuan";
 import "./index.scss";
 import { addMenu } from "./lib/menu";
 import { addSheet } from "./lib/sheet";
@@ -6,7 +6,7 @@ import { dyMakeCard } from "./api/dyCard";
 import { IRswitch } from "./api/IR";
 import { addCards } from "./utils/card";
 
-import { createApp,ref,watch } from 'vue'
+import { watch } from 'vue'
 import {settingList,getSetting} from "./utils/config"
 
 
