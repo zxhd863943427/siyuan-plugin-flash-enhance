@@ -67,8 +67,8 @@ async function 挖空() {
         return
     }
     let subFileID = await createSubFile("挖空",selectionContent[2])
-    updateSubFile(subFileID,selectionContent[0])
-    addCard(selectionContent[3])
+    await updateSubFile(subFileID,selectionContent[0])
+    await addCard(selectionContent[3])
 }
 
 function 问答() {
@@ -228,6 +228,7 @@ function updateContentStyle(range:Range){
         else{
             addStyleNode = item.cloneNode(true)
             addStyleNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+            addStyleNode.setAttribute('data-type',addStyleNode.getAttribute("data-type").replaceAll("mark","").trim())
             console.log(addStyleNode)
         }
         range.insertNode(addStyleNode)
@@ -268,10 +269,10 @@ function 获取挖空内容(mode:string){
     let md;
     let content;
     let range = getSelection().getRangeAt(0)
-    let oldRange = range.cloneRange()
-    let oldContent = range.cloneContents()
     let block = getBlock(range.startContainer as HTMLElement)
     设置挖空状态(range.cloneRange())
+    //重新获取range
+    range = getSelection().getRangeAt(0)
     //设置块id
     let cardID = getNewID()
     let selected = block.cloneNode(true) as HTMLElement
@@ -279,8 +280,8 @@ function 获取挖空内容(mode:string){
     console.log("start",selected)
     let source = getContentSource(range)
 
-    恢复挖空前状态(range.cloneRange(),oldContent)
-    updateContentStyle(oldRange)
+    // 恢复挖空前状态(range.cloneRange(),oldContent)
+    updateContentStyle(range)
     let element = document.createElement("div")
 
     element.appendChild(selected)
@@ -297,15 +298,15 @@ function 获取挖空内容(mode:string){
     return [md,content,source,cardID];
 }
 
-function 恢复挖空前状态(range:Range, content:any){
-    range.deleteContents()
-    let cloneContents = content.childNodes
-    foreach(cloneContents,(item:any)=>{
-        let addStyleNode = item.cloneNode(true)
-        range.insertNode(addStyleNode)
-        range.setStartAfter(addStyleNode)
-    })
-}
+// function 恢复挖空前状态(range:Range, content:any){
+//     range.deleteContents()
+//     let cloneContents = content.childNodes
+//     foreach(cloneContents,(item:any)=>{
+//         let addStyleNode = item.cloneNode(true)
+//         range.insertNode(addStyleNode)
+//         range.setStartAfter(addStyleNode)
+//     })
+// }
 
 function 设置挖空状态(range:Range){
     // let selection = getSelection()
@@ -316,6 +317,8 @@ function 设置挖空状态(range:Range){
     // range.insertNode(strongNode)
     let cloneContents = range.cloneContents().childNodes
     range.deleteContents()
+    let firstNode:null|HTMLElement = null
+    let lastNode:null|HTMLElement = null
     //遍历节点，增加样式
     foreach(cloneContents,(item:any)=>{
         let addStyleNode
@@ -334,8 +337,14 @@ function 设置挖空状态(range:Range){
             console.log(addStyleNode)
         }
         range.insertNode(addStyleNode)
+        if (firstNode === null)
+            firstNode = addStyleNode
+        lastNode = addStyleNode
         range.setStartAfter(addStyleNode)
     })
+    document.getSelection().removeAllRanges()
+    document.getSelection().addRange(((item)=>{item.setStartBefore(firstNode);item.setEndAfter(lastNode);return item})(new Range()))
+    document.getSelection().getRangeAt(0)
 }
 
 async function addCard(id: string){
