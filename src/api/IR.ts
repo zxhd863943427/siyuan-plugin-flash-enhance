@@ -10,31 +10,46 @@ const shortcuts = new Shortcuts ();
 const luteEngine = globalThis.Lute.New()
 const builtInDeck = '20230218211946-2kw8jgx'
 
-export function IRswitch() {
+export function IRswitch(plugin:any) {
     let enable = settingList.getSetting()["渐进式阅读"]
     if (enable) {
-        shortcuts.add([ // Adding some shortcuts
-        {shortcut: 'ALT+Q', handler: event => {摘录();}},
-        {shortcut: 'ALT+W', handler: event => {挖空();}},
-        {shortcut: 'ALT+E', handler: event => {问答();}},
-    ]);
+    plugin.addCommand({
+        langKey: "extract",
+        hotkey: "⌥Q",
+        callback: () => {
+            摘录();
+        }
+    })
+    plugin.addCommand({
+        langKey: "hollowedOut",
+        hotkey: "⌥W",
+        callback: () => {
+            挖空();
+        }
+    })
     }
+
 
     watch(settingList.setList,()=>{
         let enable = settingList.getSetting()["渐进式阅读"]
         if (!enable) {
-            shortcuts.remove([
-                { shortcut: 'ALT+E' },
-                { shortcut: 'ALT+W' },
-                { shortcut: 'ALT+E' }
-            ])
+
         }
         else{
-            shortcuts.add([ // Adding some shortcuts
-                {shortcut: 'ALT+Q', handler: event => {摘录();}},
-                {shortcut: 'ALT+W', handler: event => {挖空();}},
-                {shortcut: 'ALT+E', handler: event => {问答();}},
-    ])
+            plugin.addCommand({
+                langKey: "extract",
+                hotkey: "⌥Q",
+                callback: () => {
+                    摘录();
+                }
+            })
+            plugin.addCommand({
+                langKey: "hollowedOut",
+                hotkey: "⌥W",
+                callback: () => {
+                    挖空();
+                }
+            })
         }
     })
 }

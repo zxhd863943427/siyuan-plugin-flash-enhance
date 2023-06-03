@@ -4,5 +4,8 @@
   "save": "Save",
   "byeMenu": "Bye, Menu!",
   "helloPlugin": "Hello, Plugin!",
-  "byePlugin": "Bye, Plugin!"
+  "byePlugin": "Bye, Plugin!",
+  "extract": "extract",
+  "hollowedOut": "hollowed Out",
+  "problem": "problem"
 }
