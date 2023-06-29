@@ -68,7 +68,7 @@ module.exports = (env, argv) => {
         devtool: isPro ? false : "eval",
         output: {
             filename: "[name].js",
-            path: path.resolve(__dirname),
+            path: path.resolve(__dirname,"dev"),
             libraryTarget: "commonjs2",
             library: {
                 type: "commonjs2",

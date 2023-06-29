@@ -4,6 +4,7 @@
   "description": "This is a sample plugin for Siyuan (https://b3log.org/siyuan)",
   "main": ".src/index.js",
   "scripts": {
+    "make-link": "node  --no-warnings ./scripts/make_dev_link.js",
     "lint": "eslint . --fix --cache",
     "dev": "webpack --mode development",
     "build": "webpack --mode production"
