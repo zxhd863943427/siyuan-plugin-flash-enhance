@@ -5,6 +5,7 @@
   "byeMenu": "再见，菜单！",
   "helloPlugin": "你好，闪卡插件！",
   "byePlugin": "再见，插件！",
+  "makeCard":"一键制卡",
   "extract": "生成摘录",
   "hollowedOut": "生成挖空",
   "problem": "生成问答"

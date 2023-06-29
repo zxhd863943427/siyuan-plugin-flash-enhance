@@ -65,5 +65,12 @@ export default class PluginSample extends Plugin {
         addSheet(that)
         watch(settingList.setList,()=>{this.updateConfig()})
         IRswitch(this)
+        this.addCommand({
+            langKey: "makeCard",
+            hotkey: "",
+            callback: () => {
+                addCards(this.data["settingConfig"].labFeature[0]["status"].value)
+                }
+        })
     }
 }

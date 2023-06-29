@@ -51,6 +51,9 @@ export function getCurrentPage() {
         let currentScreen = document.querySelector(".b3-dialog--open")
         if (currentScreen === null)
             currentScreen = document.querySelector(".layout__wnd--active"); //获取当前屏幕
+        
+        if (currentScreen.querySelector("#commands") != null) //排除命令面板的情况
+            currentScreen = document.querySelector(".layout__wnd--active");
         //获取当前页面
         let currentPage = currentScreen.querySelector(
             ".fn__flex-1.protyle:not(.fn__none)"
