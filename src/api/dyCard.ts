@@ -16,25 +16,29 @@ export function dyMakeCard(detail: any, plugin: any) {
     foreach(detail.data, (data: any) => {
         // console.log("是否为撤回操作:",isUndo(data))
         foreach(data.doOperations, (item: any) => {
-            let type = item.action
-            let marked = isDoMark(item)
-            let carded = isCarded(item)
-            let needMakeCard = ((type === "insert" || type === "update") && marked && !carded)
-            let needDelCard = ((type === "update" && !marked && carded) || (type === "delete"))
-            console.log(item.id, "操作类型:", item.action,
-                "\n是否已经制卡:\t", carded,
-                "\n是否需要制卡:\t", needMakeCard,
-                "\n是否需要取消制卡:\t", needDelCard,
-                "\n是否打开动态制卡:\t", open
-            )
-            if (needMakeCard){
-                addCard(item.id)
-            }
-            if (needDelCard){
-                removeCard(item.id)
-            }
+            console.log("\n是否打开动态制卡:\t", open)
+            makeMarkCard(item)
         })
     })
+}
+
+function makeMarkCard(item: any) {
+    let type = item.action
+    let marked = isDoMark(item)
+    let carded = isCarded(item)
+    let needMakeCard = ((type === "insert" || type === "update") && marked && !carded)
+    let needDelCard = ((type === "update" && !marked && carded) || (type === "delete"))
+    console.log(item.id, "操作类型:", item.action,
+        "\n是否已经制卡:\t", carded,
+        "\n是否需要制卡:\t", needMakeCard,
+        "\n是否需要取消制卡:\t", needDelCard
+    )
+    if (needMakeCard) {
+        addCard(item.id)
+    }
+    if (needDelCard) {
+        removeCard(item.id)
+    }
 }
 
 async function addCard(id: string){
