@@ -1,6 +1,6 @@
 import { fetchSyncPost } from "siyuan"
 import { getFileID, getHpath, getCurrentPage } from "../utils/utils"
-import { saveViaTransaction } from"../lib/utils"
+import { foreach, saveViaTransaction } from"../lib/utils"
 import { settingList } from "../utils/config"
 import { watch } from "vue"
 import { getBlock } from "../lib/utils"
@@ -10,31 +10,46 @@ const shortcuts = new Shortcuts ();
 const luteEngine = globalThis.Lute.New()
 const builtInDeck = '20230218211946-2kw8jgx'
 
-export function IRswitch() {
+export function IRswitch(plugin:any) {
     let enable = settingList.getSetting()["渐进式阅读"]
     if (enable) {
-        shortcuts.add([ // Adding some shortcuts
-        {shortcut: 'ALT+Q', handler: event => {摘录();}},
-        {shortcut: 'ALT+W', handler: event => {挖空();}},
-        {shortcut: 'ALT+E', handler: event => {问答();}},
-    ]);
+    plugin.addCommand({
+        langKey: "extract",
+        hotkey: "⌥Q",
+        callback: () => {
+            摘录();
+        }
+    })
+    plugin.addCommand({
+        langKey: "hollowedOut",
+        hotkey: "⌥W",
+        callback: () => {
+            挖空();
+        }
+    })
     }
+
 
     watch(settingList.setList,()=>{
         let enable = settingList.getSetting()["渐进式阅读"]
         if (!enable) {
-            shortcuts.remove([
-                { shortcut: 'ALT+E' },
-                { shortcut: 'ALT+W' },
-                { shortcut: 'ALT+E' }
-            ])
+
         }
         else{
-            shortcuts.add([ // Adding some shortcuts
-                {shortcut: 'ALT+Q', handler: event => {摘录();}},
-                {shortcut: 'ALT+W', handler: event => {挖空();}},
-                {shortcut: 'ALT+E', handler: event => {问答();}},
-    ])
+            plugin.addCommand({
+                langKey: "extract",
+                hotkey: "⌥Q",
+                callback: () => {
+                    摘录();
+                }
+            })
+            plugin.addCommand({
+                langKey: "hollowedOut",
+                hotkey: "⌥W",
+                callback: () => {
+                    挖空();
+                }
+            })
         }
     })
 }
@@ -67,8 +82,8 @@ async function 挖空() {
         return
     }
     let subFileID = await createSubFile("挖空",selectionContent[2])
-    updateSubFile(subFileID,selectionContent[0])
-    addCard(selectionContent[3])
+    await updateSubFile(subFileID,selectionContent[0])
+    await addCard(selectionContent[3])
 }
 
 function 问答() {
@@ -201,15 +216,43 @@ function updateBlockStyle(el:HTMLElement){
 
 function updateContentStyle(range:Range){
     let selection = getSelection()
-    let strongNode = document.createElement('span')
-    strongNode.append(range.cloneContents())
-    strongNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+    // let strongNode = document.createElement('span')
+    // strongNode.append(range.cloneContents())
+    // strongNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+    // range.deleteContents()
+    // range.insertNode(strongNode)
+    // range.setStartAfter(strongNode)
+    // range.collapse(true) //取消文本选择状态
+    // selection.removeAllRanges()
+    // selection.addRange(range)
+    
+    let cloneContents = range.cloneContents().childNodes
     range.deleteContents()
-    range.insertNode(strongNode)
-    range.setStartAfter(strongNode)
+    //遍历节点，增加样式
+    foreach(cloneContents,(item:any)=>{
+        let addStyleNode
+        if (item instanceof Text){
+            if(item.textContent == ""){
+                return;
+            }
+            addStyleNode = document.createElement('span')
+            addStyleNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+            addStyleNode.append(item)
+            console.log(addStyleNode)
+        }
+        else{
+            addStyleNode = item.cloneNode(true)
+            addStyleNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+            addStyleNode.setAttribute('data-type',addStyleNode.getAttribute("data-type").replaceAll("mark","").trim())
+            console.log(addStyleNode)
+        }
+        range.insertNode(addStyleNode)
+        range.setStartAfter(addStyleNode)
+    })
     range.collapse(true) //取消文本选择状态
     selection.removeAllRanges()
     selection.addRange(range)
+    console.log(cloneContents)
     //关闭toolbar
     document.querySelector("#layouts  div.fn__flex-1.protyle > div.protyle-toolbar").classList.add('fn__none') 
     saveViaTransaction()
@@ -242,13 +285,17 @@ function 获取挖空内容(mode:string){
     let content;
     let range = getSelection().getRangeAt(0)
     let block = getBlock(range.startContainer as HTMLElement)
-    设置挖空状态(range)
+    设置挖空状态(range.cloneRange())
+    //重新获取range
+    range = getSelection().getRangeAt(0)
     //设置块id
     let cardID = getNewID()
     let selected = block.cloneNode(true) as HTMLElement
     selected.setAttribute("data-node-id",cardID)
     console.log("start",selected)
     let source = getContentSource(range)
+
+    // 恢复挖空前状态(range.cloneRange(),oldContent)
     updateContentStyle(range)
     let element = document.createElement("div")
 
@@ -266,13 +313,53 @@ function 获取挖空内容(mode:string){
     return [md,content,source,cardID];
 }
 
+// function 恢复挖空前状态(range:Range, content:any){
+//     range.deleteContents()
+//     let cloneContents = content.childNodes
+//     foreach(cloneContents,(item:any)=>{
+//         let addStyleNode = item.cloneNode(true)
+//         range.insertNode(addStyleNode)
+//         range.setStartAfter(addStyleNode)
+//     })
+// }
+
 function 设置挖空状态(range:Range){
-    let selection = getSelection()
-    let strongNode = document.createElement('span')
-    strongNode.append(range.cloneContents())
-    strongNode.setAttribute('data-type', 'mark')
+    // let selection = getSelection()
+    // let strongNode = document.createElement('span')
+    // strongNode.append(range.cloneContents())
+    // strongNode.setAttribute('data-type', 'mark')
+    // range.deleteContents()
+    // range.insertNode(strongNode)
+    let cloneContents = range.cloneContents().childNodes
     range.deleteContents()
-    range.insertNode(strongNode)
+    let firstNode:null|HTMLElement = null
+    let lastNode:null|HTMLElement = null
+    //遍历节点，增加样式
+    foreach(cloneContents,(item:any)=>{
+        let addStyleNode
+        if (item instanceof Text){
+            if(item.textContent == ""){
+                return;
+            }
+            addStyleNode = document.createElement('span')
+            addStyleNode.setAttribute('data-type', 'mark')
+            addStyleNode.append(item)
+            console.log(addStyleNode)
+        }
+        else{
+            addStyleNode = item.cloneNode(true)
+            addStyleNode.setAttribute('data-type', 'mark '+addStyleNode.getAttribute("data-type"))
+            console.log(addStyleNode)
+        }
+        range.insertNode(addStyleNode)
+        if (firstNode === null)
+            firstNode = addStyleNode
+        lastNode = addStyleNode
+        range.setStartAfter(addStyleNode)
+    })
+    document.getSelection().removeAllRanges()
+    document.getSelection().addRange(((item)=>{item.setStartBefore(firstNode);item.setEndAfter(lastNode);return item})(new Range()))
+    document.getSelection().getRangeAt(0)
 }
 
 async function addCard(id: string){
