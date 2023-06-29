@@ -56,8 +56,12 @@ module.exports = (env, argv) => {
             },
         }));
     } else {
-        plugins.push(new CopyPlugin({
+ plugins.push(new CopyPlugin({
             patterns: [
+                {from: "preview.png", to: "./"},
+                {from: "icon.png", to: "./"},
+                {from: "README*.md", to: "./"},
+                {from: "plugin.json", to: "./"},
                 {from: "src/i18n/", to: "./i18n/"},
             ],
         }));
