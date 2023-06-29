@@ -60,6 +60,7 @@ export async function addCards(useBulitIn = true) {
 
 
     let customDeckIdArr = [];
+    let focusItemPath = await getHpath()
     // 导入默认卡包
     if (useBulitIn === true) {
         customDeckIdArr.push('20230218211946-2kw8jgx');
