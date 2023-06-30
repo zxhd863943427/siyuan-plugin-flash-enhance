@@ -58,6 +58,41 @@ export function isParentIsList(item:any):boolean{
     }
 }
 
+export function isDosuperBlockCard(item:any):boolean{
+
+    let DoListCard = false
+    let element = document.createElement("div")
+    element.innerHTML = item.data
+
+    let sourceElement = getParentElement(item)
+    if (sourceElement === null) //无法找到父节点，证明不是列表，返回false
+        return false
+    let parentIsList = isParentIsSuperBlock(item)
+    if (!parentIsList)
+        return false
+    let isFirstSubBlock = sourceElement.querySelector(`:scope>[data-node-id='${item.id}']:nth-child(1)`) != null
+    if (!isFirstSubBlock)
+        return false
+    let query = element.querySelectorAll(`[data-type~="strong"]`)
+    for (let node of query){
+        let innerText = (node as HTMLElement).innerText
+        if (innerText === "?" || innerText === "？")
+            DoListCard = true
+    }
+    return DoListCard
+}
+
+export function isParentIsSuperBlock(item:any):boolean{
+
+    let sourceElement = getParentElement(item)
+    let dataType = sourceElement ? sourceElement.getAttribute("data-type") : "none"
+    if (sourceElement === null || dataType != "NodeSuperBlock") //无法找到nodelist的父节点，证明不是列表，返回false
+        return false
+    else{
+        return true
+    }
+}
+
 export function isParentCarded(item:any):boolean{
 
     let sourceElement = getParentElement(item)

@@ -1,4 +1,17 @@
-import { isDoMark, isDelete, isUndo, isCarded, isDoListCard, isHasListCardMark, isParentCarded, getParentElement, isParentIsList } from "../lib/status"
+import { 
+    isDoMark, 
+    isDelete, 
+    isUndo, 
+    isCarded, 
+    isDoListCard, 
+    isHasListCardMark, 
+    isParentCarded, 
+    getParentElement, 
+    isParentIsList,
+    isDosuperBlockCard,
+    isParentIsSuperBlock,
+    isParentIsSuperBlock,
+} from "../lib/status"
 import { foreach } from "../lib/utils"
 import { settingList } from "../utils/config"
 import { fetchPost, showMessage } from "siyuan"
@@ -19,6 +32,7 @@ export function dyMakeCard(detail: any, plugin: any) {
             console.log("\n是否打开动态制卡:\t", open)
             makeMarkCard(item)
             makeListCard(item)
+            makeSuperBlockCard(item)
             autoDeleteCard(item)
         })
     })
@@ -70,6 +84,24 @@ function makeListCard(item: any) {
         if (listElement === null) return
         let id = listElement.getAttribute("data-node-id")
         removeCard(id)
+    }
+}
+
+function makeSuperBlockCard(item: any) {
+    let type = item.action
+    let superBlockCarded = isDosuperBlockCard(item)
+    let carded = isParentCarded(item)
+    let needMakeCard = ((type === "insert" || type === "update") && superBlockCarded && !carded)
+    console.log(item.id, "操作类型:", item.action,
+        "\n是否使用超级块标记:\t", superBlockCarded,
+        "\n是否已经制卡:\t", carded,
+        "\n是否需要制卡:\t", needMakeCard
+    )
+    if (needMakeCard) {
+        let listElement = getParentElement(item)
+        if (listElement === null) return
+        let id = listElement.getAttribute("data-node-id")
+        addCard(id)
     }
 }
 
