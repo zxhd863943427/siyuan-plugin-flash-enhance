@@ -66,7 +66,7 @@ jobs:
         uses: thedoctor0/zip-release@0.7.1
         with:
           type: 'zip'
-          directory: './dist'
+          directory: './dev/dist'
           filename: 'package.zip'
           exclusions: '*.git* /*node_modules/* .editorconfig'
 
@@ -78,5 +78,5 @@ jobs:
           artifactErrorsFailBuild: true
           removeArtifacts: false
           replacesArtifacts: false
-          artifacts: "dist/package.zip"
+          artifacts: "dev/dist/package.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
