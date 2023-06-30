@@ -78,5 +78,5 @@ jobs:
           artifactErrorsFailBuild: true
           removeArtifacts: false
           replacesArtifacts: false
-          artifacts: "dist/package.zip"
+          artifacts: "dev/dist/package.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
