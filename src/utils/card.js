@@ -82,11 +82,11 @@ export async function addCards(useBulitIn = true) {
     // 获取需要被制成卡片的块的ID
     const currentPage = getCurrentPage()
     //标记块
-    const markList = currentPage.querySelectorAll("span[data-type*='mark']")
+    const markList = currentPage.querySelectorAll("span[data-type*='mark']:not([custom-riff-decks])")
     //超级块
-    const superBlockList = currentPage.querySelectorAll("div[class='sb']")
+    const superBlockList = currentPage.querySelectorAll("div[class='sb']:not([custom-riff-decks])")
     //列表块
-    const listList = currentPage.querySelectorAll("div[class='li']:has(div[class='li'])  > div[class = 'p']")
+    const listList = currentPage.querySelectorAll("div[class='li']:not([custom-riff-decks]):has(div[class='li'])  > div[class = 'p']")
 
     let arr = [];
     let markCardList = iterArr(markList, fliterMarkCard)
@@ -110,7 +110,8 @@ export async function addCards(useBulitIn = true) {
         };
         let res = await request("/api/riff/addRiffCards", body);
         if (res.code === 0) {
-            showMessage(`${res.data.name}卡包的总卡片数：${res.data.size}`);
+            showMessage(`新增卡片 ${arr.length} 张,
+            目前${res.data.name}卡包的总卡片数：${res.data.size}`);
         }
     }
 
