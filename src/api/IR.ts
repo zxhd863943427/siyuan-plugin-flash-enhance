@@ -175,6 +175,7 @@ async function createSubFile(title:string,id:string){
     // let NotebookId = queryData.data[0]["box"]
     let [FileID, NotebookId, Hpath] =  await getBlockInfo(id)
     let subTitle = title.slice(0,15).replace(/\r\n|\r|\n|\u2028|\u2029|\t|\//g,"")
+    subTitle = subTitle === "" ? subTitle : "untitled" 
     console.log(NotebookId)
     let data = await fetchSyncPost("/api/filetree/createDocWithMd",{
         "notebook": NotebookId,
