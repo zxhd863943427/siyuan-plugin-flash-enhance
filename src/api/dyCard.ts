@@ -1,7 +1,5 @@
 import { 
     isDoMark, 
-    isDelete, 
-    isUndo, 
     isCarded, 
     isDoListCard, 
     isHasListCardMark, 
@@ -9,8 +7,6 @@ import {
     getParentElement, 
     isParentIsList,
     isDosuperBlockCard,
-    isParentIsSuperBlock,
-    isParentIsSuperBlock,
 } from "../lib/status"
 import { foreach } from "../lib/utils"
 import { settingList } from "../utils/config"
