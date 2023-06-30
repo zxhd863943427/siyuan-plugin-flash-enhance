@@ -78,3 +78,9 @@
 社区 [BryceAndJuly](https://ld246.com/member/BryceAndJuly) 大佬实现的原型 [【分享】使用当前文档的二级标题快速制作闪卡](https://ld246.com/article/1674135504898)
 
 社区 [RenaEmiya - 链滴](https://ld246.com/member/RenaEmiya) 大佬提供了[复习时隐藏最后一个块标](https://ld246.com/article/1680862515960/comment/1680866557430#comments)
+
+### 更新日志
+v0.0.8
+增加一键制卡快捷键和命令面板支持
+增加列表块和超级块沉浸式制卡支持，使用**？** 和 **?** 即可动态制卡。其中列表块可以动态取消，超级块不行。
+改进渐进式阅读摘录和挖空
