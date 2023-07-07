@@ -174,8 +174,9 @@ async function createSubFile(title:string,id:string){
     // }
     // let NotebookId = queryData.data[0]["box"]
     let [FileID, NotebookId, Hpath] =  await getBlockInfo(id)
-    let subTitle = title.slice(0,15).replace(/\r\n|\r|\n|\u2028|\u2029|\t|\//g,"")
-    subTitle = subTitle === "" ? subTitle : "untitled" 
+    // 还要去除零宽度空格
+    let subTitle = title.slice(0,15).replace(/\r\n|\r|\n|\u2028|\u2029|\t|\//g,"").replace(/[\u200B-\u200D\uFEFF]/g, '')
+    subTitle = subTitle === "" ? getNewID().slice(0,14) : subTitle
     console.log(NotebookId)
     let data = await fetchSyncPost("/api/filetree/createDocWithMd",{
         "notebook": NotebookId,
