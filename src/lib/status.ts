@@ -106,11 +106,17 @@ export function getParentElement(item:any):Element|null{
     if (item.data === null || (typeof(item.data)) != "string") {
         return null
     }
-    let element = document.createElement("div")
-    element.innerHTML = item.data
-    let dataId = (element.childNodes[0] as HTMLElement).getAttribute("data-node-id")
-    let currentPage = getCurrentPage()
-    let sourceElement = currentPage.querySelector(`[data-type]:has(>[data-node-id="${dataId}"])`)
+    // let element = document.createElement("div")
+    // element.innerHTML = item.data
+    // let dataId = (element.childNodes[0] as HTMLElement).getAttribute("data-node-id")
+    let dataIDRegx = /data-node-id\s?=\s?"(\d{14}-.{7})"/
+    let match = dataIDRegx.exec(item.data)
+    let dataId;
+    if (match != null){
+        dataId = match[1]
+    }
+    // let currentPage = getCurrentPage()
+    let sourceElement = document.querySelector(`[data-node-id][data-type]:has(>div[data-node-id="${dataId}"][data-type])`)
     return sourceElement
 }
 
