@@ -112,11 +112,12 @@ export function getParentElement(item:any):Element|null{
     let dataIDRegx = /data-node-id\s?=\s?"(\d{14}-.{7})"/
     let match = dataIDRegx.exec(item.data)
     let dataId;
-    if (match != null){
-        dataId = match[1]
+    if (match == null){
+        return null
     }
+    dataId = match[1]
     // let currentPage = getCurrentPage()
-    let sourceElement = document.querySelector(`[data-node-id][data-type]:has(>div[data-node-id="${dataId}"][data-type])`)
+    let sourceElement = document.querySelector(`div[data-node-id][data-type]:has(>div[data-node-id="${dataId}"][data-type])`)
     return sourceElement
 }
 
