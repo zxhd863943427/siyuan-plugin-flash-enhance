@@ -60,7 +60,7 @@ async function 摘录() {
         return;
     }
     console.log("摘录")
-    let selectionContent = getSelectionContent("Md")
+    let selectionContent = await getSelectionContent("Md")
     console.log(selectionContent)
     if (selectionContent[0].length <= 1){
         return
@@ -94,13 +94,13 @@ function 问答() {
     console.log("问答")
 }
 
-function getSelectionContent(mode:string){
+async function getSelectionContent(mode:string){
     const currentPage = getCurrentPage()
     //页面无.protyle-wysiwyg--select，说明未选中块，而是内容
     const slectMult = (currentPage.querySelector(".protyle-wysiwyg--select")!=null)
     let selectedContent;
     if (slectMult){
-        selectedContent = getMultSelectionContent(currentPage, mode)
+        selectedContent = await getMultSelectionContent(currentPage, mode)
     }
     else{
         selectedContent = getMonSelectionContent(mode)
@@ -108,7 +108,7 @@ function getSelectionContent(mode:string){
     return selectedContent
 }
 
-function getMultSelectionContent(root:HTMLElement,mode:string){
+async function getMultSelectionContent(root:HTMLElement,mode:string){
     let md;
     let content;
     let source;
@@ -117,7 +117,7 @@ function getMultSelectionContent(root:HTMLElement,mode:string){
     .filter(chapter => chapter.classList.contains("protyle-wysiwyg--select"))
     const AllSelection = document.createElement("div")
     for (let se of select) {
-        updateBlockStyle(se)
+        await updateBlockStyle(se)
         let item = se.cloneNode(true) as HTMLElement
         source = se.getAttribute("data-node-id")
         item.setAttribute("data-node-id",getNewID())
@@ -205,9 +205,9 @@ async function updateSubFile(id:string, content:string){
     return data.data
 }
 
-function updateBlockStyle(el:HTMLElement){
+async function updateBlockStyle(el:HTMLElement){
     let ID = el.getAttribute("data-node-id")
-    fetchSyncPost("/api/attr/setBlockAttrs",{
+    await fetchSyncPost("/api/attr/setBlockAttrs",{
         "id": ID,
         "attrs": {
           "style": "background-color: var(--b3-font-background1);"
