@@ -116,12 +116,12 @@ async function getMultSelectionContent(root:HTMLElement,mode:string){
     const select = Array.from(elemnet)
     .filter(chapter => chapter.classList.contains("protyle-wysiwyg--select"))
     const AllSelection = document.createElement("div")
-    for (let se of select) {
-        await updateBlockStyle(se)
+    for (let se of select) {    
         let item = se.cloneNode(true) as HTMLElement
         source = se.getAttribute("data-node-id")
         item.setAttribute("data-node-id",getNewID())
         AllSelection.appendChild(item)
+        await updateBlockStyle(se)
     }
     switch(mode){
         case "StdMd":
