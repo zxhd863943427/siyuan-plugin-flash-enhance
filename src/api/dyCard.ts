@@ -15,8 +15,8 @@ import { fetchPost, showMessage } from "siyuan"
 const builtInDeck = '20230218211946-2kw8jgx'
 
 export function dyMakeCard(detail: any, plugin: any) {
-    console.log("编辑操作")
-    console.log(detail)
+    // console.log("编辑操作")
+    // console.log(detail)
     //判断是否打开功能
     let open = settingList.getSetting()["沉浸式制卡"]
     if (!open){
@@ -25,7 +25,7 @@ export function dyMakeCard(detail: any, plugin: any) {
     foreach(detail.data, (data: any) => {
         // console.log("是否为撤回操作:",isUndo(data))
         foreach(data.doOperations, (item: any) => {
-            console.log("\n是否打开动态制卡:\t", open)
+            // console.log("\n是否打开动态制卡:\t", open)
             makeMarkCard(item)
             makeListCard(item)
             makeSuperBlockCard(item)
@@ -40,11 +40,11 @@ function makeMarkCard(item: any) {
     let carded = isCarded(item)
     let needMakeCard = ((type === "insert" || type === "update") && marked && !carded)
     let needDelCard = ((type === "update" && !marked && carded))
-    console.log(item.id, "操作类型:", item.action,
-        "\n是否已经制卡:\t", carded,
-        "\n是否需要制卡:\t", needMakeCard,
-        "\n是否需要取消制卡:\t", needDelCard
-    )
+    // console.log(item.id, "操作类型:", item.action,
+    //     "\n是否已经制卡:\t", carded,
+    //     "\n是否需要制卡:\t", needMakeCard,
+    //     "\n是否需要取消制卡:\t", needDelCard
+    // )
     if (needMakeCard) {
         addCard(item.id)
     }
@@ -61,14 +61,14 @@ function makeListCard(item: any) {
     let carded = isParentCarded(item)
     let needMakeCard = ((type === "insert" || type === "update") && ListCarded && !carded)
     let needDelCard = (type === "update" && parentIsList && carded && !ListCarded && !ListCardMarked)
-    console.log(item.id, "操作类型:", item.action,
-        "\n是否父元素为列表:\t", parentIsList,
-        "\n是否使用列表标记:\t", ListCarded,
-        "\n是否存在原始列表标记:\t", ListCardMarked,
-        "\n是否已经制卡:\t", carded,
-        "\n是否需要制卡:\t", needMakeCard,
-        "\n是否需要取消制卡:\t", needDelCard
-    )
+    // console.log(item.id, "操作类型:", item.action,
+    //     "\n是否父元素为列表:\t", parentIsList,
+    //     "\n是否使用列表标记:\t", ListCarded,
+    //     "\n是否存在原始列表标记:\t", ListCardMarked,
+    //     "\n是否已经制卡:\t", carded,
+    //     "\n是否需要制卡:\t", needMakeCard,
+    //     "\n是否需要取消制卡:\t", needDelCard
+    // )
     if (needMakeCard) {
         let listElement = getParentElement(item)
         if (listElement === null) return
@@ -88,11 +88,11 @@ function makeSuperBlockCard(item: any) {
     let superBlockCarded = isDosuperBlockCard(item)
     let carded = isParentCarded(item)
     let needMakeCard = ((type === "insert" || type === "update") && superBlockCarded && !carded)
-    console.log(item.id, "操作类型:", item.action,
-        "\n是否使用超级块标记:\t", superBlockCarded,
-        "\n是否已经制卡:\t", carded,
-        "\n是否需要制卡:\t", needMakeCard
-    )
+    // console.log(item.id, "操作类型:", item.action,
+    //     "\n是否使用超级块标记:\t", superBlockCarded,
+    //     "\n是否已经制卡:\t", carded,
+    //     "\n是否需要制卡:\t", needMakeCard
+    // )
     if (needMakeCard) {
         let listElement = getParentElement(item)
         if (listElement === null) return

@@ -4,6 +4,7 @@ import { addMenu } from "./lib/menu";
 import { addSheet } from "./lib/sheet";
 import { dyMakeCard } from "./api/dyCard";
 import { IRswitch } from "./api/IR";
+import { occasionEdit, occasionLoad } from "./api/imageOccasion";
 import { addCards } from "./utils/card";
 
 import { watch } from 'vue'
@@ -18,6 +19,8 @@ export default class PluginSample extends Plugin {
         this.data = {}
         this.init()
         this.eventBus.on("ws-main", this.wsEvent)
+        this.eventBus.on("loaded-protyle", occasionLoad)
+        this.eventBus.on("open-menu-image", occasionEdit)
         console.log(this.i18n.helloPlugin);
     }
 
