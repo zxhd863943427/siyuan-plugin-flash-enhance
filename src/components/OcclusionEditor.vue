@@ -25,6 +25,7 @@
 import fabric from "fabric"
 import { defineProps } from 'vue'
 import { getBlock } from "../lib/utils"
+import { fetchSyncPost } from "siyuan";
 const props = defineProps({
    closeFunc:Function,
    img:HTMLElement
@@ -50,11 +51,18 @@ function updateData(resolveData:Occasion[]) {
    loadData[currentImg] = resolveData
 }
 
-function savaData(params:type) {
-   
+function saveData() {
+   let savingData = JSON.stringify(loadData)
+   fetchSyncPost("/api/attr/setBlockAttrs",{
+        "id": currentBlockID,
+        "attrs": {
+          "custom-plugin-image-occlusion": savingData,
+        }
+      })
 }
 
 function occlusion_save_action() {
+   saveData()
    props.closeFunc()
 }
 
