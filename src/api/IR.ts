@@ -120,6 +120,7 @@ async function getMultSelectionContent(root:HTMLElement,mode:string){
         let item = se.cloneNode(true) as HTMLElement
         source = se.getAttribute("data-node-id")
         item.setAttribute("data-node-id",getNewID())
+        item.querySelectorAll("[data-node-id]").forEach((subNode)=>{subNode.setAttribute("data-node-id",getNewID())})
         AllSelection.appendChild(item)
         await updateBlockStyle(se)
     }
