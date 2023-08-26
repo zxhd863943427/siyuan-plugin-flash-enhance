@@ -1,5 +1,28 @@
 <template>
-    <canvas ref="canvasRef"></canvas>
+        <div class="fn__flex b3-label" style="justify-content: end;">
+            <button
+            @:click="addOcclusion"
+            class="b3-button b3-button--outline fn__flex-center fn__size96"><svg class="b3-menu__icon" style=""><use xlink:href="#iconAdd"></use></svg>
+    </button>
+    <span style="width: 10px;"></span>
+    <button @:click="deleteOcclusion"
+                class="b3-button b3-button--outline fn__flex-center fn__size96"><svg class="b3-menu__icon" style=""><use xlink:href="#iconTrashcan"></use></svg>
+    </button>
+    <span style="width: 10px;"></span>
+    <span style="margin-top: auto;margin-bottom: auto;"> Cloze Id:</span>
+    <select
+        v-model="cidSelectorRef"
+        @:change="onCIdChange"
+        style= "margin: 0; width: 80px;"
+    >
+    <option v-for="n in 9">{{ n }}</option>
+    </select>
+
+    </div>
+    <div id="image-occlusion-main-canvas">
+        <canvas ref="canvasRef"></canvas>
+    </div>
+    
 </template>
 
 <script lang="ts" setup>
@@ -14,13 +37,14 @@ const props = defineProps({
     imgSrc:String,
     occlusionData:Array<Occasion>
 })
+const emit = defineEmits(['destory','response'])
 import {fabric} from "fabric"
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch, emit } from "vue";
 const MaxWidth = 800
 const MaxHeight = 800
 
 let canvasRef = ref(null)
-let cidSelectorRef = ref(null)
+let cidSelectorRef = ref(1)
 let fabricSelection = ref(null)
 
 let fabricRef: fabric.Canvas
@@ -77,6 +101,28 @@ async function initFabric(){
     
 }
 
+
+const disposeFabric = () => {
+                fabricRef.dispose();
+            };
+//获得当前选中的元素
+function initFabricEventListener(){
+    fabricRef.on("selection:created",()=>{
+        fabricSelection.value = fabricRef.getActiveObject()
+        console.log(fabricRef.getActiveObject())
+    })
+    fabricRef.on("selection:updated",()=>{
+        fabricSelection.value = fabricRef.getActiveObject()
+        console.log(fabricRef.getActiveObject())
+        
+    })
+    fabricRef.on("selection:cleared",()=>{
+        fabricSelection.value = fabricRef.getActiveObject()
+        console.log(fabricRef.getActiveObject())
+    })
+    console.log(fabricRef.getActiveObject())
+}
+//防止选中元素越界
 function initPreventOutOfBounds(){
     const preventOutOfBounds = (e: any) => {
         const obj = e.target;
@@ -104,39 +150,139 @@ function initPreventOutOfBounds(){
     fabricRef.on("object:modified", preventOutOfBounds);
 }
 
-const disposeFabric = () => {
-                fabricRef.dispose();
-            };
-
-function initFabricEventListener(){
-    fabricRef.on("selection:created",()=>{
-        fabricSelection.value = fabricRef.getActiveObject()
-        console.log(fabricRef.getActiveObject())
-    })
-    fabricRef.on("selection:updated",()=>{
-        fabricSelection.value = fabricRef.getActiveObject()
-        console.log(fabricRef.getActiveObject())
-        
-    })
-    fabricRef.on("selection:cleared",()=>{
-        fabricSelection.value = fabricRef.getActiveObject()
-        console.log(fabricRef.getActiveObject())
-    })
-    console.log(fabricRef.getActiveObject())
+function getNewOcclusionData(){
+    const occlusionArr:Occasion[] = [];
+    fabricRef.getObjects().forEach((obj) => {
+        occlusionArr.push({
+            left: obj.left,
+            top: obj.top,
+            width: obj.getScaledWidth(),
+            height: obj.getScaledHeight(),
+            angle: obj.angle,
+            cId: parseInt(obj._objects[1].text),
+        });
+    });
+    return occlusionArr
 }
 
+function initEmitEvent(){
+    emit("response",fabricRef)
+    emit("destory",()=>{
+        document.removeEventListener("keydown",onKeydown)
+    })
+}
+
+//选中元素更新后更新cid
 function updateCid(){
+    if (fabricSelection.value != null)
     cidSelectorRef.value = fabricSelection.value._objects[1].text;
-    console.log(cidSelectorRef)
+    // console.log(cidSelectorRef)
 }
+
+const onKeydown = (e: KeyboardEvent) => {
+    if (e.key === "Escape" && fabricRef.getActiveObject()) {
+        fabricRef.discardActiveObject();
+        fabricRef.renderAll();
+        e.stopImmediatePropagation();
+    }
+    if (e.key === "Delete" && fabricRef.getActiveObject()) {
+        deleteOcclusion();
+        e.stopImmediatePropagation();
+    }
+    if (e.key === "Insert") {
+        addOcclusion();
+        e.stopImmediatePropagation();
+    }
+    if (e.key === "ArrowUp") {
+        if (fabricRef.getActiveObject()) {
+            fabricRef.getActiveObject().top -= 1;
+            fabricRef.renderAll();
+            e.stopImmediatePropagation();
+        }
+    }
+    if (e.key === "ArrowDown") {
+        if (fabricRef.getActiveObject()) {
+            fabricRef.getActiveObject().top += 1;
+            fabricRef.renderAll();
+            e.stopImmediatePropagation();
+        }
+    }
+    if (e.key === "ArrowLeft") {
+        if (fabricRef.getActiveObject()) {
+            fabricRef.getActiveObject().left -= 1;
+            fabricRef.renderAll();
+            e.stopImmediatePropagation();
+        }
+    }
+    if (e.key === "ArrowRight") {
+        if (fabricRef.getActiveObject()) {
+            fabricRef.getActiveObject().left += 1;
+            fabricRef.renderAll();
+            e.stopImmediatePropagation();
+        }
+    }
+    if (e.key >= "1" && e.key <= "9") {
+        if (fabricRef.getActiveObject()) {
+            cidSelectorRef.value = e.key;
+            onCIdChange()
+            e.stopImmediatePropagation();
+        }
+    }
+};
 
 watch(fabricSelection,updateCid)
+
+const addOcclusion = () => {
+    const randomLocation = {
+        x:
+            Math.floor(
+                Math.random() * (imgEl.width - 0.22 * imgEl.width),
+            ) +
+            0.11 * imgEl.width,
+        y:
+            Math.floor(
+                Math.random() * (imgEl.height - 0.22 * imgEl.height),
+            ) +
+            0.11 * imgEl.height,
+    };
+    const occlusionEl = createOcclusionRectEl(
+        randomLocation.x,
+        randomLocation.y,
+        0.22 * imgEl.width,
+        0.22 * imgEl.height,
+        0,
+        cidSelectorRef.value
+    );
+    fabricRef.add(occlusionEl);
+    fabricRef.setActiveObject(occlusionEl);
+    fabricRef.renderAll();
+};
+const deleteOcclusion = () => {
+    fabricRef.remove(fabricRef.getActiveObject());
+    fabricRef.renderAll();
+};
+const onCIdChange = () => {
+    if (fabricSelection.value != null) {
+        fabricRef
+            .getActiveObject()
+            ._objects[1].set("text", cidSelectorRef.value);
+        fabricRef.renderAll();
+    }
+};
 
 onMounted(()=>{
     initFabric()
     // console.log("init fabric")
     initFabricEventListener()
     initPreventOutOfBounds()
+    initEmitEvent()
+    document.addEventListener("keydown",onKeydown,{
+                capture: true,
+            })
+})
+
+onUnmounted(()=>{
+    console.log("unmounted vue")
 })
 
 // const OcclusionEditorComponent = React.forwardRef<any, any>(

@@ -7,7 +7,7 @@
        <div class="panel-content">
           <div class="ui__confirm-modal is-">
              <div class="cloze-editor">
-               <OcclusionEditorComponent :imgSrc="currentImg" :occlusionData="loadData[currentImg]" />
+               <OcclusionEditorComponent :imgSrc="currentImg" :occlusionData="loadData[currentImg]" @response="(msg)=>{fabricRef = msg;console.log(fabricRef)}" @destory="(msg)=>{OcclusionEditorComponentDestory = msg}" />
              </div>
              <div class="fn__flex b3-label">
                <span class="">
@@ -27,6 +27,7 @@
 import { getBlock } from "../lib/utils"
 import { fetchSyncPost } from "siyuan";
 import OcclusionEditorComponent from "./OcclusionEditorComponent.vue"
+import {fabric} from "fabric"
 import { Ref } from "vue";
 const props = defineProps({
    closeFunc:Function,
@@ -43,6 +44,7 @@ type Occasion = {
 type OcclusionList = Map<string,Occasion[]>
 
 // console.log(props.closeFunc,props.img, getBlock(props.img))
+let fabricRef;
 let currentBlock = getBlock(props.img as HTMLElement)
 let currentBlockID = currentBlock.getAttribute("data-node-id")
 let rawData = currentBlock?.getAttribute("custom-plugin-image-occlusion")
@@ -50,9 +52,16 @@ rawData = rawData ? rawData : "{}"
 let loadData:OcclusionList = JSON.parse(rawData ? rawData : "")
 let currentImgSrc = ((props.img as HTMLElement).querySelector("img") as HTMLImageElement).getAttribute("src")
 let currentImg = currentImgSrc!=null ? currentImgSrc : "" 
+let OcclusionEditorComponentDestory;
 console.log(currentBlock,currentBlockID,loadData,props.img,currentImg,loadData[currentImg])
 
-function updateData(resolveData:Occasion[]) {
+function updateData() {
+   let resolveData =  getNewOcclusionData(fabricRef)
+   if (resolveData.length===0)
+      return
+   console.log("update save data")
+   console.log(fabricRef)
+   console.log(resolveData)
    loadData[currentImg] = resolveData
 }
 
@@ -66,7 +75,23 @@ function saveData() {
       })
 }
 
+function getNewOcclusionData(fabricRef:fabric.Canvas){
+    const occlusionArr:Occasion[] = [];
+    fabricRef.getObjects().forEach((obj) => {
+        occlusionArr.push({
+            left: obj.left,
+            top: obj.top,
+            width: obj.getScaledWidth(),
+            height: obj.getScaledHeight(),
+            angle: obj.angle,
+            cId: parseInt(obj._objects[1].text),
+        });
+    });
+    return occlusionArr
+}
+
 function occlusion_save_action() {
+   updateData()
    saveData()
    if (props.closeFunc != undefined)
       props.closeFunc()
