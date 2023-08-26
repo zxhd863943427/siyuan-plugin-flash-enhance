@@ -237,12 +237,15 @@ function initEmitEvent(){
 watch(fabricSelection,updateCid)
 let mouseX,mouseY,isInCanvas
 function initMouseListener(){
-    console.log(canvasRef.value)
+    // console.log(canvasRef.value)
+    let canvas = canvasRef.value
+    let {width, height} = canvas.getBoundingClientRect()
     canvasRef.value.parentElement.addEventListener("mousemove",(e)=>{
         mouseX = e.offsetX
         mouseY = e.offsetY
-        isInCanvas = mouseX > 1 && imgEl.width - mouseX > 1  && mouseY > 1 && imgEl.height - mouseY  > 1
-        // console.log(isInCanvas)
+        let {width, height} = canvas.getBoundingClientRect()
+        isInCanvas = mouseX > 1 && width - mouseX > 1  && mouseY > 1 && height - mouseY  > 1
+        // console.log(mouseX,mouseY,isInCanvas)
     })
 }
 function getMiddle(a, b, c) {
@@ -252,10 +255,11 @@ function getMiddle(a, b, c) {
 const addOcclusion = () => {
 
     let randomLocation
-    if (isInCanvas) {
+    let scale = fabricRef.getZoom()
+    if (isInCanvas === true) {
         randomLocation = {
-            x: getMiddle(0.11 * imgEl.width, mouseX, imgEl.width - 0.11 * imgEl.width),
-            y: getMiddle(0.11 * imgEl.height, mouseY, imgEl.height - 0.11 * imgEl.height),
+            x: getMiddle(0.11 * imgEl.width, mouseX / scale, imgEl.width - 0.11 * imgEl.width),
+            y: getMiddle(0.11 * imgEl.height, mouseY / scale, imgEl.height - 0.11 * imgEl.height),
         };
     }
     else {
