@@ -31,13 +31,6 @@ export function occasionEdit({detail}: any){
     };
     detail.menu.addItem(myMenu)
 }
-export function occasionLoad({detail}: any){
-    let open = settingList.getSetting()["图像遮挡"]
-    if (!open){
-        return;
-    }
-    console.log("启动遮挡")
-}
 
 function openOcclusionEditor(img:HTMLElement){
     console.log("开始编辑遮挡")
@@ -52,90 +45,139 @@ function openOcclusionEditor(img:HTMLElement){
     AppOcclusionEditor.mount(occlusionEditorDialog.element.querySelector("#image-editor"))
 
 }
-// import { createOcclusionRectEl } from "../ui/OcclusionEditor";
-// import path from "path-browserify";
 
-// window.addEventListener("load-of", () => {
-//     if (type == "image_occlusion") {
-//         // Get current cloze id (only works for image occlusion)
-//         let currentClozeId = "-1";
-//         for (let i = 1; i <= 9; i++)
-//             if (document.getElementById(`c${i}`)) currentClozeId = `${i}`;
-//         console.log(`Current cloze id: ${currentClozeId}`);
-//         if (currentClozeId == "-1") return;
-//         // Get localImgBasePath
-//         let localImgBasePath = document.getElementById("localImgBasePath").src;
-//         localImgBasePath = localImgBasePath.substring(
-//             0,
-//             localImgBasePath.lastIndexOf("/"),
-//         );
-//         // Replace all images with canvas
-//         let imgToCanvasHashMap = {};
-//         let images = Array.from(document.getElementsByTagName("img"));
-//         for (let image of images) {
-//             image.style.visibility = "hidden";
-//             let canvasEl = document.createElement("canvas");
-//             canvasEl.width = image.width;
-//             canvasEl.height = image.height;
-//             let canvas = new fabric.Canvas(canvasEl, {
-//                 imageSmoothingEnabled: false,
-//             });
-//             let imgEl = new Image();
-//             imgEl.src = image.src;
-//             imgEl.onload = function () {
-//                 let imgFabric = new fabric.Image(imgEl);
-//                 let scaleX = canvas.width / imgFabric.width,
-//                     scaleY = canvas.height / imgFabric.height;
-//                 canvas.setViewportTransform([scaleX, 0, 0, scaleY, 0, 0]);
-//                 canvas.setBackgroundImage(
-//                     imgFabric,
-//                     canvas.renderAll.bind(canvas),
-//                     {
-//                         scaleX: 1,
-//                         scaleY: 1,
-//                     },
-//                 );
-//             };
-//             canvasEl.style.position = "relative";
-//             image.replaceWith(canvasEl);
-//             if (imgToCanvasHashMap[image.src] == null)
-//                 imgToCanvasHashMap[image.src] = [];
-//             imgToCanvasHashMap[image.src].push(canvas);
-//         }
+export function occasionLoad({detail}: any){
+    let open = settingList.getSetting()["图像遮挡"]
+    if (!open){
+        return;
+    }
+    if (!detail.element.classList.contains("card__block")){
+        return
+    }
+    console.log("启动遮挡")
+    let imgToCanvasHashMap = {};
+    let container = document.createElement("div")
+    let imagesContainer = Array.from(detail.element.querySelectorAll("[custom-plugin-image-occlusion]"))
+    let ImagesOccasionData:[string,Occasion[]][] = imagesContainer
+    .map((elem:HTMLElement)=>{
+        let rawData:OcclusionList = JSON.parse(elem.getAttribute("custom-plugin-image-occlusion"))
+        return Object.entries(rawData)
+    })
+    .flat(1)
+    //抽取keys，后展平
+    let OccasionedImages = ImagesOccasionData
+    .map((data:[string,Occasion[]])=>{
+        return data[0]
+    })
+    console.log(imagesContainer,ImagesOccasionData,OccasionedImages)
+    detail.element.querySelector(".protyle-content").appendChild(container)
+    setHiddenImg(OccasionedImages, container)
 
-//         // Show the main content (without images)
-//         document.getElementById("main-content").style.visibility = "visible";
+    setTimeout(()=>{showOcclusion(ImagesOccasionData,detail.element,container)},300)
+}
 
-//         // Iterate the imgToOcclusionArrHashMap to draw the occlusion and inject the canvas into dom instead of images
-//         let imgToOcclusionArrHashMap = JSON.parse(
-//             document.getElementById("imgToOcclusionArrHashMap").innerHTML,
-//         );
-//         for (let image in imgToOcclusionArrHashMap) {
-//             let occlusionArr = imgToOcclusionArrHashMap[image];
-//             occlusionArr.forEach((obj) => {
-//                 if (obj.cId == currentClozeId) {
-//                     (
-//                         imgToCanvasHashMap[
-//                             localImgBasePath + "/" + path.basename(image)
-//                         ] ||
-//                         imgToCanvasHashMap[image] ||
-//                         []
-//                     ).forEach((canvas) => {
-//                         let occlusion = createOcclusionRectEl(
-//                             obj.left,
-//                             obj.top,
-//                             obj.width,
-//                             obj.height,
-//                             obj.angle,
-//                             obj.cId,
-//                         );
-//                         occlusion._objects[0].set("opacity", 1);
-//                         canvas.add(occlusion);
-//                         canvas.renderAll();
-//                     });
-//                 }
-//             });
-//         }
-//     }
-// });
+function setHiddenImg(OccasionedImages:String[],container:HTMLElement){
+    let cssText = ""
+    for (let item of OccasionedImages){
+        cssText += `[data-src="${item}"]{
+            visibility: hidden;
+        }
+        `
+    }
+    let div = document.createElement("style")
+    div.innerHTML = cssText
+    container.append(div)
+}
+
+function showOcclusion(ImagesOccasionData:[string,Occasion[]][],root:HTMLElement,container:HTMLElement){
+    let currentClozeId = 1
+    let rootTop = root.getBoundingClientRect().top
+    let rootLeft = root.getBoundingClientRect().left
+    for(let anImagesOccasionData of ImagesOccasionData){
+        let canvasEl = document.createElement("canvas");
+        
+        let image:HTMLImageElement = root.querySelector(`img[data-src="${anImagesOccasionData[0]}"]`)
+
+        canvasEl.width = image.width;
+        canvasEl.height = image.height;
+        let canvas = new fabric.Canvas(canvasEl, {
+        imageSmoothingEnabled: false,
+    });
+        let imgEl = new Image();
+        imgEl.src = image.src;
+        imgEl.onload = function () {
+            let imgFabric = new fabric.Image(imgEl);
+            let scaleX = canvas.width / imgFabric.width,
+                scaleY = canvas.height / imgFabric.height;
+            canvas.setViewportTransform([scaleX, 0, 0, scaleY, 0, 0]);
+            canvas.setBackgroundImage(
+                imgFabric,
+                canvas.renderAll.bind(canvas),
+                {
+                    scaleX: 1,
+                    scaleY: 1,
+                },
+            );
+        };
+
+        let occlusionArr = anImagesOccasionData[1];
+        occlusionArr.forEach((obj) => {
+            if (obj.cId == currentClozeId) {
+                let occlusion = createOcclusionRectEl(
+                    obj.left,
+                    obj.top,
+                    obj.width,
+                    obj.height,
+                    obj.angle,
+                    obj.cId,
+                );
+                occlusion._objects[0].set("opacity", 1);
+                canvas.add(occlusion);
+                canvas.renderAll();
+            }
+        });
+        canvasEl.style.top = `${image.getBoundingClientRect().top-rootTop}px`
+        canvasEl.style.left = `${image.getBoundingClientRect().left-rootLeft}px`
+        container.append(canvasEl)
+    }
+}
+
+export function createOcclusionRectEl(
+    left = 0,
+    top = 0,
+    width = 80,
+    height = 40,
+    angle = 0,
+    cId = 1,
+) {
+    const rect = new fabric.Rect({
+        fill: "#FFEBA2",
+        stroke: "#000",
+        strokeWidth: 1,
+        strokeUniform: true,
+        noScaleCache: false,
+        opacity: 0.8,
+        width: width,
+        height: height,
+        originX: "center",
+        originY: "center",
+    });
+    const text = new fabric.Text(`${cId}`, {
+        originX: "center",
+        originY: "center",
+    });
+    text.scaleToHeight(height);
+    const group = new fabric.Group([rect, text], {
+        left: left,
+        top: top,
+        width: width,
+        height: height,
+        originX: "center",
+        originY: "center",
+        angle: angle,
+    });
+    return group;
+}
+
+
 
