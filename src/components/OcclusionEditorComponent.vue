@@ -40,8 +40,8 @@ const props = defineProps({
 const emit = defineEmits(['destory','response'])
 import {fabric} from "fabric"
 import { ref, onMounted, onUnmounted, watch, emit } from "vue";
-const MaxWidth = 800
-const MaxHeight = 800
+const MaxWidth = 1200
+const MaxHeight = 600
 
 let canvasRef = ref(null)
 let cidSelectorRef = ref(1)
