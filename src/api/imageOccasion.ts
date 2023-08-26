@@ -140,7 +140,8 @@ function showOcclusion(ImagesOccasionData:[string,Occasion[]][],root:HTMLElement
 
         let occlusionArr = anImagesOccasionData[1];
         occlusionArr.forEach((obj) => {
-            if (obj.cId == currentClozeId) {
+            //先改为全部通过
+            if (obj.cId == currentClozeId || true) {
                 let occlusion = createOcclusionRectEl(
                     obj.left,
                     obj.top,
