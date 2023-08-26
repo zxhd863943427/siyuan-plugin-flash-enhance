@@ -148,7 +148,7 @@ function showOcclusion(ImagesOccasionData:[string,Occasion[]][],root:HTMLElement
         });
         canvasEl.style.top = `${image.getBoundingClientRect().top-containerTop}px`
         canvasEl.style.left = `${image.getBoundingClientRect().left-containerLeft}px`
-        canvasEl.style.position = "relative"
+        canvasEl.style.position = "absolute"
         container.append(canvasEl)
     }
 }
