@@ -57,6 +57,9 @@ export function occasionLoad({detail}: any){
     console.log("启动遮挡")
     let imgToCanvasHashMap = {};
     let container = document.createElement("div")
+    container.classList.add("plugin-occasion-container")
+    container.style.position = "relative"
+    container.style.height = "0px"
     let imagesContainer = Array.from(detail.element.querySelectorAll("[custom-plugin-image-occlusion]"))
     let ImagesOccasionData:[string,Occasion[]][] = imagesContainer
     .map((elem:HTMLElement)=>{
@@ -70,16 +73,23 @@ export function occasionLoad({detail}: any){
         return data[0]
     })
     console.log(imagesContainer,ImagesOccasionData,OccasionedImages)
-    detail.element.querySelector(".protyle-content").appendChild(container)
+    let protyleContent = detail.element.querySelector(".protyle-content")
+    protyleContent.insertBefore(container, protyleContent.firstChild)
     setHiddenImg(OccasionedImages, container)
 
     setTimeout(()=>{showOcclusion(ImagesOccasionData,detail.element,container)},300)
 }
 
 function setHiddenImg(OccasionedImages:String[],container:HTMLElement){
-    let cssText = ""
+    let cssText = `
+    .plugin-occasion-container {
+        visibility: hidden;
+    }
+    .card__block--hidemark .plugin-occasion-container {
+        visibility: initial;
+    }`
     for (let item of OccasionedImages){
-        cssText += `[data-src="${item}"]{
+        cssText += `.card__block--hidemark [data-src="${item}"]{
             visibility: hidden;
         }
         `
@@ -91,8 +101,8 @@ function setHiddenImg(OccasionedImages:String[],container:HTMLElement){
 
 function showOcclusion(ImagesOccasionData:[string,Occasion[]][],root:HTMLElement,container:HTMLElement){
     let currentClozeId = 1
-    let rootTop = root.getBoundingClientRect().top
-    let rootLeft = root.getBoundingClientRect().left
+    let containerTop = container.getBoundingClientRect().top
+    let containerLeft = container.getBoundingClientRect().left
     for(let anImagesOccasionData of ImagesOccasionData){
         let canvasEl = document.createElement("canvas");
         
@@ -136,8 +146,9 @@ function showOcclusion(ImagesOccasionData:[string,Occasion[]][],root:HTMLElement
                 canvas.renderAll();
             }
         });
-        canvasEl.style.top = `${image.getBoundingClientRect().top-rootTop}px`
-        canvasEl.style.left = `${image.getBoundingClientRect().left-rootLeft}px`
+        canvasEl.style.top = `${image.getBoundingClientRect().top-containerTop}px`
+        canvasEl.style.left = `${image.getBoundingClientRect().left-containerLeft}px`
+        canvasEl.style.position = "relative"
         container.append(canvasEl)
     }
 }
