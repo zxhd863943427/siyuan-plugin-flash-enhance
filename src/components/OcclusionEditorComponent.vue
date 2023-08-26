@@ -235,20 +235,43 @@ function initEmitEvent(){
 }
 
 watch(fabricSelection,updateCid)
-
+let mouseX,mouseY,isInCanvas
+function initMouseListener(){
+    console.log(canvasRef.value)
+    canvasRef.value.parentElement.addEventListener("mousemove",(e)=>{
+        mouseX = e.offsetX
+        mouseY = e.offsetY
+        isInCanvas = mouseX > 1 && imgEl.width - mouseX > 1  && mouseY > 1 && imgEl.height - mouseY  > 1
+        // console.log(isInCanvas)
+    })
+}
+function getMiddle(a, b, c) {
+  let nums = [a, b, c].sort((x, y) => x - y);
+  return nums[1];
+}
 const addOcclusion = () => {
-    const randomLocation = {
-        x:
-            Math.floor(
-                Math.random() * (imgEl.width - 0.22 * imgEl.width),
-            ) +
-            0.11 * imgEl.width,
-        y:
-            Math.floor(
-                Math.random() * (imgEl.height - 0.22 * imgEl.height),
-            ) +
-            0.11 * imgEl.height,
-    };
+
+    let randomLocation
+    if (isInCanvas) {
+        randomLocation = {
+            x: getMiddle(0.11 * imgEl.width, mouseX, imgEl.width - 0.11 * imgEl.width),
+            y: getMiddle(0.11 * imgEl.height, mouseY, imgEl.height - 0.11 * imgEl.height),
+        };
+    }
+    else {
+        randomLocation = {
+            x:
+                Math.floor(
+                    Math.random() * (imgEl.width - 0.22 * imgEl.width),
+                ) +
+                0.11 * imgEl.width,
+            y:
+                Math.floor(
+                    Math.random() * (imgEl.height - 0.22 * imgEl.height),
+                ) +
+                0.11 * imgEl.height,
+        };
+    }
     const occlusionEl = createOcclusionRectEl(
         randomLocation.x,
         randomLocation.y,
@@ -280,6 +303,7 @@ onMounted(()=>{
     initFabricEventListener()
     initPreventOutOfBounds()
     initEmitEvent()
+    initMouseListener()
     document.body.addEventListener("keydown",onKeydown,{
                 capture: true,
             })
