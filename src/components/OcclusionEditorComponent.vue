@@ -244,7 +244,7 @@ function initMouseListener(){
         mouseX = e.offsetX
         mouseY = e.offsetY
         let {width, height} = canvas.getBoundingClientRect()
-        isInCanvas = mouseX > 1 && width - mouseX > 1  && mouseY > 1 && height - mouseY  > 1
+        isInCanvas = mouseX > 0.03 * width && width - mouseX > 0.03 * width  && mouseY > 0.03 * height && height - mouseY  > 0.03 * height
         // console.log(mouseX,mouseY,isInCanvas)
     })
 }
