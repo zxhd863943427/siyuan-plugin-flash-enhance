@@ -14,3 +14,31 @@
     align-items: center;
   }
 }
+[custom-plugin-image-occlusion]{ 
+  img {
+  box-shadow: 0 0 0 2px var(--b3-mask-background);
+  border-radius: 5px;
+  border: 2px solid var(--b3-theme-on-background);
+  }
+  img:hover {
+    box-shadow: 4px 4px var(--b3-theme-on-background);
+    transform: translate(-4px, -4px);
+    transition: all ease-in 0.3s;
+  }
+}
+div.card__block [custom-plugin-image-occlusion]{
+  img {
+    box-shadow: none;
+    border: none;
+  }
+  img:hover {
+    box-shadow: 4px 4px var(--b3-theme-on-background);
+    transform: translate(-4px, -4px);
+    transition: all ease-in 0.3s;
+  }
+}
+
+
+.plugin-occasion-container canvas{
+  z-index: 100;
+}
