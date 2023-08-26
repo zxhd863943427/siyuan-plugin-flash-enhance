@@ -6,7 +6,9 @@
     <div class="">
        <div class="panel-content">
           <div class="ui__confirm-modal is-">
-             <div class="cloze-editor"></div>
+             <div class="cloze-editor">
+               <OcclusionEditorComponent :imgSrc="currentImg" :occlusionData="loadData[currentImg]" />
+             </div>
              <div class="fn__flex b3-label">
                <span class="">
                <button type="button" class="b3-button b3-button--outline fn__flex-center fn__size96" @:click="occlusion_save_action">Save</button>
@@ -22,10 +24,10 @@
 </template>
 
 <script lang="ts" setup>
-import fabric from "fabric"
-import { defineProps } from 'vue'
 import { getBlock } from "../lib/utils"
 import { fetchSyncPost } from "siyuan";
+import OcclusionEditorComponent from "./OcclusionEditorComponent.vue"
+import { Ref } from "vue";
 const props = defineProps({
    closeFunc:Function,
    img:HTMLElement
@@ -41,10 +43,13 @@ type Occasion = {
 type OcclusionList = Map<string,Occasion[]>
 
 // console.log(props.closeFunc,props.img, getBlock(props.img))
-let currentBlock = getBlock(props.img)
+let currentBlock = getBlock(props.img as HTMLElement)
 let currentBlockID = currentBlock.getAttribute("data-node-id")
-let loadData:OcclusionList = JSON.parse(currentBlock?.getAttribute("custom-plugin-image-occlusion"))
-let currentImg = props.img.querySelector("img").getAttribute("src")
+let rawData = currentBlock?.getAttribute("custom-plugin-image-occlusion")
+rawData = rawData ? rawData : "{}"
+let loadData:OcclusionList = JSON.parse(rawData ? rawData : "")
+let currentImgSrc = ((props.img as HTMLElement).querySelector("img") as HTMLImageElement).getAttribute("src")
+let currentImg = currentImgSrc!=null ? currentImgSrc : "" 
 console.log(currentBlock,currentBlockID,loadData,props.img,currentImg,loadData[currentImg])
 
 function updateData(resolveData:Occasion[]) {
@@ -63,10 +68,12 @@ function saveData() {
 
 function occlusion_save_action() {
    saveData()
-   props.closeFunc()
+   if (props.closeFunc != undefined)
+      props.closeFunc()
 }
 
 function occlusion_cancel_action() {
-   props.closeFunc()
+   if (props.closeFunc != undefined)
+      props.closeFunc()
 }
 </script>

@@ -1,0 +1,493 @@
+<template>
+    <canvas ref="canvasRef"></canvas>
+</template>
+
+<script lang="ts" setup>
+type Occasion = {
+    "left":number,
+    "top":number,
+    "width":number,
+    "height":number,
+    "angle":number,
+    "cId":number}
+const props = defineProps({
+    imgSrc:String,
+    occlusionData:Array<Occasion>
+})
+import {fabric} from "fabric"
+import { ref, onMounted, watch } from "vue";
+const MaxWidth = 800
+const MaxHeight = 800
+
+let canvasRef = ref(null)
+let cidSelectorRef = ref(null)
+let fabricSelection = ref(null)
+
+let fabricRef: fabric.Canvas
+let imgEl = new Image()
+imgEl.src = props.imgSrc
+
+async function initFabric(){
+    fabricRef = new fabric.Canvas(canvasRef.value, { 
+        stateful: true,
+        selection:false,
+        uniformScaling:false })
+
+    imgEl.onload=(e)=>{
+        const img = new fabric.Image(imgEl)
+        const canvasWidth = Math.min(
+                        imgEl.width,
+                        MaxWidth
+                    );
+        const canvasHeight = Math.min(
+                        imgEl.height,
+                        MaxHeight
+                    );
+        const scale = Number(
+                        Math.min(
+                            canvasWidth / imgEl.width,
+                            canvasHeight / imgEl.height,
+                        ).toPrecision(1),
+                    );
+        fabricRef.setZoom(scale);
+        fabricRef.setWidth(imgEl.width * scale);
+        fabricRef.setHeight(imgEl.height * scale);
+        fabricRef.setBackgroundImage(
+            img,
+            fabricRef.renderAll.bind(fabricRef),
+            {
+                scaleX: 1,
+                scaleY: 1,
+            },
+        );
+        props.occlusionData.forEach((obj) => {
+                        const occlusionEl = createOcclusionRectEl(
+                            obj.left,
+                            obj.top,
+                            obj.width,
+                            obj.height,
+                            obj.angle,
+                            obj.cId,
+                        );
+                        fabricRef.add(occlusionEl);
+                    });
+        fabricRef.renderAll();
+        
+    }
+    
+}
+
+function initPreventOutOfBounds(){
+    const preventOutOfBounds = (e: any) => {
+        const obj = e.target;
+        const top = obj.top;
+        const bottom = top + obj.height * obj.scaleY;
+        const left = obj.left;
+        const right = left + obj.width * obj.scaleX;
+
+        const topBound = (obj.height * obj.scaleY) / 2;
+        const bottomBound = topBound + imgEl.height;
+        const leftBound = (obj.width * obj.scaleX) / 2;
+        const rightBound = leftBound + imgEl.width;
+
+        // capping logic here
+        obj.left = Math.min(
+            Math.max(left, leftBound),
+            rightBound - obj.width * obj.scaleX,
+        );
+        obj.top = Math.min(
+            Math.max(top, topBound),
+            bottomBound - obj.height * obj.scaleY,
+        );
+    };
+    fabricRef.on("object:moving", preventOutOfBounds);
+    fabricRef.on("object:modified", preventOutOfBounds);
+}
+
+const disposeFabric = () => {
+                fabricRef.dispose();
+            };
+
+function initFabricEventListener(){
+    fabricRef.on("selection:created",()=>{
+        fabricSelection.value = fabricRef.getActiveObject()
+        console.log(fabricRef.getActiveObject())
+    })
+    fabricRef.on("selection:updated",()=>{
+        fabricSelection.value = fabricRef.getActiveObject()
+        console.log(fabricRef.getActiveObject())
+        
+    })
+    fabricRef.on("selection:cleared",()=>{
+        fabricSelection.value = fabricRef.getActiveObject()
+        console.log(fabricRef.getActiveObject())
+    })
+    console.log(fabricRef.getActiveObject())
+}
+
+function updateCid(){
+    cidSelectorRef.value = fabricSelection.value._objects[1].text;
+    console.log(cidSelectorRef)
+}
+
+watch(fabricSelection,updateCid)
+
+onMounted(()=>{
+    initFabric()
+    // console.log("init fabric")
+    initFabricEventListener()
+    initPreventOutOfBounds()
+})
+
+// const OcclusionEditorComponent = React.forwardRef<any, any>(
+//     ({ imgURL, occlusionArr }, fabricRef: any) => {
+//         const canvasRef = React.useRef(null);
+//         const cidSelectorRef = React.useRef(null);
+//         const [imgEl, setImgEl] = React.useState(new window.parent.Image());
+
+//         React.useEffect(() => {
+//             const initFabric = async () => {
+//                 fabricRef.current = new window.parent.fabric.Canvas(
+//                     canvasRef.current,
+//                     { stateful: true },
+//                 );
+//                 fabricRef.current.selection = false; // disable group selection
+//                 fabricRef.current.uniformScaling = false; // disable object scaling keeping aspect ratio
+
+//                 // Load the image and then add the occlusion rectangles
+//                 imgEl.setAttribute("crossOrigin", "anonymous");
+//                 const graphPath = (await logseq.App.getCurrentGraph()).path;
+//                 imgEl.src = isWebURL_REGEXP.test(imgURL)
+//                     ? imgURL
+//                     : encodeURI(path.join(graphPath, path.resolve(imgURL)));
+//                 imgEl.onload = function () {
+//                     const img = new window.parent.fabric.Image(imgEl);
+//                     const canvasWidth = Math.min(
+//                         imgEl.width,
+//                         window.parent.document.querySelector(
+//                             ".occlusion__editor",
+//                         ).clientWidth - 160,
+//                     );
+//                     const canvasHeight = Math.min(
+//                         imgEl.height,
+//                         window.parent.document.body.clientHeight - 340,
+//                     );
+//                     const scale = Number(
+//                         Math.min(
+//                             canvasWidth / imgEl.width,
+//                             canvasHeight / imgEl.height,
+//                         ).toPrecision(1),
+//                     );
+//                     fabricRef.current.setZoom(scale);
+//                     fabricRef.current.setWidth(imgEl.width * scale);
+//                     fabricRef.current.setHeight(imgEl.height * scale);
+//                     fabricRef.current.setBackgroundImage(
+//                         img,
+//                         fabricRef.current.renderAll.bind(fabricRef.current),
+//                         {
+//                             scaleX: 1,
+//                             scaleY: 1,
+//                         },
+//                     );
+//                     fabricRef.current.renderAll();
+
+//                     occlusionArr.forEach((obj) => {
+//                         const occlusionEl = createOcclusionRectEl(
+//                             obj.left,
+//                             obj.top,
+//                             obj.width,
+//                             obj.height,
+//                             obj.angle,
+//                             obj.cId,
+//                         );
+//                         fabricRef.current.add(occlusionEl);
+//                     });
+//                     fabricRef.current.renderAll();
+//                 };
+//             };
+//             const disposeFabric = () => {
+//                 fabricRef.current.dispose();
+//             };
+//             initFabric();
+//             return () => {
+//                 disposeFabric();
+//             };
+//         }, []);
+
+//         // Handle Selection
+//         const [fabricSelection, setFabricSelection] = React.useState(null);
+//         React.useEffect(() => {
+//             fabricRef.current.on("selection:created", function () {
+//                 setFabricSelection(fabricRef.current.getActiveObject());
+//             });
+//             fabricRef.current.on("selection:updated", function () {
+//                 setFabricSelection(fabricRef.current.getActiveObject());
+//             });
+//             fabricRef.current.on("selection:cleared", function () {
+//                 setFabricSelection(null);
+//             });
+//         }, [fabricRef]);
+//         React.useEffect(() => {
+//             if (fabricSelection) {
+//                 cidSelectorRef.current.value = fabricSelection._objects[1].text;
+//             }
+//         }, [fabricSelection]);
+
+//         // Prevent out of bounds - https://stackoverflow.com/a/42915768
+//         React.useEffect(() => {
+//             const preventOutOfBounds = (e: any) => {
+//                 const obj = e.target;
+//                 const top = obj.top;
+//                 const bottom = top + obj.height * obj.scaleY;
+//                 const left = obj.left;
+//                 const right = left + obj.width * obj.scaleX;
+
+//                 const topBound = (obj.height * obj.scaleY) / 2;
+//                 const bottomBound = topBound + imgEl.height;
+//                 const leftBound = (obj.width * obj.scaleX) / 2;
+//                 const rightBound = leftBound + imgEl.width;
+
+//                 // capping logic here
+//                 obj.left = Math.min(
+//                     Math.max(left, leftBound),
+//                     rightBound - obj.width * obj.scaleX,
+//                 );
+//                 obj.top = Math.min(
+//                     Math.max(top, topBound),
+//                     bottomBound - obj.height * obj.scaleY,
+//                 );
+//             };
+//             fabricRef.current.on("object:moving", preventOutOfBounds);
+//             fabricRef.current.on("object:modified", preventOutOfBounds);
+//         }, [fabricRef]);
+
+//         // Handle some key events
+//         React.useEffect(() => {
+//             const onKeydown = (e: KeyboardEvent) => {
+//                 if (e.key === "Escape" && fabricRef.current.getActiveObject()) {
+//                     fabricRef.current.discardActiveObject();
+//                     fabricRef.current.renderAll();
+//                     e.stopImmediatePropagation();
+//                 }
+//                 if (e.key === "Delete" && fabricRef.current.getActiveObject()) {
+//                     deleteOcclusion();
+//                     e.stopImmediatePropagation();
+//                 }
+//                 if (e.key === "Insert") {
+//                     addOcclusion();
+//                     e.stopImmediatePropagation();
+//                 }
+//                 if (e.key === "ArrowUp") {
+//                     if (fabricRef.current.getActiveObject()) {
+//                         fabricRef.current.getActiveObject().top -= 1;
+//                         fabricRef.current.renderAll();
+//                         e.stopImmediatePropagation();
+//                     }
+//                 }
+//                 if (e.key === "ArrowDown") {
+//                     if (fabricRef.current.getActiveObject()) {
+//                         fabricRef.current.getActiveObject().top += 1;
+//                         fabricRef.current.renderAll();
+//                         e.stopImmediatePropagation();
+//                     }
+//                 }
+//                 if (e.key === "ArrowLeft") {
+//                     if (fabricRef.current.getActiveObject()) {
+//                         fabricRef.current.getActiveObject().left -= 1;
+//                         fabricRef.current.renderAll();
+//                         e.stopImmediatePropagation();
+//                     }
+//                 }
+//                 if (e.key === "ArrowRight") {
+//                     if (fabricRef.current.getActiveObject()) {
+//                         fabricRef.current.getActiveObject().left += 1;
+//                         fabricRef.current.renderAll();
+//                         e.stopImmediatePropagation();
+//                     }
+//                 }
+//                 if (e.key >= "1" && e.key <= "9") {
+//                     if (fabricRef.current.getActiveObject()) {
+//                         cidSelectorRef.current.value = e.key;
+//                         const event = new Event("change", { bubbles: true });
+//                         cidSelectorRef.current.dispatchEvent(event);
+//                         e.stopImmediatePropagation();
+//                     }
+//                 }
+//             };
+//             window.parent.document.addEventListener("keydown", onKeydown, {
+//                 capture: true,
+//             });
+//             return () => {
+//                 window.parent.document.removeEventListener(
+//                     "keydown",
+//                     onKeydown,
+//                     { capture: true },
+//                 );
+//             };
+//         }, [fabricRef]);
+
+//         // Create the UI
+//         const addOcclusion = () => {
+//             const randomLocation = {
+//                 x:
+//                     Math.floor(
+//                         Math.random() * (imgEl.width - 0.22 * imgEl.width),
+//                     ) +
+//                     0.11 * imgEl.width,
+//                 y:
+//                     Math.floor(
+//                         Math.random() * (imgEl.height - 0.22 * imgEl.height),
+//                     ) +
+//                     0.11 * imgEl.height,
+//             };
+//             const occlusionEl = createOcclusionRectEl(
+//                 randomLocation.x,
+//                 randomLocation.y,
+//                 0.22 * imgEl.width,
+//                 0.22 * imgEl.height,
+//             );
+//             fabricRef.current.add(occlusionEl);
+//             fabricRef.current.setActiveObject(occlusionEl);
+//             fabricRef.current.renderAll();
+//         };
+//         const deleteOcclusion = () => {
+//             fabricRef.current.remove(fabricRef.current.getActiveObject());
+//             fabricRef.current.renderAll();
+//         };
+//         const onCIdChange = () => {
+//             if (fabricSelection) {
+//                 fabricRef.current
+//                     .getActiveObject()
+//                     ._objects[1].set("text", cidSelectorRef.current.value);
+//                 fabricRef.current.renderAll();
+//             }
+//         };
+//         return (
+//             <div>
+//                 <div
+//                     className="flex"
+//                     style={{
+//                         justifyContent: "space-between",
+//                         marginTop: "0.3rem",
+//                         marginBottom: "0.6rem",
+//                     }}
+//                 >
+//                     <div className="flex" style={{ alignItems: "center" }}>
+//                         <i
+//                             className="ti"
+//                             dangerouslySetInnerHTML={{ __html: ANKI_ICON }}
+//                         ></i>
+//                         <h3 className="text-lg" style={{ marginLeft: "4px" }}>
+//                             Occlusion Editor
+//                         </h3>
+//                     </div>
+//                     <a href="https://github.com/sponsors/debanjandhar12">
+//                         <img
+//                             alt="Donate"
+//                             style={{ height: "1.6rem" }}
+//                             src={DONATE_ICON}
+//                         />
+//                     </a>
+//                 </div>
+//                 <div
+//                     className="occlusion-editor-toolbar flex"
+//                     style={{
+//                         justifyContent: "end",
+//                         alignItems: "center",
+//                         marginBottom: "0.3rem",
+//                     }}
+//                 >
+//                     <button
+//                         onClick={addOcclusion}
+//                         className="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm"
+//                         style={{
+//                             margin: "0.125rem 0.25rem 0.125rem 0",
+//                             padding: ".35rem .35rem",
+//                         }}
+//                     >
+//                         <i
+//                             className="ti ti-plus"
+//                             style={{ fontSize: "1.25rem" }}
+//                         ></i>
+//                     </button>
+//                     <button
+//                         onClick={deleteOcclusion}
+//                         className="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm"
+//                         style={{
+//                             margin: "0.125rem 0.25rem 0.125rem 0",
+//                             padding: ".35rem .35rem",
+//                         }}
+//                         disabled={fabricSelection == null}
+//                     >
+//                         <i
+//                             className="ti ti-trash"
+//                             style={{ fontSize: "1.25rem" }}
+//                         ></i>
+//                     </button>
+//                     <span style={{ fontSize: "0.875rem", marginLeft: "1rem" }}>
+//                         Cloze Id:
+//                     </span>{" "}
+//                     <select
+//                         ref={cidSelectorRef}
+//                         onChange={onCIdChange}
+//                         className="form-select is-small"
+//                         style={{ margin: "0", width: "80px", height: "2.2rem" }}
+//                         disabled={fabricSelection == null}
+//                     >
+//                         {_.range(1, 10).map((i) => (
+//                             <option key={i} value={i}>
+//                                 {i}
+//                             </option>
+//                         ))}
+//                     </select>
+//                 </div>
+//                 <div
+//                     className="cloze-editor-canvas-container flex"
+//                     style={{ justifyContent: "center" }}
+//                 >
+//                     <canvas ref={canvasRef} />
+//                 </div>
+//             </div>
+//         );
+//     },
+// );
+
+function createOcclusionRectEl(
+    left = 0,
+    top = 0,
+    width = 80,
+    height = 40,
+    angle = 0,
+    cId = 1,
+) {
+    const rect = new window.parent.fabric.Rect({
+        fill: "#FFEBA2",
+        stroke: "#000",
+        strokeWidth: 1,
+        strokeUniform: true,
+        noScaleCache: false,
+        opacity: 0.8,
+        width: width,
+        height: height,
+        originX: "center",
+        originY: "center",
+    });
+    const text = new window.parent.fabric.Text(`${cId}`, {
+        originX: "center",
+        originY: "center",
+    });
+    text.scaleToHeight(height);
+    const group = new window.parent.fabric.Group([rect, text], {
+        left: left,
+        top: top,
+        width: width,
+        height: height,
+        originX: "center",
+        originY: "center",
+        angle: angle,
+    });
+    return group;
+}
+
+
+</script>
