@@ -165,12 +165,7 @@ function getNewOcclusionData(){
     return occlusionArr
 }
 
-function initEmitEvent(){
-    emit("response",fabricRef)
-    emit("destory",()=>{
-        document.removeEventListener("keydown",onKeydown)
-    })
-}
+
 
 //选中元素更新后更新cid
 function updateCid(){
@@ -230,6 +225,15 @@ const onKeydown = (e: KeyboardEvent) => {
     }
 };
 
+function initEmitEvent(){
+    emit("response",fabricRef)
+    emit("destory",()=>{
+        document.body.removeEventListener("keydown",onKeydown,{
+        capture: true,
+    })
+    })
+}
+
 watch(fabricSelection,updateCid)
 
 const addOcclusion = () => {
@@ -276,7 +280,7 @@ onMounted(()=>{
     initFabricEventListener()
     initPreventOutOfBounds()
     initEmitEvent()
-    document.addEventListener("keydown",onKeydown,{
+    document.body.addEventListener("keydown",onKeydown,{
                 capture: true,
             })
 })

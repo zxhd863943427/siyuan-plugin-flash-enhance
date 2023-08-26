@@ -34,13 +34,21 @@ export function occasionEdit({detail}: any){
 
 function openOcclusionEditor(img:HTMLElement){
     console.log("开始编辑遮挡")
+    let destroyCallFn : Function[] =[]
+    destroyCallFn.push(()=>{console.log("dialog destory")})
     const occlusionEditorDialog = new Dialog({
         title:"图像遮挡编辑",
-        content:"<div id='image-editor'></div>"
+        content:"<div id='image-editor'></div>",
+        destroyCallback:()=>{
+            for(let fn of destroyCallFn){
+                fn()
+            }
+        }
     })
     const AppOcclusionEditor = createApp(OcclusionEditor.default,{
         closeFunc:()=>{occlusionEditorDialog.destroy()},
-        img:img
+        img:img,
+        destroyCallFn:destroyCallFn
         })
     AppOcclusionEditor.mount(occlusionEditorDialog.element.querySelector("#image-editor"))
 

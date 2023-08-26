@@ -7,7 +7,7 @@
        <div class="panel-content">
           <div class="ui__confirm-modal is-">
              <div class="cloze-editor">
-               <OcclusionEditorComponent :imgSrc="currentImg" :occlusionData="loadData[currentImg]" @response="(msg)=>{fabricRef = msg;console.log(fabricRef)}" @destory="(msg)=>{OcclusionEditorComponentDestory = msg}" />
+               <OcclusionEditorComponent :imgSrc="currentImg" :occlusionData="loadData[currentImg]" @response="(msg)=>{fabricRef = msg;console.log(fabricRef)}" @destory="(msg)=>{destroyCallFn.push(msg)}" />
              </div>
              <div class="fn__flex b3-label">
                <span class="">
@@ -31,7 +31,8 @@ import {fabric} from "fabric"
 import { Ref } from "vue";
 const props = defineProps({
    closeFunc:Function,
-   img:HTMLElement
+   img:HTMLElement,
+   destroyCallFn:Array<Function>
 })
 type Occasion = {
     "left":number,
