@@ -64,10 +64,7 @@ export function occasionLoad({detail}: any){
     }
     console.log("启动遮挡")
     let imgToCanvasHashMap = {};
-    let container = document.createElement("div")
-    container.classList.add("plugin-occasion-container")
-    container.style.position = "relative"
-    container.style.height = "0px"
+    let container = getOcclusionContainer(detail.element);
     let imagesContainer = Array.from(detail.element.querySelectorAll("[custom-plugin-image-occlusion]"))
     let ImagesOccasionData:[string,Occasion[]][] = imagesContainer
     .map((elem:HTMLElement)=>{
@@ -81,11 +78,25 @@ export function occasionLoad({detail}: any){
         return data[0]
     })
     console.log(imagesContainer,ImagesOccasionData,OccasionedImages)
-    let protyleContent = detail.element.querySelector(".protyle-content")
-    protyleContent.insertBefore(container, protyleContent.firstChild)
     setHiddenImg(OccasionedImages, container)
 
     setTimeout(()=>{showOcclusion(ImagesOccasionData,detail.element,container)},300)
+}
+
+function getOcclusionContainer(root:HTMLElement) {
+    
+    let container = (root.querySelector(".plugin-occasion-container") as HTMLDivElement|null);
+    if (container != null) {
+        container.innerHTML = ''
+        return container
+    }
+    container = document.createElement("div")
+    container.classList.add("plugin-occasion-container");
+    container.style.position = "relative";
+    container.style.height = "0px";
+    let protyleContent = root.querySelector(".protyle-content")
+    protyleContent.insertBefore(container, protyleContent.firstChild)
+    return container;
 }
 
 function setHiddenImg(OccasionedImages:String[],container:HTMLElement){
