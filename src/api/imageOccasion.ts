@@ -77,10 +77,15 @@ export function occasionLoad({detail}: any){
     .map((data:[string,Occasion[]])=>{
         return data[0]
     })
-    console.log(imagesContainer,ImagesOccasionData,OccasionedImages)
+    // console.log(imagesContainer,ImagesOccasionData,OccasionedImages)
     setHiddenImg(OccasionedImages, container)
 
-    setTimeout(()=>{showOcclusion(ImagesOccasionData,detail.element,container)},300)
+    imagesContainer
+    .map((elem:HTMLElement)=>{
+        let rawData:OcclusionList = JSON.parse(elem.getAttribute("custom-plugin-image-occlusion"))
+        setTimeout(()=>{showOcclusion(Object.entries(rawData), elem, container)},300)
+        return 
+    })
 }
 
 function getOcclusionContainer(root:HTMLElement) {
@@ -124,9 +129,10 @@ function showOcclusion(ImagesOccasionData:[string,Occasion[]][],root:HTMLElement
     let containerLeft = container.getBoundingClientRect().left
     for(let anImagesOccasionData of ImagesOccasionData){
         let canvasEl = document.createElement("canvas");
-        
-        let image:HTMLImageElement = root.querySelector(`img[data-src="${anImagesOccasionData[0]}"]`)
-
+        //处理一张闪卡出现相同图片的问题：选择不加载
+        let imageList = root.querySelectorAll(`img[data-src="${anImagesOccasionData[0]}"]`)
+        if (imageList.length != 1) return
+        let image = imageList[0] as HTMLImageElement
         canvasEl.width = image.width;
         canvasEl.height = image.height;
         let canvas = new fabric.Canvas(canvasEl, {
