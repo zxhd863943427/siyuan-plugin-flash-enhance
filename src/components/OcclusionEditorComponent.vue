@@ -291,7 +291,14 @@ const addOcclusion = () => {
     fabricRef.renderAll();
 };
 const deleteOcclusion = () => {
-    fabricRef.remove(fabricRef.getActiveObject());
+    let activeObjectList = fabricRef.getActiveObjects()
+    if (activeObjectList === null || activeObjectList === undefined)
+        return;
+    activeObjectList.forEach((activeObject:fabric.Object)=>{
+        fabricRef.remove(activeObject)
+    })
+    // fabricRef.remove(fabricRef.getActiveObject());
+    fabricRef.discardActiveObject()
     fabricRef.renderAll();
 };
 const onCIdChange = () => {
