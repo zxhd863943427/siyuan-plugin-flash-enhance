@@ -103,6 +103,47 @@ async function initFabric(){
     
 }
 
+let downPoint:undefined|fabric.Point;
+let upPoint:undefined|fabric.Point;
+function canvasMouseDown(e:fabric.IEvent){
+    downPoint=e.pointer
+}
+function canvasMouseup(e:fabric.IEvent){
+    let activeObject = fabricRef.getActiveObject()
+    console.log(activeObject)
+    if (activeObject != null && activeObject != undefined)
+        return
+    upPoint=e.pointer
+    if (upPoint===undefined || downPoint ===undefined)
+        return
+    let width = Math.abs(downPoint.x - upPoint.x)
+    let height = Math.abs(downPoint.y - upPoint.y)
+    let canvas = canvasRef.value
+    if (canvas === null) 
+        return;
+    let canvasRect = canvas.getBoundingClientRect()
+    if (width < 0.05 * canvasRect.width && height < 0.05 * canvasRect.height){
+        return
+    }
+    let top = Math.min(downPoint.y, upPoint.y) + 0.5 * height
+    let left = Math.min(downPoint.x, upPoint.x) + 0.5 * width
+
+    let angle = 0
+    let cId = cidSelectorRef.value
+    const occlusionEl = createOcclusionRectEl(left,top,width,height,angle,cId)
+    fabricRef.add(occlusionEl);
+    fabricRef.setActiveObject(occlusionEl);
+    fabricRef.renderAll();
+}
+
+function initDrawFree(){
+    fabricRef.selection = true
+    fabricRef.selectionColor = 'rgba(255, 235, 162, 0.2)' // 选框填充色：透明
+    fabricRef.selectionBorderColor = 'rgba(0, 0, 0, 0.3)' 
+
+    fabricRef.on("mouse:down",canvasMouseDown)
+    fabricRef.on("mouse:up",canvasMouseup)
+}
 
 const disposeFabric = () => {
                 fabricRef.dispose();
@@ -317,6 +358,7 @@ onMounted(()=>{
     initPreventOutOfBounds()
     initEmitEvent()
     initMouseListener()
+    initDrawFree()
     document.body.addEventListener("keydown",onKeydown,{
                 capture: true,
             })
