@@ -7,6 +7,7 @@ import {
     getParentElement, 
     isParentIsList,
     isDosuperBlockCard,
+    isDoImageOcclusion,
 } from "../lib/status"
 import { foreach } from "../lib/utils"
 import { settingList } from "../utils/config"
@@ -26,7 +27,7 @@ export function dyMakeCard(detail: any, plugin: any) {
         // console.log("是否为撤回操作:",isUndo(data))
         foreach(data.doOperations, (item: any) => {
             // console.log("\n是否打开动态制卡:\t", open)
-            makeMarkCard(item)
+            makeBlockCard(item)
             makeListCard(item)
             makeSuperBlockCard(item)
             autoDeleteCard(item)
@@ -34,12 +35,13 @@ export function dyMakeCard(detail: any, plugin: any) {
     })
 }
 
-function makeMarkCard(item: any) {
+function makeBlockCard(item: any) {
     let type = item.action
     let marked = isDoMark(item)
     let carded = isCarded(item)
-    let needMakeCard = ((type === "insert" || type === "update") && marked && !carded)
-    let needDelCard = ((type === "update" && !marked && carded))
+    let occlusioned = isDoImageOcclusion(item)
+    let needMakeCard = ((type === "insert" || type === "update") && marked && !carded) || (type === "updateAttrs" && occlusioned && !carded)
+    let needDelCard = (type === "update" && !marked && !occlusioned && carded)
     // console.log(item.id, "操作类型:", item.action,
     //     "\n是否已经制卡:\t", carded,
     //     "\n是否需要制卡:\t", needMakeCard,

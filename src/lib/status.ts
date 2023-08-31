@@ -13,6 +13,23 @@ export function isDoMark(item: any) {
     return query.length != 0
 }
 
+export function isDoImageOcclusion(item: any) {
+    if (item.data === null) {
+        return false
+    }
+    if ( typeof item.data === "string"){
+        let element = document.createElement("div")
+        element.innerHTML = item.data
+        let query = element.querySelectorAll("[custom-plugin-image-occlusion]")
+        // console.log(item.data)
+        // console.log(query)
+        return query.length != 0
+    }
+    // console.log(item.data)
+    return Object.keys(item.data.new).indexOf("custom-plugin-image-occlusion")!=-1
+
+}
+
 export function isDoListCard(item:any):boolean{
 
     let DoListCard = false
@@ -125,10 +142,15 @@ export function isCarded(item: any) {
     if (item.data === null) {
         return false
     }
-    let element = document.createElement("div")
-    element.innerHTML = item.data
-    let query = element.querySelectorAll("[custom-riff-decks]")
-    return query.length != 0
+    if (typeof item.data === "string"){
+        let element = document.createElement("div")
+        element.innerHTML = item.data
+        let query = element.querySelectorAll("[custom-riff-decks]")
+        return query.length != 0
+    }
+    if (typeof item.data === 'object'){
+        return Object.keys(item.data.new).indexOf("custom-riff-decks")!=-1
+    }
 }
 
 export function isDelete(item: any) {
