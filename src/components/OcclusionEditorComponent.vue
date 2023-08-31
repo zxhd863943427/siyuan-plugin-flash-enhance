@@ -640,7 +640,7 @@ function createOcclusionRectEl(
     angle = 0,
     cId = 1,
 ) {
-    const rect = new window.parent.fabric.Rect({
+    const rect = new fabric.Rect({
         fill: "#FFEBA2",
         stroke: "#000",
         strokeWidth: 1,
@@ -652,12 +652,12 @@ function createOcclusionRectEl(
         originX: "center",
         originY: "center",
     });
-    const text = new window.parent.fabric.Text(`${cId}`, {
+    const text = new fabric.Text(`${cId}`, {
         originX: "center",
         originY: "center",
     });
     text.scaleToHeight(height);
-    const group = new window.parent.fabric.Group([rect, text], {
+    const group = new fabric.Group([rect, text], {
         left: left,
         top: top,
         width: width,
