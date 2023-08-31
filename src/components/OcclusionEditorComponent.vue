@@ -39,13 +39,13 @@ const props = defineProps({
 })
 const emit = defineEmits(['destory','response'])
 import {fabric} from "fabric"
-import { ref, onMounted, onUnmounted, watch, emit } from "vue";
+import { Ref, ref, onMounted, onUnmounted, watch, emit } from "vue";
 const MaxWidth = 1200
 const MaxHeight = 600
 
-let canvasRef = ref(null)
+let canvasRef:Ref<HTMLCanvasElement | null> = ref(null)
 let cidSelectorRef = ref(1)
-let fabricSelection = ref(null)
+let fabricSelection:Ref<fabric.Object | null> = ref(null)
 
 let fabricRef: fabric.Canvas
 let imgEl = new Image()
