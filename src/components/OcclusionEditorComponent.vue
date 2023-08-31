@@ -84,6 +84,8 @@ async function initFabric(){
                 scaleY: 1,
             },
         );
+        if (!(props.occlusionData instanceof Array)) 
+            return;
         props.occlusionData.forEach((obj) => {
                         const occlusionEl = createOcclusionRectEl(
                             obj.left,
