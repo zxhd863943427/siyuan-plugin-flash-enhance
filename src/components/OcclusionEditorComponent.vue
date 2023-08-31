@@ -130,7 +130,14 @@ function canvasMouseup(e:fabric.IEvent){
 
     let angle = 0
     let cId = cidSelectorRef.value
-    const occlusionEl = createOcclusionRectEl(left,top,width,height,angle,cId)
+    let scale = fabricRef.getZoom()
+    const occlusionEl = createOcclusionRectEl(
+        left / scale,
+        top / scale,
+        width / scale,
+        height / scale,
+        angle,
+        cId)
     fabricRef.add(occlusionEl);
     fabricRef.setActiveObject(occlusionEl);
     fabricRef.renderAll();
