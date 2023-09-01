@@ -133,6 +133,11 @@ function showOcclusion(ImagesOccasionData:[string,Occasion[]][],root:HTMLElement
         let imageList = root.querySelectorAll(`img[data-src="${anImagesOccasionData[0]}"]`)
         if (imageList.length != 1) return
         let image = imageList[0] as HTMLImageElement
+        //兼容超级块制卡和列表制卡
+        let style = image.getBoundingClientRect()
+        if (style.width <= 0){
+            return
+        }
         canvasEl.width = image.width;
         canvasEl.height = image.height;
         let canvas = new fabric.Canvas(canvasEl, {
