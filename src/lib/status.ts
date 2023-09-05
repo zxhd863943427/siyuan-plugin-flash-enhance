@@ -13,6 +13,19 @@ export function isDoMark(item: any) {
     return query.length != 0
 }
 
+function isParagraph(item:any):boolean{
+    if (!item.data){
+        return false
+    }
+    let element = document.createElement("div")
+    element.innerHTML = item.data
+    if (!((element.firstChild as HTMLDivElement)?.classList && 
+    (element.firstChild as HTMLDivElement)?.classList.contains("p"))){
+        return false
+    }
+    return true
+}
+
 export function isDoListCard(item:any):boolean{
 
     let DoListCard = false
@@ -20,6 +33,9 @@ export function isDoListCard(item:any):boolean{
     element.innerHTML = item.data
 
     let sourceElement = getParentElement(item)
+    let paragraphed = isParagraph(item) //当前块非段落块，则说明非首行
+    if (!paragraphed)
+        return false
     if (sourceElement === null) //无法找到父节点，证明不是列表，返回false
         return false
     let parentIsList = isParentIsList(item)
@@ -65,6 +81,9 @@ export function isDosuperBlockCard(item:any):boolean{
     element.innerHTML = item.data
 
     let sourceElement = getParentElement(item)
+    let paragraphed = isParagraph(item) //当前块非段落块，则说明非首行
+    if (!paragraphed)
+        return false
     if (sourceElement === null) //无法找到父节点，证明不是列表，返回false
         return false
     let parentIsList = isParentIsSuperBlock(item)
