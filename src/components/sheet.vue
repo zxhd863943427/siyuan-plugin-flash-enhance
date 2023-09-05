@@ -121,6 +121,10 @@
                 .card__block--hidemark span:has(>span[style='color:#6495ed;']) {
                 font-size: 0px;
                 }
+                /*兼容选项，针对部分设备不支持has选择器。*/
+                .card__block--hidemark span[style='color:#6495ed;'] {
+                background: #6495ed;
+                }
 
             </component>
             <component is="script">
