@@ -65,6 +65,7 @@ export function occasionLoad({detail}: any){
     console.log("启动遮挡")
     let imgToCanvasHashMap = {};
     let container = getOcclusionContainer(detail.element);
+
     let imagesContainer = Array.from(detail.element.querySelectorAll("[custom-plugin-image-occlusion]"))
     let ImagesOccasionData:[string,Occasion[]][] = imagesContainer
     .map((elem:HTMLElement)=>{
@@ -83,9 +84,35 @@ export function occasionLoad({detail}: any){
     imagesContainer
     .map((elem:HTMLElement)=>{
         let rawData:OcclusionList = JSON.parse(elem.getAttribute("custom-plugin-image-occlusion"))
-        setTimeout(()=>{showOcclusion(Object.entries(rawData), elem, container)},300)
+        // setTimeout(()=>{showOcclusion(Object.entries(rawData), elem, container)},10)
+        let position = container.getBoundingClientRect()
+        let waitTime = 30
+        setTimeout(()=>{
+            waitToLoadedPosition(
+                container,
+                position,
+                ()=>{
+                    showOcclusion(Object.entries(rawData), elem, container)
+                },
+                waitTime)
+        },waitTime)
         return 
     })
+}
+//等待位置不再变动再进行操作
+function waitToLoadedPosition(elem:HTMLElement,position:DOMRect,fn:Function,waitTime:number = 10){
+    let newPosition = elem.getBoundingClientRect()
+    let topChange = Math.abs(newPosition.top - position.top)
+    let leftChange = Math.abs(newPosition.left - position.left)
+    console.log("wait change",topChange,leftChange)
+    if ((topChange + leftChange) < 0.1){
+        fn()
+    }
+    else{
+        setTimeout(()=>{
+            waitToLoadedPosition(elem,newPosition,fn,waitTime)
+        },waitTime)
+    }
 }
 
 function getOcclusionContainer(root:HTMLElement) {
