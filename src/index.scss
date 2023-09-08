@@ -16,13 +16,11 @@
 }
 [custom-plugin-image-occlusion]{ 
   img {
-  box-shadow: 0 0 0 2px var(--b3-mask-background);
+  box-shadow: 0.1em 0.1em 0.2em #aaaaaa20;
   border-radius: 5px;
-  border: 2px solid var(--b3-theme-on-background);
   }
   img:hover {
-    box-shadow: 4px 4px var(--b3-theme-on-background);
-    transform: translate(-4px, -4px);
+    box-shadow: 0.1em 0.1em 0.2em #aaaaaa40;
     transition: all ease-in 0.3s;
   }
 }
@@ -32,8 +30,7 @@ div.card__block [custom-plugin-image-occlusion]{
     border: none;
   }
   img:hover {
-    box-shadow: 4px 4px var(--b3-theme-on-background);
-    transform: translate(-4px, -4px);
+    box-shadow: 0.1em 0.1em 0.2em #aaaaaa40;
     transition: all ease-in 0.3s;
   }
 }
@@ -41,4 +38,16 @@ div.card__block [custom-plugin-image-occlusion]{
 
 .plugin-occasion-container canvas{
   z-index: 100;
+}
+#plugin-float-image-occasion canvas{
+  border-radius: 5px;
+  box-shadow: 0.1em 0.1em 0.2em #aaaaaa40;
+  transition: all ease-in 0.3s;
+  z-index: 20;
+  opacity: 0;
+  &:hover{
+    opacity: 1;
+    box-shadow: 0.1em 0.1em 0.2em #aaaaaaf0;
+    transition: all ease-in 0.2s;
+  }
 }

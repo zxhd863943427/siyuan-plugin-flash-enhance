@@ -4,6 +4,7 @@
 import { settingList } from "../utils/config"
 import { IMenuItemOption, Dialog } from "siyuan";
 import * as OcclusionEditor from "../components/OcclusionEditor.vue"
+import { getBlock } from "../lib/utils";
 import { createApp } from "vue";
 import { fabric } from "fabric";
 
@@ -180,7 +181,8 @@ function addCanvasOcclusion(
     currentClozeId:number,
     containerTop:number,
     containerLeft:number,
-    container:HTMLElement
+    container:HTMLElement,
+    opacity:number = 1
     ) {
     console.log("loaded img ",image.src)
     let style = image.getBoundingClientRect()
@@ -217,7 +219,7 @@ function addCanvasOcclusion(
                 obj.angle,
                 obj.cId,
             );
-            occlusion._objects[0].set("opacity", 1);
+            occlusion._objects[0].set("opacity", opacity);
             canvas.add(occlusion);
             canvas.renderAll();
         }
@@ -265,5 +267,70 @@ export function createOcclusionRectEl(
     return group;
 }
 
+const getFloatOccasionContainer = ()=>{
+    let container = document.createElement("div")
+    document.body.append(container)
+    container.id = "plugin-float-image-occasion"
+    container.style.position = "absolute"
+    // container.style.transform = "translate(-4px, -4px)"
+    container.style.borderRadius = "5px"
+    return container
+}
 
+const showFloatOcclusion = (imageElement:HTMLImageElement)=>{
+    let block = getBlock(imageElement)
+    let container = getFloatOccasionContainer()
+    let rawData:OcclusionList = JSON.parse(block.getAttribute("custom-plugin-image-occlusion"))
+    let canvasEl = document.createElement("canvas")
+    // let position = imageElement.getBoundingClientRect()
+    let containerPostion = container.getBoundingClientRect()
+    addCanvasOcclusion(imageElement,canvasEl,Object.entries(rawData)[0],1,containerPostion.top,containerPostion.left,container,0.5)
+    const removeElement = () => {
+        container.removeEventListener("mouseout",removeElement)
+        container.removeEventListener("contextmenu",rightClick)
+        setTimeout(()=>{container.remove()},300)
+        console.log('关闭函数');
+    }
+    const rightClick = (event:MouseEvent) =>{
+        const rightClickEvent = new MouseEvent('contextmenu', {
+            bubbles: true,
+            clientX:event.screenX,
+            clientY:event.screenY
+          }); 
+        imageElement.dispatchEvent(rightClickEvent);
+    }
+    // 鼠标移出,清除浮窗
+    container.addEventListener('mouseout',removeElement,{once:true});
+    container.addEventListener("contextmenu",rightClick)
+}
 
+const ShowFloatOccasionEvent = (event:MouseEvent) => {
+    // 事件目标
+    const target = event.target;
+
+    // 检查目标是否符合要求
+    if (!(target instanceof HTMLElement)){
+        return
+    }
+    if (target.matches('[custom-plugin-image-occlusion] img')) {
+
+        // 启动定时器,3秒后触发
+        const timer = setTimeout(() => {
+            showFloatOcclusion(target as HTMLImageElement)
+            console.log('触发函数');
+        }, 400);
+
+        // 鼠标移出,清除定时器
+        target.addEventListener('mouseout', () => {
+            clearTimeout(timer);
+            console.log('关闭函数');
+        },{once:true});
+    }
+}
+
+export function initShowFloatOccasion(){
+    let container = getFloatOccasionContainer()
+    document.body.addEventListener('mouseover', (event)=>{
+        ShowFloatOccasionEvent(event)
+    })
+}
