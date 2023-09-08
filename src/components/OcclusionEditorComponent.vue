@@ -176,6 +176,9 @@ function initFabricEventListener(){
 function initPreventOutOfBounds(){
     const preventOutOfBounds = (e: any) => {
         const obj = e.target;
+        if (obj.originX != "center"){
+            return
+        }
         const top = obj.top;
         const bottom = top + obj.height * obj.scaleY;
         const left = obj.left;
