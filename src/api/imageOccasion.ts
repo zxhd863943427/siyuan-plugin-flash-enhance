@@ -269,7 +269,10 @@ export function createOcclusionRectEl(
 
 const getFloatOccasionContainer = ()=>{
     let container = document.createElement("div")
-    document.body.append(container)
+    let root = document.querySelector(".b3-dialog")
+    if (root === null)
+        root = document.body
+    root.append(container)
     container.id = "plugin-float-image-occasion"
     container.style.position = "absolute"
     // container.style.transform = "translate(-4px, -4px)"

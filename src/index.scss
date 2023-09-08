@@ -43,7 +43,7 @@ div.card__block [custom-plugin-image-occlusion]{
   border-radius: 5px;
   box-shadow: 0.1em 0.1em 0.2em #aaaaaa40;
   transition: all ease-in 0.3s;
-  z-index: 20;
+  z-index: 2;
   opacity: 0;
   &:hover{
     opacity: 1;
