@@ -133,56 +133,73 @@ function showOcclusion(ImagesOccasionData:[string,Occasion[]][],root:HTMLElement
         let imageList = root.querySelectorAll(`img[data-src="${anImagesOccasionData[0]}"]`)
         if (imageList.length != 1) return
         let image = imageList[0] as HTMLImageElement
-        //兼容超级块制卡和列表制卡
-        let style = image.getBoundingClientRect()
-        if (style.width <= 0){
-            return
+        if (image.complete){
+            addCanvasOcclusion(image,canvasEl,anImagesOccasionData,currentClozeId,containerTop,containerLeft,container)
         }
-        canvasEl.width = image.width;
-        canvasEl.height = image.height;
-        let canvas = new fabric.Canvas(canvasEl, {
-        imageSmoothingEnabled: false,
-    });
-        let imgEl = new Image();
-        imgEl.src = image.src;
-        imgEl.onload = function () {
-            let imgFabric = new fabric.Image(imgEl);
-            let scaleX = canvas.width / imgFabric.width,
-                scaleY = canvas.height / imgFabric.height;
-            canvas.setViewportTransform([scaleX, 0, 0, scaleY, 0, 0]);
-            canvas.setBackgroundImage(
-                imgFabric,
-                canvas.renderAll.bind(canvas),
-                {
-                    scaleX: 1,
-                    scaleY: 1,
-                },
-            );
-        };
-
-        let occlusionArr = anImagesOccasionData[1];
-        occlusionArr.forEach((obj) => {
-            //先改为全部通过
-            if (obj.cId == currentClozeId || true) {
-                let occlusion = createOcclusionRectEl(
-                    obj.left,
-                    obj.top,
-                    obj.width,
-                    obj.height,
-                    obj.angle,
-                    obj.cId,
-                );
-                occlusion._objects[0].set("opacity", 1);
-                canvas.add(occlusion);
-                canvas.renderAll();
+        else{
+            image.onload = ()=>{
+                addCanvasOcclusion(image,canvasEl,anImagesOccasionData,currentClozeId,containerTop,containerLeft,container)
             }
-        });
-        canvasEl.style.top = `${image.getBoundingClientRect().top-containerTop}px`
-        canvasEl.style.left = `${image.getBoundingClientRect().left-containerLeft}px`
-        canvasEl.style.position = "absolute"
-        container.append(canvasEl)
+        }
+        
+        
     }
 }
+
+function addCanvasOcclusion(
+    image:HTMLImageElement,
+    canvasEl:HTMLCanvasElement,
+    anImagesOccasionData:[string, Occasion[]],
+    currentClozeId:number,
+    containerTop:number,
+    containerLeft:number,
+    container:HTMLElement
+    ) {
+    console.log("loaded img ",image.src)
+    let style = image.getBoundingClientRect()
+    //兼容超级块制卡和列表制卡
+    if (style.width <= 0){
+        return
+    }
+    canvasEl.width = image.width;
+    canvasEl.height = image.height;
+    let canvas = new fabric.Canvas(canvasEl, {
+    imageSmoothingEnabled: false,
+});
+    let imgFabric = new fabric.Image(image);
+    let scaleX = canvas.width / imgFabric.width,
+        scaleY = canvas.height / imgFabric.height;
+    canvas.setViewportTransform([scaleX, 0, 0, scaleY, 0, 0]);
+    canvas.setBackgroundImage(
+        imgFabric,
+        canvas.renderAll.bind(canvas),
+        {
+            scaleX: 1,
+            scaleY: 1,
+        },
+    );
+    let occlusionArr = anImagesOccasionData[1];
+    occlusionArr.forEach((obj) => {
+        //先改为全部通过
+        if (obj.cId == currentClozeId || true) {
+            let occlusion = createOcclusionRectEl(
+                obj.left,
+                obj.top,
+                obj.width,
+                obj.height,
+                obj.angle,
+                obj.cId,
+            );
+            occlusion._objects[0].set("opacity", 1);
+            canvas.add(occlusion);
+            canvas.renderAll();
+        }
+    });
+    canvasEl.style.top = `${image.getBoundingClientRect().top-containerTop}px`
+    canvasEl.style.left = `${image.getBoundingClientRect().left-containerLeft}px`
+    canvasEl.style.position = "absolute"
+    container.append(canvasEl)
+};
 
 export function createOcclusionRectEl(
     left = 0,
