@@ -16,11 +16,11 @@
 }
 [custom-plugin-image-occlusion]{ 
   img {
-  box-shadow: 0.1em 0.1em 0.2em #aaaaaa20;
+  box-shadow: 0.1em 0.1em 0.2em #aaaaaa60;
   border-radius: 5px;
   }
   img:hover {
-    box-shadow: 0.1em 0.1em 0.2em #aaaaaa40;
+    box-shadow: 0.1em 0.1em 0.2em #aaaaaab0;
     transition: all ease-in 0.3s;
   }
 }
@@ -30,7 +30,7 @@ div.card__block [custom-plugin-image-occlusion]{
     border: none;
   }
   img:hover {
-    box-shadow: 0.1em 0.1em 0.2em #aaaaaa40;
+    box-shadow: 0.1em 0.1em 0.2em #aaaaaab0;
     transition: all ease-in 0.3s;
   }
 }
@@ -41,7 +41,7 @@ div.card__block [custom-plugin-image-occlusion]{
 }
 #plugin-float-image-occasion canvas{
   border-radius: 5px;
-  box-shadow: 0.1em 0.1em 0.2em #aaaaaa40;
+  box-shadow: 0.1em 0.1em 0.2em #aaaaaaf0;
   transition: all ease-in 0.3s;
   z-index: 2;
   opacity: 0;
