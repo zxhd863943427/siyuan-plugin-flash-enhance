@@ -283,11 +283,13 @@ const getFloatOccasionContainer = ()=>{
 const showFloatOcclusion = (imageElement:HTMLImageElement)=>{
     let block = getBlock(imageElement)
     let container = getFloatOccasionContainer()
-    let rawData:OcclusionList = JSON.parse(block.getAttribute("custom-plugin-image-occlusion"))
+    let rawData:OcclusionList = new Map(Object.entries(JSON.parse(block.getAttribute("custom-plugin-image-occlusion"))))
+    let imgSrc = imageElement.getAttribute("src")
+    let occlusinData:[string, Occasion[]] = [imgSrc,rawData.get(imgSrc)]
     let canvasEl = document.createElement("canvas")
     // let position = imageElement.getBoundingClientRect()
     let containerPostion = container.getBoundingClientRect()
-    addCanvasOcclusion(imageElement,canvasEl,Object.entries(rawData)[0],1,containerPostion.top,containerPostion.left,container,0.5)
+    addCanvasOcclusion(imageElement,canvasEl,occlusinData,1,containerPostion.top,containerPostion.left,container,0.5)
     const removeElement = () => {
         container.removeEventListener("mouseout",removeElement)
         container.removeEventListener("contextmenu",rightClick)
