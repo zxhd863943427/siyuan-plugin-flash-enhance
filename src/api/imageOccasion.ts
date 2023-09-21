@@ -296,17 +296,18 @@ const showFloatOcclusion = (imageElement:HTMLImageElement)=>{
     addCanvasOcclusion(imageElement,canvasEl,occlusinData,1,containerPostion.top,containerPostion.left,container,0.5)
     const removeElement = () => {
         canvasEl.removeEventListener("mouseout",removeElement)
-        canvasEl.removeEventListener("contextmenu",rightClick)
         setTimeout(()=>{canvasEl.remove()},300)
         console.log('关闭函数');
     }
-    const rightClick = (event:MouseEvent) =>{
-        const rightClickEvent = new MouseEvent('contextmenu', {
-            bubbles: true,
-            clientX:event.screenX,
-            clientY:event.screenY
-          }); 
-        imageElement.dispatchEvent(rightClickEvent);
+    const productMouseEvent = (eventName:string)=>{
+        return (event:MouseEvent) =>{
+            const Event = new MouseEvent(eventName, {
+                bubbles: true,
+                clientX:event.screenX,
+                clientY:event.screenY
+              }); 
+            imageElement.dispatchEvent(Event);
+        }
     }
     const autoRemove = setTimeout(()=>removeElement(),5000)
     const autoCleanRemove = ()=>{
@@ -316,7 +317,9 @@ const showFloatOcclusion = (imageElement:HTMLImageElement)=>{
     canvasEl.onmouseover = autoCleanRemove
     // 鼠标移出,清除浮窗
     canvasEl.addEventListener('mouseout',removeElement,{once:true});
-    canvasEl.addEventListener("contextmenu",rightClick)
+    canvasEl.oncontextmenu = productMouseEvent('contextmenu')
+    canvasEl.onclick = productMouseEvent('click')
+    canvasEl.ondblclick = productMouseEvent('dblclick')
 }
 
 const ShowFloatOccasionEvent = (event:MouseEvent) => {
