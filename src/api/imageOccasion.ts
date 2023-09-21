@@ -277,7 +277,8 @@ const getFloatOccasionContainer = (imageElement:HTMLImageElement)=>{
     container.classList.add("float-occasion-container")
     wysiwygContainer.insertBefore(container, wysiwygContainer.firstChild)
     container.id = "plugin-float-image-occasion"
-    container.style.position = "absolute"
+    container.style.position = "relative"
+    container.style.height = "0px"
     // container.style.transform = "translate(-4px, -4px)"
     container.style.borderRadius = "5px"
     return container
