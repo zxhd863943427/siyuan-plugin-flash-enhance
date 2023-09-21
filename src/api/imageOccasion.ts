@@ -295,9 +295,9 @@ const showFloatOcclusion = (imageElement:HTMLImageElement)=>{
     let containerPostion = container.getBoundingClientRect()
     addCanvasOcclusion(imageElement,canvasEl,occlusinData,1,containerPostion.top,containerPostion.left,container,0.5)
     const removeElement = () => {
-        container.removeEventListener("mouseout",removeElement)
-        container.removeEventListener("contextmenu",rightClick)
-        setTimeout(()=>{container.remove()},300)
+        canvasEl.removeEventListener("mouseout",removeElement)
+        canvasEl.removeEventListener("contextmenu",rightClick)
+        setTimeout(()=>{canvasEl.remove()},300)
         console.log('关闭函数');
     }
     const rightClick = (event:MouseEvent) =>{
@@ -313,10 +313,10 @@ const showFloatOcclusion = (imageElement:HTMLImageElement)=>{
         // console.log("捕获到鼠标事件，停止自动清除")
         clearTimeout(autoRemove)
     }
-    container.onmouseover = autoCleanRemove
+    canvasEl.onmouseover = autoCleanRemove
     // 鼠标移出,清除浮窗
-    container.addEventListener('mouseout',removeElement,{once:true});
-    container.addEventListener("contextmenu",rightClick)
+    canvasEl.addEventListener('mouseout',removeElement,{once:true});
+    canvasEl.addEventListener("contextmenu",rightClick)
 }
 
 const ShowFloatOccasionEvent = (event:MouseEvent) => {
