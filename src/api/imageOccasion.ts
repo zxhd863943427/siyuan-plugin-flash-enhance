@@ -308,6 +308,12 @@ const showFloatOcclusion = (imageElement:HTMLImageElement)=>{
           }); 
         imageElement.dispatchEvent(rightClickEvent);
     }
+    const autoRemove = setTimeout(()=>removeElement(),5000)
+    const autoCleanRemove = ()=>{
+        // console.log("捕获到鼠标事件，停止自动清除")
+        clearTimeout(autoRemove)
+    }
+    container.onmouseover = autoCleanRemove
     // 鼠标移出,清除浮窗
     container.addEventListener('mouseout',removeElement,{once:true});
     container.addEventListener("contextmenu",rightClick)
