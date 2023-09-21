@@ -272,7 +272,7 @@ const getFloatOccasionContainer = (imageElement:HTMLImageElement)=>{
     if (wysiwygContainer === null) return;
     let container;
     container = wysiwygContainer.querySelector(".float-occasion-container")
-    if (container != null) return;
+    if (container != null) return container;
     container = document.createElement("div")
     container.classList.add("float-occasion-container")
     wysiwygContainer.insertBefore(container, wysiwygContainer.firstChild)
