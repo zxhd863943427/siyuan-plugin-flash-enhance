@@ -23,3 +23,10 @@ export function getBlock(node:HTMLElement):HTMLElement{
     }
     return node
 }
+
+export function getWysiwygContainer(node:HTMLElement):HTMLElement{
+    if(node!=null &&  !node.classList.contains("protyle-content")){
+        return getWysiwygContainer(node.parentElement)
+    }
+    return node
+}

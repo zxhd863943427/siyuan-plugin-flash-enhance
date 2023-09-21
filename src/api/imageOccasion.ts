@@ -4,7 +4,7 @@
 import { settingList } from "../utils/config"
 import { IMenuItemOption, Dialog } from "siyuan";
 import * as OcclusionEditor from "../components/OcclusionEditor.vue"
-import { getBlock } from "../lib/utils";
+import { getBlock, getWysiwygContainer } from "../lib/utils";
 import { createApp } from "vue";
 import { fabric } from "fabric";
 
@@ -267,12 +267,15 @@ export function createOcclusionRectEl(
     return group;
 }
 
-const getFloatOccasionContainer = ()=>{
-    let container = document.createElement("div")
-    let root = document.querySelector(".b3-dialog")
-    if (root === null)
-        root = document.body
-    root.append(container)
+const getFloatOccasionContainer = (imageElement:HTMLImageElement)=>{
+    let wysiwygContainer = getWysiwygContainer(imageElement)
+    if (wysiwygContainer === null) return;
+    let container;
+    container = wysiwygContainer.querySelector(".float-occasion-container")
+    if (container != null) return;
+    container = document.createElement("div")
+    container.classList.add("float-occasion-container")
+    wysiwygContainer.insertBefore(container, wysiwygContainer.firstChild)
     container.id = "plugin-float-image-occasion"
     container.style.position = "absolute"
     // container.style.transform = "translate(-4px, -4px)"
@@ -282,7 +285,7 @@ const getFloatOccasionContainer = ()=>{
 
 const showFloatOcclusion = (imageElement:HTMLImageElement)=>{
     let block = getBlock(imageElement)
-    let container = getFloatOccasionContainer()
+    let container = getFloatOccasionContainer(imageElement)
     let rawData:OcclusionList = new Map(Object.entries(JSON.parse(block.getAttribute("custom-plugin-image-occlusion"))))
     let imgSrc = imageElement.getAttribute("src")
     let occlusinData:[string, Occasion[]] = [imgSrc,rawData.get(imgSrc)]
@@ -334,7 +337,6 @@ const ShowFloatOccasionEvent = (event:MouseEvent) => {
 }
 
 export function initShowFloatOccasion(){
-    let container = getFloatOccasionContainer()
     document.body.addEventListener('mouseover', (event)=>{
         ShowFloatOccasionEvent(event)
     })
