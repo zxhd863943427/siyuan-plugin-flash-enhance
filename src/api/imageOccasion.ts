@@ -270,7 +270,7 @@ export function createOcclusionRectEl(
 const getFloatOccasionContainer = (imageElement:HTMLImageElement)=>{
     let wysiwygContainer = getWysiwygContainer(imageElement)
     if (wysiwygContainer === null) return;
-    let container;
+    let container:HTMLElement;
     container = wysiwygContainer.querySelector(".float-occasion-container")
     if (container != null) return container;
     container = document.createElement("div")
