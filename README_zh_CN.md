@@ -69,11 +69,11 @@
 
 开启后，能够实现以下操作：
 
-<video src="img/%E9%81%AE%E6%8C%A1.mp4" controls title="遮挡"></video>
+![遮挡](img/%E9%81%AE%E6%8C%A1.gif)
 
-<video src="img/%E6%82%AC%E6%B5%AE%E6%98%BE%E7%A4%BA.mp4" controls title="悬浮显示"></video>
+![悬浮显示](img/%E6%82%AC%E6%B5%AE%E6%98%BE%E7%A4%BA.gif)
 
-<video src="img/%E5%A4%8D%E4%B9%A0%E9%81%AE%E6%8C%A1.mp4" controls title="复习"></video>
+![复习](img/%E5%A4%8D%E4%B9%A0.gif)
 
 ### 缺陷
 * [x] 配置不能保存
