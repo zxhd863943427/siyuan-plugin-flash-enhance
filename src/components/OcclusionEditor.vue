@@ -58,8 +58,10 @@ console.log(currentBlock,currentBlockID,loadData,props.img,currentImg,loadData[c
 
 function updateData() {
    let resolveData =  getNewOcclusionData(fabricRef)
-   if (resolveData.length===0)
-      return
+   if (resolveData.length===0){
+      loadData[currentImg] ? delete loadData[currentImg] : "";
+      return;
+   }
    console.log("update save data")
    console.log(fabricRef)
    console.log(resolveData)
@@ -68,6 +70,9 @@ function updateData() {
 
 function saveData() {
    let savingData = JSON.stringify(loadData)
+   if (savingData === "{}"){
+      savingData = "";
+   }
    fetchSyncPost("/api/attr/setBlockAttrs",{
         "id": currentBlockID,
         "attrs": {
