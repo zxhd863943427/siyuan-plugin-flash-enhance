@@ -68,6 +68,7 @@
 #### 图片制卡
 
 开启后，能够实现以下操作：
+
 <video src="img/%E9%81%AE%E6%8C%A1.mp4" controls title="遮挡"></video>
 
 <video src="img/%E6%82%AC%E6%B5%AE%E6%98%BE%E7%A4%BA.mp4" controls title="悬浮显示"></video>
