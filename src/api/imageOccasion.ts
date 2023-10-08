@@ -289,11 +289,14 @@ const showFloatOcclusion = (imageElement:HTMLImageElement)=>{
     let container = getFloatOccasionContainer(imageElement)
     let rawData:OcclusionList = new Map(Object.entries(JSON.parse(block.getAttribute("custom-plugin-image-occlusion"))))
     let imgSrc = imageElement.getAttribute("src")
-    let occlusinData:[string, Occasion[]] = [imgSrc,rawData.get(imgSrc)]
+    let currentImgOcclusion = rawData.get(imgSrc)
+    if (currentImgOcclusion===undefined || currentImgOcclusion===null) //当前图像未遮挡则不应该悬浮
+        return;
+    let occlusionData:[string, Occasion[]] = [imgSrc,rawData.get(imgSrc)]
     let canvasEl = document.createElement("canvas")
     // let position = imageElement.getBoundingClientRect()
     let containerPostion = container.getBoundingClientRect()
-    addCanvasOcclusion(imageElement,canvasEl,occlusinData,1,containerPostion.top,containerPostion.left,container,0.5)
+    addCanvasOcclusion(imageElement,canvasEl,occlusionData,1,containerPostion.top,containerPostion.left,container,0.5)
     const removeElement = () => {
         canvasEl.removeEventListener("mouseout",removeElement)
         setTimeout(()=>{canvasEl.remove()},300)
