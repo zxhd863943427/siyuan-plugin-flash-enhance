@@ -7,7 +7,7 @@ export function isDoMark(item: any) {
     }
     let element = document.createElement("div")
     element.innerHTML = item.data
-    let query = element.querySelectorAll("span[data-type*='mark']")
+    let query = element.querySelectorAll("span[data-type~='mark']")
     // console.log(item.data)
     // console.log(query)
     return query.length != 0
