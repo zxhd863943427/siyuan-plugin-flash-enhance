@@ -1,4 +1,4 @@
-import { fetchSyncPost } from "siyuan"
+import { fetchSyncPost, IProtyle } from "siyuan"
 import { getFileID, getHpath, getCurrentPage } from "../utils/utils"
 import { foreach, saveViaTransaction } from"../lib/utils"
 import { settingList } from "../utils/config"
@@ -16,14 +16,14 @@ export function IRswitch(plugin:any) {
     plugin.addCommand({
         langKey: "extract",
         hotkey: "⌥Q",
-        callback: () => {
+        editorCallback: (protyle: IProtyle) => {
             摘录();
         }
     })
     plugin.addCommand({
         langKey: "hollowedOut",
         hotkey: "⌥W",
-        callback: () => {
+        editorCallback: (protyle: IProtyle) => {
             挖空();
         }
     })
@@ -39,14 +39,14 @@ export function IRswitch(plugin:any) {
             plugin.addCommand({
                 langKey: "extract",
                 hotkey: "⌥Q",
-                callback: () => {
+                editorCallback: (protyle: IProtyle) => {
                     摘录();
                 }
             })
             plugin.addCommand({
                 langKey: "hollowedOut",
                 hotkey: "⌥W",
-                callback: () => {
+                editorCallback: (protyle: IProtyle) => {
                     挖空();
                 }
             })
