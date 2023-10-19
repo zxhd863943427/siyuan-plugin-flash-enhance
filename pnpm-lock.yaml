@@ -17,6 +17,9 @@ dependencies:
   shortcuts:
     specifier: ^2.0.3
     version: registry.npmmirror.com/shortcuts@2.0.3
+  siyuan:
+    specifier: ^0.8.6
+    version: registry.npmmirror.com/siyuan@0.8.6
   vue:
     specifier: ^3.3.4
     version: registry.npmmirror.com/vue@3.3.4
@@ -55,9 +58,6 @@ devDependencies:
   sass-loader:
     specifier: ^12.6.0
     version: registry.npmmirror.com/sass-loader@12.6.0(sass@1.62.1)(webpack@5.83.1)
-  siyuan:
-    specifier: ^0.7.9
-    version: registry.npmmirror.com/siyuan@0.7.9
   tslib:
     specifier: 2.4.0
     version: registry.npmmirror.com/tslib@2.4.0
@@ -3632,11 +3632,11 @@ packages:
     dev: false
     optional: true
 
-  registry.npmmirror.com/siyuan@0.7.9:
-    resolution: {integrity: sha512-X5olBQhfkgyPRF+d8agpcbAaFnCSvSkN3LWX7XU9jApmCfpJ/4PAmK7mKPfR1YGBpjFLRa/xTrv11BQ3hxN15Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/siyuan/-/siyuan-0.7.9.tgz}
+  registry.npmmirror.com/siyuan@0.8.6:
+    resolution: {integrity: sha512-hEMZpOetrqKSPaoE5QmVMrLR59xJH8sH1Jfd+O+ii3A0WVeV5CBv/8b3FaEzle99RC7e0MEIWI4jnP4OlsBVLA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/siyuan/-/siyuan-0.8.6.tgz}
     name: siyuan
-    version: 0.7.9
-    dev: true
+    version: 0.8.6
+    dev: false
 
   registry.npmmirror.com/slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/slash/-/slash-3.0.0.tgz}
