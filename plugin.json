@@ -2,7 +2,7 @@
   "name": "siyuan-plugin-flash-enhance",
   "author": "zxhd863943427",
   "url": "https://github.com/zxhd863943427/siyuan-plugin-flash-enhance",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "minAppVersion": "2.9.3",
   "displayName": {
     "default": "flash-enhance",
@@ -10,7 +10,7 @@
   },
   "description": {
     "default": "This plugin can make the card-making experience in Siyuan as smooth as clouds and flowing water.Supports incremental reading flow.",
-    "zh_CN": "使思源制卡的体验行云流水般流畅, 支持渐进式阅读流程"
+    "zh_CN": "使思源制卡的体验行云流水般流畅, 支持渐进式阅读流程、图片制卡"
   },
   "readme": {
     "default": "README.md",
