@@ -50,9 +50,9 @@ export function customReviewSwitch(plugin:any) {
     })
 }
 
-function openEnhanceReview(plugin:any){
+async function openEnhanceReview(plugin:any){
 
-    const tab = openTab({
+    const tab = await openTab({
         app: plugin.app,
         custom: {
             icon: "iconFace",

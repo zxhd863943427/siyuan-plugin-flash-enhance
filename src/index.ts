@@ -6,6 +6,7 @@ import { dyMakeCard } from "./api/dyCard";
 import { IRswitch } from "./api/IR";
 import { occasionEdit, occasionLoad, initShowFloatOccasion } from "./api/imageOccasion";
 import { customReviewSwitch } from "./api/customReview"
+import { setPlugin } from "./api/utils";
 import { addCards } from "./utils/card";
 
 import { watch } from 'vue'
@@ -79,5 +80,6 @@ export default class PluginSample extends Plugin {
         })
         //初始化图像遮挡浮窗
         initShowFloatOccasion()
+        setPlugin(this)
     }
 }
