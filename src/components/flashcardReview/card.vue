@@ -2,7 +2,7 @@
     <div>{{currentCard? currentCard.deckID:""}}</div>
     <div>{{currentCard? currentCard.cardID:""}}</div>
     <div>{{currentCard? currentCard.blockID:""}}</div>
-    <div ref="mainCard"></div>
+    <div ref="mainCard" class="protyle"></div>
 </template>
 
 <script setup lang="ts">
@@ -33,10 +33,10 @@ onMounted(async()=>{
         () => props.currentCard,
         (newProps, oldProps) => {
             new Protyle(plugin.app,(mainCard.value as HTMLElement),{
-                action:["cb-get-append","cb-get-before"],
-                blockId:"20230922225710-nc6tskx",
+                action:["cb-get-append","cb-get-before","cb-get-all"],
+                blockId:props.currentCard.blockID,
                 render: {
-                    title: true,
+                    title: false,
                     gutter: true,
                     scroll: true,
                     breadcrumb: true,
@@ -47,3 +47,9 @@ onMounted(async()=>{
     )
 })
 </script>
+
+<style lang="scss" scoped>
+.protyle{
+    height: 80%;
+}
+</style>
