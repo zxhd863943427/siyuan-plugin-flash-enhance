@@ -47,22 +47,31 @@ async function getDueCard(type:string) {
 }
 function switchCard(delta:number) {
     if (allReviewCard.value == null) return;
-    let nowCard = currentCard.value
-    let index = allReviewCard.value.indexOf(nowCard)
-    let cardNumber = allReviewCard.value.length - 1
-    let newIndex = index + delta
-    if (newIndex<0){
-        newIndex = 0
-    }
-    if (newIndex >= cardNumber){
-        newIndex = cardNumber
+    let newIndex = getNewCardIndex(delta);
+    let cardNumber = allReviewCard.value.length - 1;
+    if (newIndex >= cardNumber) {
+        newIndex = cardNumber;
         reviewCardEnd.value = true;
     }
-    else{
+    else {
         reviewCardEnd.value = false;
     }
     currentCard.value = allReviewCard.value[newIndex]
 }
+function getNewCardIndex(delta: number) {
+    let nowCard = currentCard.value;
+    let index = allReviewCard.value.indexOf(nowCard);
+    let cardNumber = allReviewCard.value.length - 1;
+    let newIndex = index + delta;
+    if (newIndex < 0) {
+        newIndex = 0;
+    }
+    if (newIndex >= cardNumber) {
+        newIndex = cardNumber;
+    }
+    return newIndex;
+}
+
 function switchNextCard(){
     switchCard(1)
 }
