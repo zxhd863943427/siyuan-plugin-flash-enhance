@@ -33,6 +33,7 @@
         <button @click="next">next</button>
         <button @click="stop">stop</button>
         <button @click="deleteCard">delete</button>
+        <button @click="finish">finish</button>
     </div>
 </template>
 
@@ -50,7 +51,7 @@ import { fetchSyncPost } from "siyuan";
       required: true
     }
     })
-    const emit = defineEmits(["next","prev","updateStatus","switchOption","continueReview","markCurrentCard"])
+    const emit = defineEmits(["next","prev","updateStatus","switchOption","continueReview","markCurrentCard","startNewReview"])
     function next(){
         emit("next")
     }
@@ -68,6 +69,9 @@ import { fetchSyncPost } from "siyuan";
     }
     function mark(){
         emit("markCurrentCard")
+    }
+    function finish(){
+        emit("startNewReview")
     }
 function stop() {
     fetchSyncPost("/api/attr/setBlockAttrs", {

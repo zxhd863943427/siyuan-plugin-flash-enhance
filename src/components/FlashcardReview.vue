@@ -15,7 +15,8 @@
         @switchOption="switchOption"
         @updateStatus="reviewCard"
         @continue-review="continueReview"
-        @markCurrentCard="markCurrentCard"/>
+        @markCurrentCard="markCurrentCard"
+        @start-new-review="startNewReview"/>
     <div>{{ currentCard }}</div>
     <div>{{ markCardList }}</div>
 </template>
@@ -111,6 +112,10 @@ function switchOption(newOption:ReviewOption){
     reviewOptionStatus.value = newOption
 }
 
+function startNewReview(){
+    initReview()
+}
+
 async function reviewCard(rate:number){
     if (rate != -3){
         fetchSyncPost("/api/riff/reviewRiffCard",{
@@ -131,27 +136,38 @@ async function reviewCard(rate:number){
     let newIndex = getNewCardIndex(1, currentCard.value as ReviewInfo, allReviewCard.value)
     let oldIndex = getNewCardIndex(0, currentCard.value as ReviewInfo, allReviewCard.value)
     let newStatus:ReviewOption;
+    console.log("restart")
     if (newIndex > oldIndex){
         newStatus = await getCardOption(allReviewCard.value[newIndex])
         reviewOptionStatus.value=newStatus
         switchCard(1)
         return
     }
-    if (markCardList.length > 0 )
+    if (markCardList.length > 0 ){
         switchProcessMark()
+    } 
+    else{
+        console.log("restart")
+        initReview()
+    } 
 }
-
-let ok = ref(null);
-onMounted(async ()=>{
-    
-    console.log("init vue!")
+async function initReview(){
+    reviewCardEnd.value = false
+    originAllreviewCard = []
+    markCardList = []
     let cardData = await getDueCard("all")
     if (cardData== undefined) return
+
     allReviewCard.value = cardData.data.cards as ReviewInfo[]
+
     if (allReviewCard.value?.length === 0) return
+
+    reviewOptionStatus.value = await getCardOption(allReviewCard.value[0])
     originAllreviewCard = allReviewCard.value
     currentCard.value = allReviewCard.value[0]
-
+}
+onMounted(async ()=>{
+    initReview()
 })
 
 </script>
