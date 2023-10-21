@@ -1,6 +1,8 @@
 <template>
     <topbar/>
     <status/>
+    <div>status :{{ reviewOptionStatus }}</div>
+    <div> now index:{{ getNewCardIndex(0,currentCard as ReviewInfo,allReviewCard) }}</div>
     <card :currentCard="currentCard"/>
     <reviewOption 
         :optionStatus="reviewOptionStatus" 
@@ -8,8 +10,10 @@
         @prev="switchPrevCard" 
         @switchOption="switchOption"
         @updateStatus="reviewCard"
-        @continue-review="continueReview"/>
+        @continue-review="continueReview"
+        @markCurrentCard="markCurrentCard"/>
     <div>{{ currentCard }}</div>
+    <div>{{ markCardList }}</div>
 </template>
 
 <script lang="ts" setup>
@@ -67,13 +71,15 @@ function getNewCardIndex(delta: number,card:ReviewInfo,cardList:ReviewInfo[]) {
 function switchNextCard(){
     if(storeCard.value === null)
         storeCard.value = currentCard.value
-    reviewOptionStatus.value = "browerCard"
+    if (reviewOptionStatus.value != "processMark")
+        reviewOptionStatus.value = "browerCard"
     switchCard(1)
 }
 function switchPrevCard(){
     if(storeCard.value === null)
         storeCard.value = currentCard.value
-    reviewOptionStatus.value = "browerCard"
+    if (reviewOptionStatus.value != "processMark")
+        reviewOptionStatus.value = "browerCard"
     switchCard(-1)
 }
 
@@ -81,6 +87,17 @@ async function continueReview(){
     reviewOptionStatus.value = await getCardOption(storeCard.value as ReviewInfo)
     currentCard.value = storeCard.value
     storeCard.value = null
+}
+function markCurrentCard(){
+    let currentCardData = (currentCard.value as ReviewInfo)
+    if (markCardList.indexOf(currentCardData)){
+        markCardList.push( currentCardData)
+    }
+}
+function switchProcessMark(){
+    reviewOptionStatus.value = "processMark"
+    allReviewCard.value = markCardList
+    currentCard.value = allReviewCard.value[0]
 }
 const getCardOption = async (card:ReviewInfo):Promise<ReviewOption>=>{
     return "hiddenCard"
@@ -90,7 +107,7 @@ function switchOption(newOption:ReviewOption){
     reviewOptionStatus.value = newOption
 }
 
-function reviewCard(rate:number){
+async function reviewCard(rate:number){
     if (rate != -3){
         fetchSyncPost("/api/riff/reviewRiffCard",{
             cardID: currentCard.value?.cardID,
@@ -108,12 +125,16 @@ function reviewCard(rate:number){
         })
     }
     let newIndex = getNewCardIndex(1, currentCard.value as ReviewInfo, allReviewCard.value)
-    getCardOption(allReviewCard.value[newIndex])
-    .then((newStatus)=>{
+    let oldIndex = getNewCardIndex(0, currentCard.value as ReviewInfo, allReviewCard.value)
+    let newStatus:ReviewOption;
+    if (newIndex > oldIndex){
+        newStatus = await getCardOption(allReviewCard.value[newIndex])
         reviewOptionStatus.value=newStatus
         switchCard(1)
-    })
-
+        return
+    }
+    if (markCardList.length > 0 )
+        switchProcessMark()
 }
 
 let ok = ref(null);

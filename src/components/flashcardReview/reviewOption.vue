@@ -45,7 +45,7 @@ import {ReviewOption, ReviewInfo} from "../../utils/type"
       required: true
     }
     })
-    const emit = defineEmits(["next","prev","updateStatus","switchOption","continueReview"])
+    const emit = defineEmits(["next","prev","updateStatus","switchOption","continueReview","markCurrentCard"])
     function next(){
         emit("next")
     }
@@ -61,7 +61,9 @@ import {ReviewOption, ReviewInfo} from "../../utils/type"
     function updateStatus(status:number){
         emit("updateStatus",status)
     }
-
+    function mark(){
+        emit("markCurrentCard")
+    }
     
 </script>
 
