@@ -38,13 +38,14 @@ type reviewOption =
 |"browerCard"   //使用前后移动浏览卡片
 |"processMark"  //处理被标记的卡片
 
-const allReviewCard:Ref<null|any> = ref(null)
+const allReviewCard:Ref<ReviewInfo[]> = ref([])
 const currentCard:Ref<null|ReviewInfo> = ref(null)
 //浏览卡片时用于恢复的状态
 const storeCard:Ref<null|ReviewInfo> = ref(null)
 //卡片的显示状态
 const reviewOptionStatus:Ref<reviewOption> = ref("hiddenCard")
 const reviewCardEnd = ref(false)
+let originAllreviewCard:ReviewInfo[] = []
 
 async function getDueCard(type:string) {
     if (type === "all"){
@@ -137,8 +138,8 @@ onMounted(async ()=>{
     console.log("init vue!")
     let cardData = await getDueCard("all")
     if (cardData== undefined) return
-    if (cardData.data.cards.length === 0) return
-    allReviewCard.value = cardData.data.cards
+    allReviewCard.value = cardData.data.cards as ReviewInfo[]
+    if (allReviewCard.value?.length === 0) return
     currentCard.value = allReviewCard.value[0]
 
 })
