@@ -15,8 +15,8 @@
     <div v-if="optionStatus == 'browerCard'">
         <button @click="prev">prev</button>
         <button @click="next">next</button>
-        <button @click="()=>{}">Learning</button>
-        <button @click="()=>{}">change repetition</button>
+        <button @click="continueReview">Learning</button>
+        <button class="changeRepetition" @click="()=>{}">change repetition</button>
     </div>
     <div v-if="optionStatus == 'reviewcard'">
         <button @click="prev">prev</button>
@@ -35,11 +35,11 @@
 type reviewOption = "reviewcard"|"hiddenCard"|"readingDoc"|"browerCard"
     const props = defineProps({
         optionStatus: {
-      type: String,
+      type: Object as Object as () => reviewOption,
       required: true
     }
     })
-    const emit = defineEmits(["next","prev","updateStatus","show"])
+    const emit = defineEmits(["next","prev","updateStatus","switchOption","continueReview"])
     function next(){
         emit("next")
     }
@@ -47,7 +47,10 @@ type reviewOption = "reviewcard"|"hiddenCard"|"readingDoc"|"browerCard"
         emit("prev")
     }
     function show(){
-        emit("show")
+        emit("switchOption","reviewcard")
+    }
+    function continueReview(){
+        emit("continueReview")
     }
     function updateStatus(status:number){
         emit("updateStatus",status)
@@ -61,5 +64,8 @@ button{
     width: 6em;
     height: 2em;
     margin: 0.2em;
+}
+.changeRepetition{
+    width: 12em;
 }
 </style>
