@@ -35,10 +35,10 @@ onMounted(async()=>{
         () => props.currentCard,
         (newProps, oldProps) => {
             new Protyle(plugin.app,(mainCard.value as HTMLElement),{
-                action:["cb-get-append","cb-get-before","cb-get-all"],
+                action:["cb-get-all"],
                 blockId:props.currentCard.blockID,
                 render: {
-                    title: false,
+                    title: true,
                     gutter: true,
                     scroll: false,
                     breadcrumb: true,
