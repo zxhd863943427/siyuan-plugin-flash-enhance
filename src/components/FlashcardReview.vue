@@ -16,7 +16,9 @@
         @updateStatus="reviewCard"
         @continue-review="continueReview"
         @markCurrentCard="markCurrentCard"
-        @start-new-review="startNewReview"/>
+        @start-new-review="startNewReview"
+        @change-repetition="changeRepetition"
+        @change-rate="changeRate"/>
     <div>{{ currentCard }}</div>
     <div>{{ markCardList }}</div>
 </template>
@@ -40,6 +42,7 @@ const reviewOptionStatus:Ref<ReviewOption> = ref("hiddenCard")
 const reviewCardEnd = ref(false)
 let originAllreviewCard:ReviewInfo[] = []
 let markCardList:ReviewInfo[] = []
+let reviewedCardList:Set<ReviewInfo> = new Set
 
 async function getDueCard(type:string) {
     if (type === "all"){
@@ -115,24 +118,18 @@ function switchOption(newOption:ReviewOption){
 function startNewReview(){
     initReview()
 }
-
+function changeRepetition(){
+    if (reviewedCardList.has(currentCard.value as ReviewInfo)){
+        reviewOptionStatus.value = "changeRate"
+    }
+}
+function changeRate(rate:number){
+    setCardReviewRate(rate);
+    reviewOptionStatus.value = "browerCard"
+}
 async function reviewCard(rate:number){
-    if (rate != -3){
-        fetchSyncPost("/api/riff/reviewRiffCard",{
-            cardID: currentCard.value?.cardID,
-            deckID: currentCard.value?.deckID,
-            rating: rate,
-            reviewedCards:originAllreviewCard
-        })
-    }
-    else{
-        fetchSyncPost("/api/riff/skipReviewRiffCard",{
-            cardID: currentCard.value?.cardID,
-            deckID: currentCard.value?.deckID,
-            rating: rate,
-            reviewedCards:originAllreviewCard
-        })
-    }
+    setCardReviewRate(rate);
+    reviewedCardList.add(currentCard.value as ReviewInfo)
     let newIndex = getNewCardIndex(1, currentCard.value as ReviewInfo, allReviewCard.value)
     let oldIndex = getNewCardIndex(0, currentCard.value as ReviewInfo, allReviewCard.value)
     let newStatus:ReviewOption;
@@ -151,10 +148,30 @@ async function reviewCard(rate:number){
         initReview()
     } 
 }
+function setCardReviewRate(rate: number) {
+if (rate != -3) {
+fetchSyncPost("/api/riff/reviewRiffCard", {
+cardID: currentCard.value?.cardID,
+deckID: currentCard.value?.deckID,
+rating: rate,
+reviewedCards: originAllreviewCard
+});
+}
+else {
+fetchSyncPost("/api/riff/skipReviewRiffCard", {
+cardID: currentCard.value?.cardID,
+deckID: currentCard.value?.deckID,
+rating: rate,
+reviewedCards: originAllreviewCard
+});
+}
+}
+
 async function initReview(){
     reviewCardEnd.value = false
     originAllreviewCard = []
     markCardList = []
+    reviewedCardList.clear()
     let cardData = await getDueCard("all")
     if (cardData== undefined) return
 

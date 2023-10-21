@@ -12,6 +12,7 @@ export interface ReviewInfo {
    }
 export type ReviewOption = 
 "reviewcard"    //显示隐藏并打分
+|"changeRate"   //修改得分 
 |"hiddenCard"   //隐藏闪卡背面
 |"readingDoc"   //渐进阅读文档
 |"browerCard"   //使用前后移动浏览卡片

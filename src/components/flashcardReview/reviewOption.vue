@@ -16,7 +16,7 @@
         <button @click="prev">prev</button>
         <button @click="next">next</button>
         <button @click="continueReview">Learning</button>
-        <button class="changeRepetition" @click="()=>{}">change repetition</button>
+        <button class="changeRepetition" @click="changeRepetition">change repetition</button>
     </div>
     <div v-if="optionStatus == 'reviewcard'">
         <button @click="prev">prev</button>
@@ -26,6 +26,16 @@
         <button @click="()=>{updateStatus(2)}">normal</button>
         <button @click="()=>{updateStatus(3)}">good</button>
         <button @click="()=>{updateStatus(4)}">prefect</button>
+        <button @click="mark">mark</button>
+    </div>
+    <div v-if="optionStatus == 'changeRate'">
+        <button @click="prev">prev</button>
+        <button @click="next">next</button>
+        <button @click="()=>{changeRate(-3)}">skip</button>
+        <button @click="()=>{changeRate(1)}">bad</button>
+        <button @click="()=>{changeRate(2)}">normal</button>
+        <button @click="()=>{changeRate(3)}">good</button>
+        <button @click="()=>{changeRate(4)}">prefect</button>
         <button @click="mark">mark</button>
     </div>
     <div v-if="optionStatus == 'processMark'">
@@ -51,8 +61,17 @@ import { fetchSyncPost } from "siyuan";
       required: true
     }
     })
-    const emit = defineEmits(["next","prev","updateStatus","switchOption","continueReview","markCurrentCard","startNewReview"])
-    function next(){
+const emit = defineEmits([
+    "next",
+    "prev",
+    "updateStatus",
+    "switchOption",
+    "continueReview",
+    "markCurrentCard",
+    "startNewReview",
+    "changeRepetition",
+    "changeRate"])
+function next() {
         emit("next")
     }
     function prev(){
@@ -73,6 +92,12 @@ import { fetchSyncPost } from "siyuan";
     function finish(){
         emit("startNewReview")
     }
+    function changeRepetition(){
+        emit("changeRepetition")
+    }
+function changeRate(rate:number){
+    emit("changeRate",rate)
+}
 function stop() {
     fetchSyncPost("/api/attr/setBlockAttrs", {
         "id": props.currentCard.blockID,
