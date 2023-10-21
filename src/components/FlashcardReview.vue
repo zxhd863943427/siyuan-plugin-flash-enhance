@@ -46,6 +46,7 @@ const storeCard:Ref<null|ReviewInfo> = ref(null)
 const reviewOptionStatus:Ref<reviewOption> = ref("hiddenCard")
 const reviewCardEnd = ref(false)
 let originAllreviewCard:ReviewInfo[] = []
+let markCardList:ReviewInfo[] = []
 
 async function getDueCard(type:string) {
     if (type === "all"){
@@ -112,7 +113,7 @@ function reviewCard(rate:number){
             cardID: currentCard.value?.cardID,
             deckID: currentCard.value?.deckID,
             rating: rate,
-            reviewedCards:allReviewCard.value
+            reviewedCards:originAllreviewCard
         })
     }
     else{
@@ -120,7 +121,7 @@ function reviewCard(rate:number){
             cardID: currentCard.value?.cardID,
             deckID: currentCard.value?.deckID,
             rating: rate,
-            reviewedCards:allReviewCard.value
+            reviewedCards:originAllreviewCard
         })
     }
     let newIndex = getNewCardIndex(1, currentCard.value as ReviewInfo, allReviewCard.value)
@@ -140,6 +141,7 @@ onMounted(async ()=>{
     if (cardData== undefined) return
     allReviewCard.value = cardData.data.cards as ReviewInfo[]
     if (allReviewCard.value?.length === 0) return
+    originAllreviewCard = allReviewCard.value
     currentCard.value = allReviewCard.value[0]
 
 })
