@@ -19,31 +19,15 @@ import  status  from "./flashcardReview/status.vue";
 import  card  from "./flashcardReview/card.vue";
 import  reviewOption  from "./flashcardReview/reviewOption.vue";
 import { Protyle, fetchSyncPost } from "siyuan"
+import {ReviewOption, ReviewInfo} from "../utils/type"
 
-interface ReviewInfo {
- deckID: string;
- cardID: string;
- blockID: string;
- nextDues: {
-   1: string;
-   2: string;
-   3: string; 
-   4: string;
- }
-}
-type reviewOption = 
-"reviewcard"    //显示隐藏并打分
-|"hiddenCard"   //隐藏闪卡背面
-|"readingDoc"   //渐进阅读文档
-|"browerCard"   //使用前后移动浏览卡片
-|"processMark"  //处理被标记的卡片
 
 const allReviewCard:Ref<ReviewInfo[]> = ref([])
 const currentCard:Ref<null|ReviewInfo> = ref(null)
 //浏览卡片时用于恢复的状态
 const storeCard:Ref<null|ReviewInfo> = ref(null)
 //卡片的显示状态
-const reviewOptionStatus:Ref<reviewOption> = ref("hiddenCard")
+const reviewOptionStatus:Ref<ReviewOption> = ref("hiddenCard")
 const reviewCardEnd = ref(false)
 let originAllreviewCard:ReviewInfo[] = []
 let markCardList:ReviewInfo[] = []
@@ -98,12 +82,11 @@ async function continueReview(){
     currentCard.value = storeCard.value
     storeCard.value = null
 }
-
-const getCardOption = async (card:ReviewInfo):Promise<reviewOption>=>{
+const getCardOption = async (card:ReviewInfo):Promise<ReviewOption>=>{
     return "hiddenCard"
 }
 
-function switchOption(newOption:reviewOption){
+function switchOption(newOption:ReviewOption){
     reviewOptionStatus.value = newOption
 }
 

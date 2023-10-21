@@ -9,17 +9,7 @@
 import {watch, onMounted, ref, Ref} from "vue"
 import { Protyle } from "siyuan";
 import {plugin} from "../../api/utils"
-interface ReviewInfo {
- deckID: string;
- cardID: string;
- blockID: string;
- nextDues: {
-   1: string;
-   2: string;
-   3: string; 
-   4: string;
- }
-}
+import {ReviewOption, ReviewInfo} from "../../utils/type"
 const props = defineProps({
   currentCard: {
       type: Object as Object as () => ReviewInfo,
@@ -50,6 +40,6 @@ onMounted(async()=>{
 
 <style lang="scss" scoped>
 .protyle{
-    height: 80%;
+    height: 50%;
 }
 </style>

@@ -26,9 +26,7 @@
         <button @click="()=>{updateStatus(2)}">normal</button>
         <button @click="()=>{updateStatus(3)}">good</button>
         <button @click="()=>{updateStatus(4)}">prefect</button>
-        <button @click="()=>{}">stop</button>
-        <button @click="()=>{}">delete</button>
-        <button @click="()=>{}">mark</button>
+        <button @click="mark">mark</button>
     </div>
     <div v-if="optionStatus == 'processMark'">
         <button @click="prev">prev</button>
@@ -39,16 +37,11 @@
 </template>
 
 <script setup lang="ts">
-type reviewOption = 
-"reviewcard"    //显示隐藏并打分
-|"hiddenCard"   //隐藏闪卡背面
-|"readingDoc"   //渐进阅读文档
-|"browerCard"   //使用前后移动浏览卡片
-|"processMark"  //处理被标记的卡片
+import {ReviewOption, ReviewInfo} from "../../utils/type"
 
     const props = defineProps({
         optionStatus: {
-      type: Object as Object as () => reviewOption,
+      type: Object as Object as () => ReviewOption,
       required: true
     }
     })
