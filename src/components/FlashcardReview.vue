@@ -3,7 +3,9 @@
     <status/>
     <div>status :{{ reviewOptionStatus }}</div>
     <div> now index:{{ getNewCardIndex(0,currentCard as ReviewInfo,allReviewCard) }}</div>
-    <card :currentCard="currentCard"/>
+    <card 
+        :currentCard="currentCard"
+        :optionStatus="reviewOptionStatus"/>
     <reviewOption 
         :currentCard="currentCard"
         :optionStatus="reviewOptionStatus" 

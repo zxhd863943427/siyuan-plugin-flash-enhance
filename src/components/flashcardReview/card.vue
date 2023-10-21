@@ -2,7 +2,13 @@
     <div>{{currentCard? currentCard.deckID:""}}</div>
     <div>{{currentCard? currentCard.cardID:""}}</div>
     <div>{{currentCard? currentCard.blockID:""}}</div>
-    <div ref="mainCard" class="protyle"></div>
+    <div class="fn__flex-1">
+        <div class="card__main">
+            <div ref="mainCard" :class="cardMainClass"></div>
+        </div>
+    </div>
+    
+    
 </template>
 
 <script setup lang="ts">
@@ -11,12 +17,17 @@ import { Protyle } from "siyuan";
 import {plugin} from "../../api/utils"
 import {ReviewOption, ReviewInfo} from "../../utils/type"
 const props = defineProps({
-  currentCard: {
-      type: Object as Object as () => ReviewInfo,
-      required: true
-    }
+    currentCard: {
+        type: Object as Object as () => ReviewInfo,
+        required: true
+    },
+    optionStatus: {
+        type: Object as Object as () => ReviewOption,
+        required: true
+    },
 })
 let mainCard:Ref<null|HTMLElement> = ref(null)
+let cardMainClass = ref("card__block fn__flex-1 protyle card__block--hidemark card__block--hidesb card__block--hideli")
 
 onMounted(async()=>{
     watch(
@@ -28,18 +39,29 @@ onMounted(async()=>{
                 render: {
                     title: false,
                     gutter: true,
-                    scroll: true,
+                    scroll: false,
                     breadcrumb: true,
                     breadcrumbDocName: true,
                 }
             })
         }
     )
+    watch(
+        () => props.optionStatus,
+        (newProps, oldProps) => {
+            if(props.optionStatus!='hiddenCard'){
+                cardMainClass.value = "card__block fn__flex-1 protyle"
+            }
+            else{
+                cardMainClass.value = "card__block fn__flex-1 protyle card__block--hidemark card__block--hidesb card__block--hideli"
+            }
+        }
+    )
 })
 </script>
 
 <style lang="scss" scoped>
-.protyle{
-    height: 50%;
+.card__main{
+    min-height: 300px;
 }
 </style>
