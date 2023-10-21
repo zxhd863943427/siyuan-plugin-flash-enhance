@@ -136,6 +136,7 @@ onMounted(async ()=>{
     console.log("init vue!")
     let cardData = await getDueCard("all")
     if (cardData== undefined) return
+    if (cardData.data.cards.length === 0) return
     allReviewCard.value = cardData.data.cards
     currentCard.value = allReviewCard.value[0]
 
