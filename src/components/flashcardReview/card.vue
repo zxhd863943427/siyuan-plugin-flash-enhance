@@ -4,7 +4,8 @@
     <div>{{currentCard? currentCard.blockID:""}}</div>
     <div class="fn__flex-1">
         <div class="card__main">
-            <div ref="mainCard" :class="cardMainClass"></div>
+            <div ref="mainCard" :class="cardMainClass">
+            </div>
         </div>
     </div>
     
@@ -62,6 +63,17 @@ onMounted(async()=>{
 
 <style lang="scss" scoped>
 .card__main{
-    min-height: 300px;
+    height: 60vh;
+
 }
+.card__main{
+::v-deep .protyle-wysiwyg { 
+    padding: 16px 10px 144px !important;
+    max-width: calc(max(50%, 800px));
+    margin-left: auto;
+    margin-right: auto;
+ }
+} 
+</style>
+<style lang="scss">
 </style>
