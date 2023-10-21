@@ -21,6 +21,7 @@
     <div v-if="optionStatus == 'reviewcard'">
         <button @click="prev">prev</button>
         <button @click="next">next</button>
+        <button @click="()=>{updateStatus(-3)}">skip</button>
         <button @click="()=>{updateStatus(1)}">bad</button>
         <button @click="()=>{updateStatus(2)}">normal</button>
         <button @click="()=>{updateStatus(3)}">good</button>
