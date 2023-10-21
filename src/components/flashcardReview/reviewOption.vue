@@ -31,17 +31,22 @@
     <div v-if="optionStatus == 'processMark'">
         <button @click="prev">prev</button>
         <button @click="next">next</button>
-        <button @click="()=>{}">stop</button>
-        <button @click="()=>{}">delete</button>
+        <button @click="stop">stop</button>
+        <button @click="deleteCard">delete</button>
     </div>
 </template>
 
 <script setup lang="ts">
 import {ReviewOption, ReviewInfo} from "../../utils/type"
+import { fetchSyncPost } from "siyuan";
 
     const props = defineProps({
         optionStatus: {
       type: Object as Object as () => ReviewOption,
+      required: true
+    },
+    currentCard: {
+      type: Object as Object as () => ReviewInfo,
       required: true
     }
     })
@@ -64,7 +69,22 @@ import {ReviewOption, ReviewInfo} from "../../utils/type"
     function mark(){
         emit("markCurrentCard")
     }
-    
+function stop() {
+    fetchSyncPost("/api/attr/setBlockAttrs", {
+        "id": props.currentCard.blockID,
+        "attrs": {
+            "custom-plugin-card-stop": "true"
+        }
+    })
+}
+function deleteCard() {
+    let body = {
+        deckID: props.currentCard.deckID,
+        blockIDs: [props.currentCard.blockID]
+    }
+    console.log(body)
+    fetchSyncPost("/api/riff/removeRiffCards", body)
+}
 </script>
 
 <style scoped lang="scss">

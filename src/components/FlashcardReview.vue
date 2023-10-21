@@ -5,6 +5,7 @@
     <div> now index:{{ getNewCardIndex(0,currentCard as ReviewInfo,allReviewCard) }}</div>
     <card :currentCard="currentCard"/>
     <reviewOption 
+        :currentCard="currentCard"
         :optionStatus="reviewOptionStatus" 
         @next="switchNextCard" 
         @prev="switchPrevCard" 
