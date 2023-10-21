@@ -36,6 +36,7 @@ type reviewOption =
 |"hiddenCard"   //隐藏闪卡背面
 |"readingDoc"   //渐进阅读文档
 |"browerCard"   //使用前后移动浏览卡片
+|"processMark"  //处理被标记的卡片
 
 const allReviewCard:Ref<null|any> = ref(null)
 const currentCard:Ref<null|ReviewInfo> = ref(null)

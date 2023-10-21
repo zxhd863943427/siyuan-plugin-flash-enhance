@@ -30,10 +30,22 @@
         <button @click="()=>{}">delete</button>
         <button @click="()=>{}">mark</button>
     </div>
+    <div v-if="optionStatus == 'processMark'">
+        <button @click="prev">prev</button>
+        <button @click="next">next</button>
+        <button @click="()=>{}">stop</button>
+        <button @click="()=>{}">delete</button>
+    </div>
 </template>
 
 <script setup lang="ts">
-type reviewOption = "reviewcard"|"hiddenCard"|"readingDoc"|"browerCard"
+type reviewOption = 
+"reviewcard"    //显示隐藏并打分
+|"hiddenCard"   //隐藏闪卡背面
+|"readingDoc"   //渐进阅读文档
+|"browerCard"   //使用前后移动浏览卡片
+|"processMark"  //处理被标记的卡片
+
     const props = defineProps({
         optionStatus: {
       type: Object as Object as () => reviewOption,
