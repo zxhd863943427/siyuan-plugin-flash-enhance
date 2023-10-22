@@ -1,7 +1,10 @@
 <template>
-    <div>{{currentCard? currentCard.deckID:""}}</div>
-    <div>{{currentCard? currentCard.cardID:""}}</div>
-    <div>{{currentCard? currentCard.blockID:""}}</div>
+    <div>
+        <span> deckID: {{currentCard? currentCard.deckID:""}} </span>
+        <span> cardID: {{currentCard? currentCard.cardID:""}} </span>
+        <span> blockID: {{currentCard? currentCard.blockID:""}}</span>
+    </div>
+
     <div class="fn__flex-1">
         <div class="card__main">
             <div ref="mainCard" :class="cardMainClass">

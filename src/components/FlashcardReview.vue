@@ -2,8 +2,7 @@
     <topbar :currentCard="currentCard"/>
     <status/>
     <div>status :{{ reviewOptionStatus }}</div>
-    <div> now index:{{ getNewCardIndex(0,currentCard as ReviewInfo,allReviewCard)+1 }}</div>
-    <div> total index:{{allReviewCard.length}}</div>
+    <div><span> now index:{{ getNewCardIndex(0,currentCard as ReviewInfo,allReviewCard)+1 }}</span> <span> total index:{{allReviewCard.length}}</span></div>
     <card 
         :currentCard="currentCard"
         :optionStatus="reviewOptionStatus"/>
