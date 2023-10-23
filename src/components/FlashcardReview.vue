@@ -166,6 +166,41 @@ reviewedCards: originAllreviewCard
 }
 }
 
+const filterSupendCard =  async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
+    let supendCardData = await fetchSyncPost("/api/query/sql", {
+        "stmt": "select block_id from attributes where name like '%custom-plugin-card-stop%'"
+    })
+    let supendCard = new Set(supendCardData.data.map(x=>x['block_id']))
+    let filteredCardList:ReviewInfo[]
+    filteredCardList = cardList.filter((x)=>{return !supendCard.has(x.blockID)})
+    return filteredCardList
+}
+//TODO
+// 今日已经读过的文档不在阅读
+const filterTodayReadedDoc = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
+    return cardList
+}
+
+//TODO
+// 阅读完成之后的文档不会被阅读
+const filterAfterFinishDoc = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
+    return cardList
+}
+
+const filterCard = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
+
+    let filteredCardList = await filterSupendCard(cardList)
+    filteredCardList = await filterTodayReadedDoc(filteredCardList)
+    filteredCardList = await filterAfterFinishDoc(filteredCardList)
+    return filteredCardList
+}
+// TODO
+// 优先级高的在前
+// 源文档排在其生成的子文档后
+const sortCard = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
+    return cardList
+}
+
 async function initReview(){
     reviewCardEnd.value = false
     originAllreviewCard = []
@@ -174,7 +209,10 @@ async function initReview(){
     let cardData = await getDueCard("all")
     if (cardData== undefined) return
 
-    allReviewCard.value = cardData.data.cards as ReviewInfo[]
+    let fiteredCard = await filterCard(cardData.data.cards as ReviewInfo[])
+    let sortedCard = await sortCard(fiteredCard)
+
+    allReviewCard.value = sortedCard
 
     if (allReviewCard.value?.length === 0) return
 
