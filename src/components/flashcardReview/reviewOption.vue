@@ -8,9 +8,9 @@
     <div v-if="optionStatus == 'readingDoc'">
         <button @click="prev">prev</button>
         <button @click="next">next</button>
-        <button @click="()=>{}">next repetition</button>
-        <button @click="()=>{}">read finish</button>
-        <button @click="()=>{}">don't read</button>
+        <button @click="nextRepetition">next repetition</button>
+        <button @click="finishReading">read finish</button>
+        <button @click="dontReading">don't read</button>
     </div>
     <div v-if="optionStatus == 'browerCard'">
         <button @click="prev">prev</button>
@@ -50,6 +50,7 @@
 <script setup lang="ts">
 import {ReviewOption, ReviewInfo} from "../../utils/type"
 import { fetchSyncPost } from "siyuan";
+import {genTodayDate} from "../../api/utils"
 
     const props = defineProps({
         optionStatus: {
@@ -114,11 +115,120 @@ function deleteCard() {
     console.log(body)
     fetchSyncPost("/api/riff/removeRiffCards", body)
 }
+
+const getRefNum = async(id:string):Promise<number> =>{
+    let data = await fetchSyncPost(`/api/ref/getBacklink2`, {
+        "sort": "3",
+        "mSort": "3",
+        "id": `${id}`,
+        "k": "",
+        "mk": ""
+    })
+    return data.data.linkRefsCount
+}
+const getBlockNum = async (id:string):Promise<number> =>{
+    let data = await fetchSyncPost("/api/filetree/getDoc",{
+        id:id,
+        size:102400})
+    let regexp = /NodeParagraph/g;
+    let matches = data.data.content.match(regexp);
+    return matches.length
+}
+const calculateNext = (a:number, b:number, factor:number=0) =>{
+  const numerator = 1;
+  const denominator = 1 + Math.exp(-b / (0.4 * a) + 1.3+0.3*factor);
+  const y = 1 - (numerator / denominator);
+
+  return y;
+}
+const getReadNum =async (id:string):Promise<number>=>{
+    let readNumData = await fetchSyncPost("/api/attr/getBlockAttrs", {
+        "id": id
+    })
+    let readNum:number
+    if (readNumData.data["custom-plugin-reading-number"] ){
+        readNum = readNumData.data["custom-plugin-reading-number"]
+    }
+    else{
+        readNum = 0
+    }
+    return readNum
+}
+function setReadNum(id:string,readNum:number){
+    fetchSyncPost("/api/attr/setBlockAttrs", {
+        "id": id,
+        "attrs": {
+            "custom-plugin-reading-number": readNum
+        }
+    })
+}
+function setReadFinish(id:string){
+    fetchSyncPost("/api/attr/setBlockAttrs", {
+        "id": id,
+        "attrs": {
+            "custom-plugin-reading-finish": "true"
+        }
+    })
+}
+function setReadLastTime(id:string){
+    fetchSyncPost("/api/attr/setBlockAttrs", {
+        "id": id,
+        "attrs": {
+            "custom-plugin-reading-last-time": genTodayDate()
+        }
+    })
+}
+//TODO
+async function setCurrentReadingIndex(id:string){
+    let blockData = await fetchSyncPost("/api/attr/getBlockAttrs", {
+        "id": id
+    })
+    let readingSource = blockData.data["custom-plugin-reading-source"]
+    if (!readingSource){
+        console.error(`block ${id} is not a read item`)
+        return
+    }
+    
+}
+
+async function nextRepetition(){
+    let blockID = props.currentCard.blockID
+    let blockNum = await getBlockNum(blockID)
+    let RefNum = await getRefNum(blockID)
+    let readNum = await getReadNum(blockID)
+    setReadNum(blockID,readNum+1)
+    let calculateNextFactor = calculateNext(blockNum, RefNum, readNum)
+    let rate = Math.ceil(calculateNextFactor * 4)
+    setReadLastTime(blockID)
+    updateStatus(rate)
+}
+async function finishReading() {
+    let blockID = props.currentCard.blockID
+    let blockNum = await getBlockNum(blockID)
+    let RefNum = await getRefNum(blockID)
+    let readNum = await getReadNum(blockID)
+    setReadNum(blockID,readNum+3)
+    let calculateNextFactor = calculateNext(blockNum, RefNum, readNum+3)
+    let rate = Math.ceil(calculateNextFactor * 4)
+    setReadFinish(blockID)
+    setReadLastTime(blockID)
+    updateStatus(rate)
+}
+
+async function dontReading(){
+    let blockID = props.currentCard.blockID
+    let readNum = await getReadNum(blockID)
+    setReadNum(blockID,readNum+1)
+    setReadLastTime(blockID)
+    stop()
+    updateStatus(-3)
+}
+
 </script>
 
 <style scoped lang="scss">
 button{
-    width: 6em;
+    min-width: 6em;
     height: 2em;
     margin: 0.2em;
 }

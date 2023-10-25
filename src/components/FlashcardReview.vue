@@ -107,6 +107,12 @@ function switchProcessMark(){
     currentCard.value = allReviewCard.value[0]
 }
 const getCardOption = async (card:ReviewInfo):Promise<ReviewOption>=>{
+    console.log("getCardOption")
+    let blockInfo = await fetchSyncPost("/api/attr/getBlockAttrs",{
+        id:card.blockID})
+    if (blockInfo.data["custom-plugin-incremental-reading"]){
+        return "readingDoc"
+    }
     return "hiddenCard"
 }
 
