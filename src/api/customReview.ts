@@ -34,7 +34,7 @@ export function customReviewSwitch(plugin:any) {
 
 
     watch(settingList.setList,()=>{
-        let enable = settingList.getSetting()["渐进式阅读"]
+        let enable = settingList.getSetting()["增强闪卡界面"]
         if (!enable) {
 
         }
