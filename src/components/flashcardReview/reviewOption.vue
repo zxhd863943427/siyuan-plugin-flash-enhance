@@ -147,7 +147,7 @@ const getReadNum =async (id:string):Promise<number>=>{
     })
     let readNum:number
     if (readNumData.data["custom-plugin-reading-number"] ){
-        readNum = readNumData.data["custom-plugin-reading-number"]
+        readNum = parseInt(readNumData.data["custom-plugin-reading-number"])
     }
     else{
         readNum = 0
