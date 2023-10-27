@@ -5,7 +5,7 @@ import { addSheet } from "./lib/sheet";
 import { dyMakeCard } from "./api/dyCard";
 import { IRswitch } from "./api/IR";
 import { occasionEdit, occasionLoad, initShowFloatOccasion } from "./api/imageOccasion";
-import { customReviewSwitch } from "./api/customReview"
+import { customReviewSwitch, addReadingItem, addOrderReadingItem } from "./api/customReview"
 import { setPlugin } from "./api/utils";
 import { addCards } from "./utils/card";
 
@@ -23,6 +23,9 @@ export default class PluginSample extends Plugin {
         this.eventBus.on("ws-main", this.wsEvent)
         this.eventBus.on("loaded-protyle", occasionLoad)
         this.eventBus.on("open-menu-image", occasionEdit)
+        this.eventBus.on("click-blockicon",addReadingItem)
+        this.eventBus.on("click-editortitleicon",addReadingItem)
+        this.eventBus.on("click-editortitleicon",addOrderReadingItem)
         console.log(this.i18n.helloPlugin);
     }
 
