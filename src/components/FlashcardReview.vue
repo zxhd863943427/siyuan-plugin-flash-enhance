@@ -187,10 +187,21 @@ const filterTodayReadedDoc = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=
     return cardList
 }
 
-//TODO
-// 阅读完成之后的文档不会被阅读
+// 未确认finish之后的文档不会被阅读
 const filterAfterFinishDoc = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
-    return cardList
+    console.log("filterAfterFinishDoc")
+    let blockIDs = cardList.map(reviewInfo=>{return reviewInfo.blockID})
+    let blockSQL = ` block_id in ('${blockIDs.join("','")}')`
+    let disableCardData = await fetchSyncPost("/api/query/sql", {
+        "stmt": `select block_id from attributes
+         where name like '%custom-plugin-incremental-reading-enable%'
+         and value = 'false'
+         and ${blockSQL}`
+    })
+    let supendCard = new Set(disableCardData.data.map(x=>x['block_id']))
+    let filteredCardList:ReviewInfo[]
+    filteredCardList = cardList.filter((x)=>{return !supendCard.has(x.blockID)})
+    return filteredCardList
 }
 
 const filterCard = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
