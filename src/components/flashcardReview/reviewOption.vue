@@ -132,6 +132,9 @@ const getBlockNum = async (id:string):Promise<number> =>{
         size:102400})
     let regexp = /NodeParagraph/g;
     let matches = data.data.content.match(regexp);
+    if (matches === null){
+        return 1
+    }
     return matches.length
 }
 const calculateNext = (a:number, b:number, factor:number=0) =>{
