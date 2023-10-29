@@ -1,4 +1,4 @@
-import { fetchSyncPost, IProtyle, Plugin } from "siyuan"
+import { fetchSyncPost, IProtyle, Plugin, Protyle } from "siyuan"
 import { getFileID, getHpath, getCurrentPage } from "../utils/utils"
 import { foreach, saveViaTransaction } from"../lib/utils"
 import { settingList } from "../utils/config"
@@ -6,6 +6,7 @@ import { watch } from "vue"
 import { getBlock } from "../lib/utils"
 import {Shortcuts} from 'shortcuts';
 import { ReviewInfo } from "../utils/type"
+import { genTodayDate } from "./utils"
 
 const shortcuts = new Shortcuts ();
 const luteEngine = globalThis.Lute.New()
@@ -66,7 +67,8 @@ async function 摘录(protyle: IProtyle) {
         return;
     }
     console.log("摘录")
-    let selectionContent = await getSelectionContent("Md")
+    // updateContentStyle(protyle)
+    let selectionContent = await getSelectionContent("Md",protyle)
     console.log(selectionContent)
     if (selectionContent[0].length <= 1){
         return
@@ -77,7 +79,7 @@ async function 摘录(protyle: IProtyle) {
     console.log("摘录完成！",data)
     cardData = {
         deckID:builtInDeck,
-        blockID:data[0].doOperations[0].id
+        blockID:subFileID
     }
     return cardData
 }
@@ -89,17 +91,20 @@ async function 挖空(protyle: IProtyle) {
         return;
     }
     console.log("挖空")
-    let selectionContent = 获取挖空内容("Md")
+    
+    let selectionContent = getHollowContent("Md",protyle,"sm")
+    updateContentStyle(protyle)
     console.log(selectionContent)
     if (selectionContent[0].length <= 1){
         return
     }
-    let subFileID = await createSubFile("挖空",selectionContent[2])
+    let title = "挖空 "+selectionContent[1].slice(0,20) + ' ...'
+    let subFileID = await createSubFile(title,selectionContent[2])
     let data = await updateSubFile(subFileID,selectionContent[0])
-    await addCard(selectionContent[3])
+    await addCard(subFileID)
     cardData = {
         deckID:builtInDeck,
-        blockID:data[0].doOperations[0].id
+        blockID:subFileID
     }
     return cardData
 }
@@ -112,7 +117,18 @@ function 问答() {
     console.log("问答")
 }
 
-async function getSelectionContent(mode:string){
+const getSourceTitle = (protyle:IProtyle):string=>{
+    if (protyle.options.blockId === protyle.block.parentID){
+        return protyle.title.editElement.innerText
+    }
+    let firstNode = protyle.element.querySelector(`div[data-node-id='${protyle.options.blockId}'] > div:nth-child(1)`) as HTMLElement
+    if (firstNode){
+        return firstNode.innerText.slice(0,30)
+    }
+    return '来源'
+}
+
+async function getSelectionContent(mode:string,protyle:IProtyle){
     const currentPage = getCurrentPage()
     //页面无.protyle-wysiwyg--select，说明未选中块，而是内容
     const slectMult = (currentPage.querySelector(".protyle-wysiwyg--select")!=null)
@@ -122,6 +138,7 @@ async function getSelectionContent(mode:string){
     }
     else{
         selectedContent = getMonSelectionContent(mode)
+        updateContentStyle(protyle)
     }
     return selectedContent
 }
@@ -163,7 +180,7 @@ function getMonSelectionContent(mode:string){
     let range = getSelection().getRangeAt(0)
     let selected = range.cloneContents()
     let source = getContentSource(range)
-    updateContentStyle(range)
+    // updateContentStyle(range)
     let element = document.createElement("div")
 
     element.appendChild(selected)
@@ -181,17 +198,7 @@ function getMonSelectionContent(mode:string){
 }
 
 async function createSubFile(title:string,id:string){
-    // let FileID = getFileID()
-    // let Hpath = await getHpath()
-    // console.log(FileID,Hpath)
-    // let queryData = await fetchSyncPost("/api/query/sql", {
-    //     "stmt": `SELECT box FROM blocks WHERE id == \"${FileID}\"`
-    // })
-    // if (queryData.code != 0 ){
-    //     console.log("query fail！")
-    //     return
-    // }
-    // let NotebookId = queryData.data[0]["box"]
+
     let [FileID, NotebookId, Hpath] =  await getBlockInfo(id)
     // 还要去除零宽度空格
     let subTitle = title.slice(0,15).replace(/\r\n|\r|\n|\u2028|\u2029|\t|\//g,"").replace(/[\u200B-\u200D\uFEFF]/g, '')
@@ -235,49 +242,14 @@ async function updateBlockStyle(el:HTMLElement){
       el.classList.remove("protyle-wysiwyg--select")
 }
 
-function updateContentStyle(range:Range){
-    let selection = getSelection()
-    // let strongNode = document.createElement('span')
-    // strongNode.append(range.cloneContents())
-    // strongNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
-    // range.deleteContents()
-    // range.insertNode(strongNode)
-    // range.setStartAfter(strongNode)
-    // range.collapse(true) //取消文本选择状态
-    // selection.removeAllRanges()
-    // selection.addRange(range)
-    
-    let cloneContents = range.cloneContents().childNodes
-    range.deleteContents()
-    //遍历节点，增加样式
-    foreach(cloneContents,(item:any)=>{
-        let addStyleNode
-        if (item instanceof Text){
-            if(item.textContent == ""){
-                return;
-            }
-            addStyleNode = document.createElement('span')
-            addStyleNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
-            addStyleNode.append(item)
-            console.log(addStyleNode)
-        }
-        else{
-            addStyleNode = item.cloneNode(true)
-            addStyleNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
-            addStyleNode.setAttribute('data-type',addStyleNode.getAttribute("data-type").replaceAll("mark","").trim())
-            console.log(addStyleNode)
-        }
-        range.insertNode(addStyleNode)
-        range.setStartAfter(addStyleNode)
-    })
-    range.collapse(true) //取消文本选择状态
-    selection.removeAllRanges()
-    selection.addRange(range)
-    console.log(cloneContents)
-    //关闭toolbar
-    document.querySelector("#layouts  div.fn__flex-1.protyle > div.protyle-toolbar").classList.add('fn__none') 
-    saveViaTransaction()
+function updateContentStyle(protyle:IProtyle){
+    protyle.toolbar.setInlineMark(protyle, "text", "range", {
+        type: "backgroundColor",
+        color:"var(--b3-font-background1)"
+    });
 }
+
+
 
 function getNewID(){
     return globalThis.Lute.NewNodeID()
@@ -301,23 +273,26 @@ async function getBlockInfo(id:string){
     return [DocId,notebookId,hpath]
 }
 
-function 获取挖空内容(mode:string){
+function getHollowContent(mode:string, protyle:IProtyle, type:"std"|"sm"="std"){
+    if (type==="std"){
+        return getStdHollowContent(mode,protyle)
+    }
+    else{
+        return getSmHollowContent(mode,protyle)
+    }
+}
+
+function getStdHollowContent(mode:string, protyle:IProtyle){
     let md;
     let content;
+    let cardID = getNewID()
     let range = getSelection().getRangeAt(0)
     let block = getBlock(range.startContainer as HTMLElement)
-    设置挖空状态(range.cloneRange())
-    //重新获取range
-    range = getSelection().getRangeAt(0)
-    //设置块id
-    let cardID = getNewID()
+    protyle.toolbar.setInlineMark(protyle, "mark", "range")
     let selected = block.cloneNode(true) as HTMLElement
+    protyle.toolbar.setInlineMark(protyle, "mark", "range")
     selected.setAttribute("data-node-id",cardID)
-    console.log("start",selected)
     let source = getContentSource(range)
-
-    // 恢复挖空前状态(range.cloneRange(),oldContent)
-    updateContentStyle(range)
     let element = document.createElement("div")
 
     element.appendChild(selected)
@@ -334,54 +309,83 @@ function 获取挖空内容(mode:string){
     return [md,content,source,cardID];
 }
 
-// function 恢复挖空前状态(range:Range, content:any){
-//     range.deleteContents()
-//     let cloneContents = content.childNodes
-//     foreach(cloneContents,(item:any)=>{
-//         let addStyleNode = item.cloneNode(true)
-//         range.insertNode(addStyleNode)
-//         range.setStartAfter(addStyleNode)
-//     })
-// }
-
-function 设置挖空状态(range:Range){
-    // let selection = getSelection()
-    // let strongNode = document.createElement('span')
-    // strongNode.append(range.cloneContents())
-    // strongNode.setAttribute('data-type', 'mark')
-    // range.deleteContents()
-    // range.insertNode(strongNode)
-    let cloneContents = range.cloneContents().childNodes
-    range.deleteContents()
-    let firstNode:null|HTMLElement = null
-    let lastNode:null|HTMLElement = null
-    //遍历节点，增加样式
-    foreach(cloneContents,(item:any)=>{
-        let addStyleNode
-        if (item instanceof Text){
-            if(item.textContent == ""){
-                return;
-            }
-            addStyleNode = document.createElement('span')
-            addStyleNode.setAttribute('data-type', 'mark')
-            addStyleNode.append(item)
-            console.log(addStyleNode)
-        }
-        else{
-            addStyleNode = item.cloneNode(true)
-            addStyleNode.setAttribute('data-type', 'mark '+addStyleNode.getAttribute("data-type"))
-            console.log(addStyleNode)
-        }
-        range.insertNode(addStyleNode)
-        if (firstNode === null)
-            firstNode = addStyleNode
-        lastNode = addStyleNode
-        range.setStartAfter(addStyleNode)
-    })
-    document.getSelection().removeAllRanges()
-    document.getSelection().addRange(((item)=>{item.setStartBefore(firstNode);item.setEndAfter(lastNode);return item})(new Range()))
-    document.getSelection().getRangeAt(0)
+const createHollow = ():HTMLElement=>{
+    let hollow = document.createElement("span")
+    hollow.setAttribute("data-type",'hollow')
+    hollow.innerText = '[...]'
+    return hollow
 }
+
+
+function getSmHollowContent(mode:string, protyle:IProtyle){
+    let md;
+    let hollowMd;
+    let sourceRoadMd;
+    let content;
+    let cardID = getNewID()
+    let range = getSelection().getRangeAt(0)
+    let doc = protyle.element.querySelector('.protyle-wysiwyg') as HTMLElement
+    let sourceTitle = getSourceTitle(protyle)
+    protyle.toolbar.setInlineMark(protyle, "wait", "range")
+    let selected = doc.cloneNode(true) as HTMLElement
+    protyle.toolbar.setInlineMark(protyle, "wait", "range")
+    // selected.setAttribute("data-node-id",cardID)
+    let source = protyle.options.blockId
+
+    for (let se of selected.childNodes) {    
+        let item = se as HTMLElement
+        item.setAttribute("data-node-id",getNewID())
+        item.querySelectorAll("[data-node-id]").forEach((subNode)=>{subNode.setAttribute("data-node-id",getNewID())})
+    }
+    let hollowElement = selected.querySelector("[data-type='wait']")
+    hollowElement.replaceWith(createHollow())
+    let tempHollowParent = document.createElement("div")
+    tempHollowParent.append(hollowElement)
+
+    let sourceRoadElement = selected.querySelector("[custom-sourceRoad]")
+    if(!sourceRoadElement){
+        sourceRoadElement = document.createElement("div")
+    }
+    sourceRoadElement.remove()
+    sourceRoadElement.querySelector('[custom-make-date]')?.remove()
+    
+    
+    switch(mode){
+        case "StdMd":
+            md = luteEngine.BlockDOM2StdMd(selected.innerHTML)
+            hollowMd = luteEngine.BlockDOM2StdMd(tempHollowParent.innerHTML)
+            sourceRoadMd  = luteEngine.BlockDOM2StdMd(sourceRoadElement.innerHTML)
+            break;
+        case "Md":
+            md = luteEngine.BlockDOM2Md(selected.innerHTML)
+            hollowMd = luteEngine.BlockDOM2Md(tempHollowParent.innerHTML)
+            sourceRoadMd  = luteEngine.BlockDOM2Md(sourceRoadElement.innerHTML)
+            break;
+    }
+    content = luteEngine.BlockDOM2Content(selected.innerHTML)
+    md =  `{{{row
+{{{row
+${md}
+
+}}}
+
+${hollowMd}
+
+}}}
+
+{{{row
+((${source} "${sourceTitle}"))
+
+${sourceRoadMd}
+    
+${genTodayDate()}
+{: custom-make-date="true"}
+    
+}}}
+{: custom-sourceRoad="true"}`
+    return [md,content,source,cardID];
+}
+
 
 async function addCard(id: string){
     let body = {
@@ -390,42 +394,122 @@ async function addCard(id: string){
     };
     fetchSyncPost("/api/riff/addRiffCards", body);
 }
-var HotKeyHandler = {
-    currentMainKey: null as any,
-    currentValueKey: null as any,
-    Init: function () {
-        HotKeyHandler.Register(0, "K", function () { alert("注册成功"); });
-    },
-    Register: function (tag: number, value: string, func: Function) {
-        let MainKey = 0;
-        switch (tag) {
-            case 0:
-                MainKey = 17; //Ctrl
-                break;
-            case 1:
-                MainKey = 16; //Shift
-                break;
-            case 2:
-                MainKey = 18; //Alt
-                break;
-        }
-        document.onkeyup = function (e) {
-            HotKeyHandler.currentMainKey = null;
-        }
 
-        document.onkeydown = function (event) {
-            //获取键值  
-            var keyCode = event.keyCode;
-            var keyValue = String.fromCharCode(event.keyCode);
 
-            if (HotKeyHandler.currentMainKey != null) {
-                if (keyValue == value) {
-                    HotKeyHandler.currentMainKey = null;
-                    if (func != null) func();
-                }
-            }
-            if (keyCode == MainKey)
-                HotKeyHandler.currentMainKey = keyCode;
-        }
-    }
-}
+// function updateContentStyleOrigin(range:Range){
+//     let selection = getSelection()
+//     // let strongNode = document.createElement('span')
+//     // strongNode.append(range.cloneContents())
+//     // strongNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+//     // range.deleteContents()
+//     // range.insertNode(strongNode)
+//     // range.setStartAfter(strongNode)
+//     // range.collapse(true) //取消文本选择状态
+//     // selection.removeAllRanges()
+//     // selection.addRange(range)
+    
+//     let cloneContents = range.cloneContents().childNodes
+//     range.deleteContents()
+//     //遍历节点，增加样式
+//     foreach(cloneContents,(item:any)=>{
+//         let addStyleNode
+//         if (item instanceof Text){
+//             if(item.textContent == ""){
+//                 return;
+//             }
+//             addStyleNode = document.createElement('span')
+//             addStyleNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+//             addStyleNode.append(item)
+//             console.log(addStyleNode)
+//         }
+//         else{
+//             addStyleNode = item.cloneNode(true)
+//             addStyleNode.setAttribute('style', 'background-color: var(--b3-font-background1);')
+//             addStyleNode.setAttribute('data-type',addStyleNode.getAttribute("data-type").replaceAll("mark","").trim())
+//             console.log(addStyleNode)
+//         }
+//         range.insertNode(addStyleNode)
+//         range.setStartAfter(addStyleNode)
+//     })
+//     range.collapse(true) //取消文本选择状态
+//     selection.removeAllRanges()
+//     selection.addRange(range)
+//     console.log(cloneContents)
+//     //关闭toolbar
+//     document.querySelector("#layouts  div.fn__flex-1.protyle > div.protyle-toolbar").classList.add('fn__none') 
+//     saveViaTransaction()
+// }
+
+
+// function getHollowContentOrigin(mode:string){
+//     let md;
+//     let content;
+//     let range = getSelection().getRangeAt(0)
+//     let block = getBlock(range.startContainer as HTMLElement)
+//     设置挖空状态(range.cloneRange())
+//     //重新获取range
+//     range = getSelection().getRangeAt(0)
+//     //设置块id
+//     let cardID = getNewID()
+//     let selected = block.cloneNode(true) as HTMLElement
+//     selected.setAttribute("data-node-id",cardID)
+//     console.log("start",selected)
+//     let source = getContentSource(range)
+
+//     // 恢复挖空前状态(range.cloneRange(),oldContent)
+//     // updateContentStyle(range)
+//     let element = document.createElement("div")
+
+//     element.appendChild(selected)
+//     switch(mode){
+//         case "StdMd":
+//             md = luteEngine.BlockDOM2StdMd(element.innerHTML)
+//             break;
+//         case "Md":
+//             md = luteEngine.BlockDOM2Md(element.innerHTML)
+//             break;
+//     }
+//     content = luteEngine.BlockDOM2Content(element.innerHTML)
+//     md =  `((${source} "*"))` + md
+//     return [md,content,source,cardID];
+// }
+
+
+// function 设置挖空状态(range:Range){
+//     // let selection = getSelection()
+//     // let strongNode = document.createElement('span')
+//     // strongNode.append(range.cloneContents())
+//     // strongNode.setAttribute('data-type', 'mark')
+//     // range.deleteContents()
+//     // range.insertNode(strongNode)
+//     let cloneContents = range.cloneContents().childNodes
+//     range.deleteContents()
+//     let firstNode:null|HTMLElement = null
+//     let lastNode:null|HTMLElement = null
+//     //遍历节点，增加样式
+//     foreach(cloneContents,(item:any)=>{
+//         let addStyleNode
+//         if (item instanceof Text){
+//             if(item.textContent == ""){
+//                 return;
+//             }
+//             addStyleNode = document.createElement('span')
+//             addStyleNode.setAttribute('data-type', 'mark')
+//             addStyleNode.append(item)
+//             console.log(addStyleNode)
+//         }
+//         else{
+//             addStyleNode = item.cloneNode(true)
+//             addStyleNode.setAttribute('data-type', 'mark '+addStyleNode.getAttribute("data-type"))
+//             console.log(addStyleNode)
+//         }
+//         range.insertNode(addStyleNode)
+//         if (firstNode === null)
+//             firstNode = addStyleNode
+//         lastNode = addStyleNode
+//         range.setStartAfter(addStyleNode)
+//     })
+//     document.getSelection().removeAllRanges()
+//     document.getSelection().addRange(((item)=>{item.setStartBefore(firstNode);item.setEndAfter(lastNode);return item})(new Range()))
+//     document.getSelection().getRangeAt(0)
+// }
