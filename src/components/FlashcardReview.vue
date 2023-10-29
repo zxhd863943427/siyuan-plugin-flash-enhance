@@ -23,13 +23,15 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, ref, Ref} from "vue"
+import {onMounted,onUnmounted, ref, Ref} from "vue"
 import  topbar  from "./flashcardReview/topbar.vue";
 import  status  from "./flashcardReview/status.vue";
 import  card  from "./flashcardReview/card.vue";
 import  reviewOption  from "./flashcardReview/reviewOption.vue";
 import { Protyle, fetchSyncPost } from "siyuan"
 import {ReviewOption, ReviewInfo} from "../utils/type"
+import { plugin } from "../api/utils";
+import { log } from "fabric/fabric-impl";
 
 
 const allReviewCard:Ref<ReviewInfo[]> = ref([])
@@ -237,8 +239,24 @@ async function initReview(){
     originAllreviewCard = allReviewCard.value
     currentCard.value = allReviewCard.value[0]
 }
+
+const afterAddCard=({detail})=>{
+        console.log(detail.newCard)
+        let oldIndex = getNewCardIndex(0, currentCard.value as ReviewInfo, allReviewCard.value)
+        allReviewCard.value.splice(oldIndex,0,detail.newCard)
+        console.log(allReviewCard)
+    }
+function listenAddNewCard(){
+    console.log("listener add card!")
+    plugin.eventBus.on(("add-card" as any),afterAddCard)
+}
 onMounted(async ()=>{
     initReview()
+    listenAddNewCard()
+})
+onUnmounted(async ()=>{
+    console.log("un mount")
+    plugin.eventBus.off(("add-card" as any),afterAddCard)
 })
 
 </script>

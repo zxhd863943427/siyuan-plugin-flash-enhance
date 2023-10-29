@@ -1,9 +1,10 @@
 import * as FlashReview from "../components/FlashcardReview.vue"
 import { settingList } from "../utils/config"
-import { watch, createApp } from "vue"
+import { watch, createApp, App } from "vue"
 import { fetchSyncPost, IProtyle, openTab } from "siyuan"
 
 const TAB_TYPE = "review-enhance"
+let flashReviewRef:App<Element>
 
 export function customReviewSwitch(plugin:any) {
     let enable = settingList.getSetting()["增强闪卡界面"]
@@ -20,6 +21,7 @@ export function customReviewSwitch(plugin:any) {
         },
         destroy() {
             console.log("destroy tab:", TAB_TYPE);
+            flashReviewRef.unmount()
         }
     });
     if (enable) {
@@ -60,11 +62,12 @@ async function openEnhanceReview(plugin:any){
             id: plugin.name + TAB_TYPE
         },
     });
-    const flashReview= createApp(FlashReview.default)
+    const flashReview = createApp(FlashReview.default)
     flashReview.mount(tab.panelElement)
     console.log("mount")
     console.log(tab.panelElement)
     console.log(tab)
+    flashReviewRef = flashReview
 }
 
 async function addBlockReading(id:string,deck:string = '20230218211946-2kw8jgx'){

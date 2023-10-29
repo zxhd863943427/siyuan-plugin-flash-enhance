@@ -1,30 +1,33 @@
-import { fetchSyncPost, IProtyle } from "siyuan"
+import { fetchSyncPost, IProtyle, Plugin } from "siyuan"
 import { getFileID, getHpath, getCurrentPage } from "../utils/utils"
 import { foreach, saveViaTransaction } from"../lib/utils"
 import { settingList } from "../utils/config"
 import { watch } from "vue"
 import { getBlock } from "../lib/utils"
 import {Shortcuts} from 'shortcuts';
+import { ReviewInfo } from "../utils/type"
 
 const shortcuts = new Shortcuts ();
 const luteEngine = globalThis.Lute.New()
 const builtInDeck = '20230218211946-2kw8jgx'
 
-export function IRswitch(plugin:any) {
+export function IRswitch(plugin:Plugin) {
     let enable = settingList.getSetting()["渐进式阅读"]
     if (enable) {
     plugin.addCommand({
         langKey: "extract",
         hotkey: "⌥Q",
-        editorCallback: (protyle: IProtyle) => {
-            摘录();
+        editorCallback: async(protyle: IProtyle) => {
+            let newCard = await 摘录(protyle);
+            plugin.eventBus.emit(("add-card" as any),{newCard:newCard as ReviewInfo})
         }
     })
     plugin.addCommand({
         langKey: "hollowedOut",
         hotkey: "⌥W",
-        editorCallback: (protyle: IProtyle) => {
-            挖空();
+        editorCallback: async(protyle: IProtyle) => {
+            let newCard = await 挖空(protyle);
+            plugin.eventBus.emit(("add-card" as any),{newCard:newCard as ReviewInfo})
         }
     })
     }
@@ -39,23 +42,26 @@ export function IRswitch(plugin:any) {
             plugin.addCommand({
                 langKey: "extract",
                 hotkey: "⌥Q",
-                editorCallback: (protyle: IProtyle) => {
-                    摘录();
+                editorCallback: async(protyle: IProtyle) => {
+                    let newCard = await  摘录(protyle);
+                    plugin.eventBus.emit(("add-card" as any),{newCard:newCard as ReviewInfo})
                 }
             })
             plugin.addCommand({
                 langKey: "hollowedOut",
                 hotkey: "⌥W",
-                editorCallback: (protyle: IProtyle) => {
-                    挖空();
+                editorCallback: async(protyle: IProtyle) => {
+                    let newCard = await  挖空(protyle);
+                    plugin.eventBus.emit(("add-card" as any),{newCard:newCard as ReviewInfo})
                 }
             })
         }
     })
 }
 
-async function 摘录() {
+async function 摘录(protyle: IProtyle) {
     let open = settingList.getSetting()["渐进式阅读"]
+    let cardData:ReviewInfo
     if (!open){
         return;
     }
@@ -66,12 +72,19 @@ async function 摘录() {
         return
     }
     let subFileID = await createSubFile(selectionContent[1],selectionContent[2])
-    updateSubFile(subFileID,selectionContent[0])
-    addCard(subFileID)
+    let data = await updateSubFile(subFileID,selectionContent[0])
+    await addCard(subFileID)
+    console.log("摘录完成！",data)
+    cardData = {
+        deckID:builtInDeck,
+        blockID:data[0].doOperations[0].id
+    }
+    return cardData
 }
 
-async function 挖空() {
+async function 挖空(protyle: IProtyle) {
     let open = settingList.getSetting()["渐进式阅读"]
+    let cardData:ReviewInfo
     if (!open){
         return;
     }
@@ -82,8 +95,13 @@ async function 挖空() {
         return
     }
     let subFileID = await createSubFile("挖空",selectionContent[2])
-    await updateSubFile(subFileID,selectionContent[0])
+    let data = await updateSubFile(subFileID,selectionContent[0])
     await addCard(selectionContent[3])
+    cardData = {
+        deckID:builtInDeck,
+        blockID:data[0].doOperations[0].id
+    }
+    return cardData
 }
 
 function 问答() {
