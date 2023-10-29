@@ -1,8 +1,8 @@
-import { getFrontend } from "siyuan"
+import { getFrontend,Plugin } from "siyuan"
 const frontEnd = getFrontend();
 export const isMobile = (frontEnd === "mobile" || frontEnd === "browser-mobile")
-export let plugin:any;
-export function setPlugin(_plugin:any){
+export let plugin:Plugin;
+export function setPlugin(_plugin:Plugin){
     plugin = _plugin;
 }
 
