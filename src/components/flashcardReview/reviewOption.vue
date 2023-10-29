@@ -157,41 +157,53 @@ const getReadNum =async (id:string):Promise<number>=>{
     }
     return readNum
 }
-function setReadNum(id:string,readNum:number){
-    fetchSyncPost("/api/attr/setBlockAttrs", {
-        "id": id,
-        "attrs": {
-            "custom-plugin-reading-number": readNum
-        }
-    })
+const setReadNum = (body:object,readNum:number)=>{
+    let newbody = {...body,
+        "custom-plugin-reading-number": `${readNum}`
+    }
+    return newbody
 }
-function setReadFinish(id:string){
-    fetchSyncPost("/api/attr/setBlockAttrs", {
-        "id": id,
-        "attrs": {
-            "custom-plugin-reading-finish": "true"
-        }
-    })
+const setReadFinish = (body:object)=>{
+    let newbody = {...body,
+        "custom-plugin-reading-finish": "true"
+    }
+    return newbody
 }
-function setReadLastTime(id:string){
-    fetchSyncPost("/api/attr/setBlockAttrs", {
-        "id": id,
-        "attrs": {
-            "custom-plugin-reading-last-time": genTodayDate()
-        }
-    })
+
+const setReadLastTime = (body:object)=>{
+    let newbody = {...body,
+        "custom-plugin-reading-last-time": genTodayDate()
+    }
+    return newbody
 }
+
 //TODO
-async function setCurrentReadingIndex(id:string){
+async function enableNextDoc(id:string){
     let blockData = await fetchSyncPost("/api/attr/getBlockAttrs", {
         "id": id
     })
-    let readingSource = blockData.data["custom-plugin-reading-source"]
-    if (!readingSource){
-        console.error(`block ${id} is not a read item`)
+    let nextID = blockData.data["custom-plugin-incremental-reading-nextID"]
+    if (!nextID) {
+        console.error(`block ${id} has not next ID!`)
         return
     }
-    
+    if (nextID === "END") {
+        console.error(`block ${id} is end`)
+        return
+    }
+    await fetchSyncPost("/api/attr/setBlockAttrs", {
+        "id": nextID,
+        "attrs": {
+            "custom-plugin-incremental-reading-enable": "true"
+        }
+    })
+}
+
+async function setBlockAttr(id:string,body:object) {
+    await fetchSyncPost("/api/attr/setBlockAttrs", {
+        "id": id,
+        "attrs": body
+    })
 }
 
 async function nextRepetition(){
@@ -199,30 +211,46 @@ async function nextRepetition(){
     let blockNum = await getBlockNum(blockID)
     let RefNum = await getRefNum(blockID)
     let readNum = await getReadNum(blockID)
-    setReadNum(blockID,readNum+1)
+
+    let body = {}
+    body = setReadNum(body,readNum+1)
+    body = setReadLastTime(body)
+
     let calculateNextFactor = calculateNext(blockNum, RefNum, readNum)
     let rate = Math.ceil(calculateNextFactor * 4)
-    setReadLastTime(blockID)
+
+    setBlockAttr(blockID,body)
     updateStatus(rate)
 }
 async function finishReading() {
+    
     let blockID = props.currentCard.blockID
     let blockNum = await getBlockNum(blockID)
     let RefNum = await getRefNum(blockID)
     let readNum = await getReadNum(blockID)
-    setReadNum(blockID,readNum+3)
+
+    let body = {}
+    body = setReadNum(body,readNum+3)
+    body = setReadFinish(body)
+    body = setReadLastTime(body)
+
     let calculateNextFactor = calculateNext(blockNum, RefNum, readNum+3)
     let rate = Math.ceil(calculateNextFactor * 4)
-    setReadFinish(blockID)
-    setReadLastTime(blockID)
+    setBlockAttr(blockID,body)
     updateStatus(rate)
+    enableNextDoc(blockID)
+    
 }
 
 async function dontReading(){
     let blockID = props.currentCard.blockID
     let readNum = await getReadNum(blockID)
-    setReadNum(blockID,readNum+1)
-    setReadLastTime(blockID)
+
+    let body = {}
+    body = setReadNum(body,readNum+1)
+    body = setReadLastTime(body)
+
+    setBlockAttr(blockID,body)
     stop()
     updateStatus(-3)
 }
