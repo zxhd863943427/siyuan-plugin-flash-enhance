@@ -253,6 +253,7 @@ async function dontReading(){
     setBlockAttr(blockID,body)
     stop()
     updateStatus(-3)
+    enableNextDoc(blockID)
 }
 
 </script>
