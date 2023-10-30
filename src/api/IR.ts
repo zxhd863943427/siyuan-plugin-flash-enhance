@@ -11,6 +11,8 @@ import { genTodayDate } from "./utils"
 const shortcuts = new Shortcuts ();
 const luteEngine = globalThis.Lute.New()
 const builtInDeck = '20230218211946-2kw8jgx'
+const MAKEDATE = 'custom-make-date'
+const SOURCEROAD = 'custom-source-road'
 
 export function IRswitch(plugin:Plugin) {
     let enable = settingList.getSetting()["渐进式阅读"]
@@ -73,10 +75,10 @@ async function 摘录(protyle: IProtyle) {
     if (selectionContent[0].length <= 1){
         return
     }
-    let subFileID = await createSubFile(selectionContent[1],selectionContent[2])
-    let data = await updateSubFile(subFileID,selectionContent[0])
+    let subFileID = await createSubFile(selectionContent[1],selectionContent[2],selectionContent[0])
+    //let data = await updateSubFile(subFileID,selectionContent[0])
     await addCard(subFileID)
-    console.log("摘录完成！",data)
+    // console.log("摘录完成！",data)
     cardData = {
         deckID:builtInDeck,
         blockID:subFileID
@@ -129,25 +131,27 @@ const getSourceTitle = (protyle:IProtyle):string=>{
 }
 
 async function getSelectionContent(mode:string,protyle:IProtyle){
-    const currentPage = getCurrentPage()
+    const currentPage = protyle.element
     //页面无.protyle-wysiwyg--select，说明未选中块，而是内容
     const slectMult = (currentPage.querySelector(".protyle-wysiwyg--select")!=null)
     let selectedContent;
     if (slectMult){
-        selectedContent = await getMultSelectionContent(currentPage, mode)
+        selectedContent = await getMultSelectionContent(currentPage, mode,protyle)
     }
     else{
-        selectedContent = getMonSelectionContent(mode)
+        selectedContent = getMonSelectionContent(mode,protyle)
         updateContentStyle(protyle)
     }
     return selectedContent
 }
 
-async function getMultSelectionContent(root:HTMLElement,mode:string){
+async function getMultSelectionContent(root:HTMLElement,mode:string,protyle:IProtyle){
     let md;
+    let sourceRoadMd;
     let content;
     let source;
     const elemnet  = root.getElementsByTagName("div")
+    let sourceTitle = getSourceTitle(protyle)
     const select = Array.from(elemnet)
     .filter(chapter => chapter.classList.contains("protyle-wysiwyg--select"))
     const AllSelection = document.createElement("div")
@@ -159,45 +163,77 @@ async function getMultSelectionContent(root:HTMLElement,mode:string){
         AllSelection.appendChild(item)
         await updateBlockStyle(se)
     }
+    let sourceRoadElement = extractSourceRoad(root.cloneNode(true) as HTMLElement)
     switch(mode){
         case "StdMd":
             md = luteEngine.BlockDOM2StdMd(AllSelection.innerHTML)
+            sourceRoadMd = luteEngine.BlockDOM2StdMd(sourceRoadElement.innerHTML)
             break;
         case "Md":
             md = luteEngine.BlockDOM2Md(AllSelection.innerHTML)
+            sourceRoadMd = luteEngine.BlockDOM2Md(sourceRoadElement.innerHTML)
             break;
     }
     content = luteEngine.BlockDOM2Content(AllSelection.innerHTML)
-    md = md + `\n((${source} "来源"))`
+    // md = md + `\n((${source} "来源"))`
+    md = md =  `${md}
+
+{{{row
+((${source} "${sourceTitle}"))
+
+${sourceRoadMd}
+    
+${genTodayDate()}
+{: ${MAKEDATE}="true"}
+}}}
+{: ${SOURCEROAD}="true"}`
     return [md,content,source];
 }
 
-function getMonSelectionContent(mode:string){
+function getMonSelectionContent(mode:string,protyle:IProtyle){
     let md;
+    let sourceRoadMd;
     let content;
 
+    let sourceTitle = getSourceTitle(protyle)
     
     let range = getSelection().getRangeAt(0)
     let selected = range.cloneContents()
     let source = getContentSource(range)
-    // updateContentStyle(range)
+    updateContentStyle(protyle)
     let element = document.createElement("div")
+
+    let sourceRoadElement = extractSourceRoad(protyle.element.cloneNode(true) as HTMLElement)
 
     element.appendChild(selected)
     switch(mode){
         case "StdMd":
             md = luteEngine.BlockDOM2StdMd(element.innerHTML)
+            sourceRoadMd = luteEngine.BlockDOM2StdMd(sourceRoadElement.innerHTML)
             break;
         case "Md":
             md = luteEngine.BlockDOM2Md(element.innerHTML)
+            sourceRoadMd = luteEngine.BlockDOM2Md(sourceRoadElement.innerHTML)
             break;
     }
     content = luteEngine.BlockDOM2Content(element.innerHTML)
-    md = md + `\n((${source} "来源"))`
+    md = md =  `${md}
+
+{{{row
+((${source} "${sourceTitle}"))
+
+${sourceRoadMd}
+    
+${genTodayDate()}
+{: ${MAKEDATE}="true"}
+    
+}}}
+{: ${SOURCEROAD}="true"}`
+
     return [md,content,source];
 }
 
-async function createSubFile(title:string,id:string){
+async function createSubFile(title:string,id:string, content=''){
 
     let [FileID, NotebookId, Hpath] =  await getBlockInfo(id)
     // 还要去除零宽度空格
@@ -207,7 +243,7 @@ async function createSubFile(title:string,id:string){
     let data = await fetchSyncPost("/api/filetree/createDocWithMd",{
         "notebook": NotebookId,
         "path": Hpath+"/"+subTitle, 
-        "markdown": ""
+        "markdown": content
     })
     if (data.code!=0){
         console.log(data.msg)
@@ -317,6 +353,7 @@ const createHollow = ():HTMLElement=>{
 }
 
 
+
 function getSmHollowContent(mode:string, protyle:IProtyle){
     let md;
     let hollowMd;
@@ -342,12 +379,7 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
     let tempHollowParent = document.createElement("div")
     tempHollowParent.append(hollowElement)
 
-    let sourceRoadElement = selected.querySelector("[custom-sourceRoad]")
-    if(!sourceRoadElement){
-        sourceRoadElement = document.createElement("div")
-    }
-    sourceRoadElement.remove()
-    sourceRoadElement.querySelector('[custom-make-date]')?.remove()
+    let sourceRoadElement = extractSourceRoad(selected)
     
     
     switch(mode){
@@ -368,7 +400,6 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
 ${md}
 
 }}}
-
 ${hollowMd}
 
 }}}
@@ -379,13 +410,22 @@ ${hollowMd}
 ${sourceRoadMd}
     
 ${genTodayDate()}
-{: custom-make-date="true"}
+{: ${MAKEDATE}="true"}
     
 }}}
-{: custom-sourceRoad="true"}`
+{: ${SOURCEROAD}="true"}`
     return [md,content,source,cardID];
 }
 
+function extractSourceRoad(cloneNode:HTMLElement){
+    let sourceRoadElement = cloneNode.querySelector("[custom-source-road]")
+    if(!sourceRoadElement){
+        sourceRoadElement = document.createElement("div")
+    }
+    sourceRoadElement.remove()
+    sourceRoadElement.querySelector('[custom-make-date]')?.remove()
+    return sourceRoadElement
+}
 
 async function addCard(id: string){
     let body = {

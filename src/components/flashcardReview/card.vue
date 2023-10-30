@@ -76,6 +76,9 @@ onMounted(async()=>{
     margin-left: auto;
     margin-right: auto;
  }
+ ::v-deep [custom-source-road]>div{
+    display: block !important;
+ }
 } 
 </style>
 <style lang="scss">
