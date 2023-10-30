@@ -163,7 +163,7 @@ async function getMultSelectionContent(root:HTMLElement,mode:string,protyle:IPro
         AllSelection.appendChild(item)
         await updateBlockStyle(se)
     }
-    let sourceRoadElement = extractSourceRoad(root.cloneNode(true) as HTMLElement)
+    let [_, sourceRoadElement] = extractSourceRoad(root)
     switch(mode){
         case "StdMd":
             md = luteEngine.BlockDOM2StdMd(AllSelection.innerHTML)
@@ -203,7 +203,7 @@ function getMonSelectionContent(mode:string,protyle:IProtyle){
     updateContentStyle(protyle)
     let element = document.createElement("div")
 
-    let sourceRoadElement = extractSourceRoad(protyle.element.cloneNode(true) as HTMLElement)
+    let [_,sourceRoadElement] = extractSourceRoad(protyle.element)
 
     element.appendChild(selected)
     switch(mode){
@@ -379,7 +379,8 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
     let tempHollowParent = document.createElement("div")
     tempHollowParent.append(hollowElement)
 
-    let sourceRoadElement = extractSourceRoad(selected)
+    let sourceRoadElement;
+    [selected,sourceRoadElement] = extractSourceRoad(selected)
     
     
     switch(mode){
@@ -417,14 +418,15 @@ ${genTodayDate()}
     return [md,content,source,cardID];
 }
 
-function extractSourceRoad(cloneNode:HTMLElement){
+function extractSourceRoad(node:HTMLElement):[HTMLElement,HTMLElement]{
+    let cloneNode = node.cloneNode(true) as HTMLElement
     let sourceRoadElement = cloneNode.querySelector("[custom-source-road]")
     if(!sourceRoadElement){
         sourceRoadElement = document.createElement("div")
     }
     sourceRoadElement.remove()
     sourceRoadElement.querySelector('[custom-make-date]')?.remove()
-    return sourceRoadElement
+    return [cloneNode as HTMLElement,sourceRoadElement as HTMLElement]
 }
 
 async function addCard(id: string){
