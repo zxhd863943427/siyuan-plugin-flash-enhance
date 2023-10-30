@@ -79,7 +79,33 @@ onMounted(async()=>{
  ::v-deep [custom-source-road]>div{
     display: block !important;
  }
+ ::v-deep [data-type="hollow"] {
+    background: var(--plugin-hollow-background);
+    color: var(--plugin-hollow-color);
+    font-size: 1.2em;
+    margin: 0.3em;
+    padding: 0.1em;
+}
+::v-deep div.sb[data-node-id][custom-source-road] {
+    margin-top: 3em;
+    background: var(--b3-theme-surface-light);
+}
+::v-deep div.bq[data-node-id][custom-flash-back] {
+    background-color: transparent!important;
+    border: none;
+    border-radius: 0em !important;
+    margin-top: 1.5em !important;
+    padding-top: 0em !important;
+    padding-bottom: 0em !important;
+    padding-left: 0.1em;
+    margin-left: 0.5em;
+    border-left: 0.2em solid #c31e1e59 !important;
+}
 } 
 </style>
 <style lang="scss">
+:root{
+    --plugin-hollow-color: red;
+    --plugin-hollow-background: yellow;
+}
 </style>

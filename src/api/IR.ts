@@ -13,6 +13,8 @@ const luteEngine = globalThis.Lute.New()
 const builtInDeck = '20230218211946-2kw8jgx'
 const MAKEDATE = 'custom-make-date'
 const SOURCEROAD = 'custom-source-road'
+const CARD_FRONT = 'custom-flash-front'
+const CARD_BACK = 'custom-flash-back'
 
 export function IRswitch(plugin:Plugin) {
     let enable = settingList.getSetting()["渐进式阅读"]
@@ -406,7 +408,11 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
 ${md}
 
 }}}
-${hollowMd}
+{: ${CARD_FRONT}='true'}
+
+
+> ${hollowMd}
+{: ${CARD_BACK}="true"}
 
 }}}
 
