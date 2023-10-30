@@ -454,7 +454,7 @@ async function addExtractInfo(newDocID:string,protyle: IProtyle) {
         "id": newDocID,
         "attrs": {
             "custom-plugin-incremental-reading": "true",
-            "custom-extract-source":protyle.options.id
+            "custom-extract-source":protyle.options.blockId
         }
       })
 }
@@ -463,7 +463,7 @@ async function addHollowInfo(newDocID:string,protyle: IProtyle) {
     await fetchSyncPost("/api/attr/setBlockAttrs",{
         "id": newDocID,
         "attrs": {
-            "custom-extract-source":protyle.options.id
+            "custom-extract-source":protyle.options.blockId
         }
       })
 }

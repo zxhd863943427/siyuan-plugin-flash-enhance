@@ -213,10 +213,39 @@ const filterCard = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
     filteredCardList = await filterAfterFinishDoc(filteredCardList)
     return filteredCardList
 }
+
+const sortExcartSource =async (cardList:ReviewInfo[]) => {
+    let sortCardList = [...cardList]
+    let blockIDs = cardList.map(reviewInfo=>{return reviewInfo.blockID})
+    let blockSQL = ` block_id in ('${blockIDs.join("','")}')`
+    let extractCardData = await fetchSyncPost("/api/query/sql", {
+        "stmt": `select block_id, value from attributes
+         where name like '%custom-extract-source%'
+         and ${blockSQL}`
+    })
+    let sourceMap = new Map(extractCardData.data.map(x=>{
+        return [x['block_id'], x['value']]
+    }))
+    sortCardList.sort((a:ReviewInfo,b:ReviewInfo):number=>{
+        if (!sourceMap.get(a.blockID)){
+            return 1
+        }
+        if (sourceMap.get(a.blockID) === b.blockID){
+            return -1
+        }
+        return 1
+    })
+    console.log(sourceMap)
+    console.log("excart 排序",sortCardList)
+    return sortCardList
+}
+
 // TODO
 // 优先级高的在前
 // 源文档排在其生成的子文档后
 const sortCard = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
+    let sortedCardList = await sortExcartSource(cardList)
+    console.log(cardList)
     return cardList
 }
 
