@@ -85,6 +85,7 @@ async function 摘录(protyle: IProtyle) {
         deckID:builtInDeck,
         blockID:subFileID
     }
+    addExtractInfo(subFileID,protyle)
     return cardData
 }
 
@@ -110,6 +111,7 @@ async function 挖空(protyle: IProtyle) {
         deckID:builtInDeck,
         blockID:subFileID
     }
+    addHollowInfo(subFileID,protyle)
     return cardData
 }
 
@@ -445,4 +447,23 @@ async function addCard(id: string){
         blockIDs: [id],
     };
     fetchSyncPost("/api/riff/addRiffCards", body);
+}
+
+async function addExtractInfo(newDocID:string,protyle: IProtyle) {
+    await fetchSyncPost("/api/attr/setBlockAttrs",{
+        "id": newDocID,
+        "attrs": {
+            "custom-plugin-incremental-reading": "true",
+            "custom-extract-source":protyle.options.id
+        }
+      })
+}
+
+async function addHollowInfo(newDocID:string,protyle: IProtyle) {
+    await fetchSyncPost("/api/attr/setBlockAttrs",{
+        "id": newDocID,
+        "attrs": {
+            "custom-extract-source":protyle.options.id
+        }
+      })
 }
