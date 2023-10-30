@@ -382,6 +382,11 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
     let sourceRoadElement;
     [selected,sourceRoadElement] = extractSourceRoad(selected)
     
+    selected
+    .querySelectorAll('[data-type="text"][style*="background-color: var(--b3-font-background1)"]')
+    .forEach((node)=>{
+        node.setAttribute('data-type',"search-mark")
+    })
     
     switch(mode){
         case "StdMd":
