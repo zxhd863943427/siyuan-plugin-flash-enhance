@@ -265,7 +265,7 @@ async function initReview(){
     if (allReviewCard.value?.length === 0) return
 
     reviewOptionStatus.value = await getCardOption(allReviewCard.value[0])
-    originAllreviewCard = allReviewCard.value
+    originAllreviewCard = [...allReviewCard.value]
     currentCard.value = allReviewCard.value[0]
 }
 
