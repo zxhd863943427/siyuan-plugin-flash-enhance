@@ -219,7 +219,7 @@ async function nextRepetition(){
     let calculateNextFactor = calculateNext(blockNum, RefNum, readNum)
     let rate = Math.ceil(calculateNextFactor * 4)
 
-    setBlockAttr(blockID,body)
+    await setBlockAttr(blockID,body)
     updateStatus(rate)
 }
 async function finishReading() {
@@ -236,10 +236,9 @@ async function finishReading() {
 
     let calculateNextFactor = calculateNext(blockNum, RefNum, readNum+3)
     let rate = Math.ceil(calculateNextFactor * 4)
-    setBlockAttr(blockID,body)
+    await setBlockAttr(blockID,body)
+    await enableNextDoc(blockID)
     updateStatus(rate)
-    enableNextDoc(blockID)
-    
 }
 
 async function dontReading(){
@@ -250,10 +249,11 @@ async function dontReading(){
     body = setReadNum(body,readNum+1)
     body = setReadLastTime(body)
 
-    setBlockAttr(blockID,body)
+    await setBlockAttr(blockID,body)
+    await enableNextDoc(blockID)
     stop()
     updateStatus(-3)
-    enableNextDoc(blockID)
+    
 }
 
 </script>
