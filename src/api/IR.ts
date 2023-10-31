@@ -377,7 +377,7 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
         item.setAttribute("data-node-id",getNewID())
         item.querySelectorAll("[data-node-id]").forEach((subNode)=>{subNode.setAttribute("data-node-id",getNewID())})
     }
-    let hollowElement = selected.querySelector("[data-type='wait']")
+    let hollowElement = selected.querySelector("[data-type~='wait']")
     hollowElement.replaceWith(createHollow())
     let tempHollowParent = document.createElement("div")
     tempHollowParent.append(hollowElement)
