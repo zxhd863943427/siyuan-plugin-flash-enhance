@@ -4,7 +4,7 @@ import { watch, createApp, App } from "vue"
 import { fetchSyncPost, IProtyle, openTab } from "siyuan"
 
 const TAB_TYPE = "review-enhance"
-let flashReviewRef:App<Element>
+let flashReviewRef:App<Element> = null;
 
 export function customReviewSwitch(plugin:any) {
     let enable = settingList.getSetting()["增强闪卡界面"]
@@ -21,7 +21,8 @@ export function customReviewSwitch(plugin:any) {
         },
         destroy() {
             console.log("destroy tab:", TAB_TYPE);
-            flashReviewRef.unmount()
+            flashReviewRef?.unmount()
+            flashReviewRef = null
         }
     });
     if (enable) {
