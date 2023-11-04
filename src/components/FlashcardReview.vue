@@ -30,7 +30,7 @@ import  card  from "./flashcardReview/card.vue";
 import  reviewOption  from "./flashcardReview/reviewOption.vue";
 import { Protyle, fetchSyncPost } from "siyuan"
 import {ReviewOption, ReviewInfo} from "../utils/type"
-import { plugin } from "../api/utils";
+import { plugin, sortByTopo } from "../api/utils";
 import { log } from "fabric/fabric-impl";
 
 
@@ -221,22 +221,16 @@ const sortExcartSource =async (cardList:ReviewInfo[]) => {
     let extractCardData = await fetchSyncPost("/api/query/sql", {
         "stmt": `select block_id, value from attributes
          where name like '%custom-extract-source%'
-         and ${blockSQL}`
+         and ${blockSQL}
+         LIMIT 10240`
     })
     let sourceMap = new Map(extractCardData.data.map(x=>{
         return [x['block_id'], x['value']]
     }))
-    sortCardList.sort((a:ReviewInfo,b:ReviewInfo):number=>{
-        if (!sourceMap.get(a.blockID)){
-            return 1
-        }
-        if (sourceMap.get(a.blockID) === b.blockID){
-            return -1
-        }
-        return 1
-    })
+    sortCardList = sortByTopo(sortCardList,sourceMap)
+
     console.log(sourceMap)
-    console.log("excart 排序",sortCardList)
+    // console.log("excart 排序",sortCardList)
     return sortCardList
 }
 
@@ -245,8 +239,10 @@ const sortExcartSource =async (cardList:ReviewInfo[]) => {
 // 源文档排在其生成的子文档后
 const sortCard = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
     let sortedCardList = await sortExcartSource(cardList)
+    console.log("完成排序")
     console.log(cardList)
-    return cardList
+    console.log(sortedCardList)
+    return sortedCardList
 }
 
 async function initReview(){
