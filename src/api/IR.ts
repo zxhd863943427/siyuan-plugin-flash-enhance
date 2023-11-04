@@ -124,12 +124,16 @@ function 问答() {
 }
 
 const getSourceTitle = (protyle:IProtyle):string=>{
-    if (protyle.options.blockId === protyle.block.parentID){
+    if (protyle.options.blockId === protyle.block.parentID && protyle.title){
         return protyle.title.editElement.innerText
     }
     let firstNode = protyle.element.querySelector(`div[data-node-id='${protyle.options.blockId}'] > div:nth-child(1)`) as HTMLElement
     if (firstNode){
         return firstNode.innerText.slice(0,30)
+    }
+    let noIdFirstNode = protyle.element.querySelector(`div[data-node-id] > div:nth-child(1)`) as HTMLElement
+    if (noIdFirstNode){
+        return noIdFirstNode.innerText.slice(0,30)
     }
     return '来源'
 }
