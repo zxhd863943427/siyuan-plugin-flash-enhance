@@ -390,6 +390,15 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
     .forEach((node)=>{
         node.setAttribute('data-type',"search-mark")
     })
+    //移除跟其他样式重合的标记
+    selected
+    .querySelectorAll('[data-type~="text"][style*="background-color: var(--b3-font-background1)"]')
+    .forEach((node)=>{
+        let originType = node.getAttribute("data-type")
+        originType = originType.replace("text","").trim()
+        node.setAttribute('data-type',originType);
+        (node as HTMLElement).style.backgroundColor = '';
+    })
     
     switch(mode){
         case "StdMd":
