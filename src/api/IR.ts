@@ -383,6 +383,10 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
     }
     let hollowElement = selected.querySelector("[data-type~='wait']")
     hollowElement.replaceWith(createHollow())
+    // 移除wait的自定义属性
+    let originType = hollowElement.getAttribute("data-type")
+    originType = originType.replace("wait","search-mark").trim()
+    hollowElement.setAttribute('data-type',originType);
     let tempHollowParent = document.createElement("div")
     tempHollowParent.append(hollowElement)
 
