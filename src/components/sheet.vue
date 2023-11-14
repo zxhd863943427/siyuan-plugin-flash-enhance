@@ -45,6 +45,15 @@
                 .card__block--hidemark span[data-type~=mark] {
                 font-size: 0px;
                 }
+                .card__block--hidemark div span[data-type~=mark]:active {
+                font-size: unset;
+                color: var(--b3-protyle-inline-mark-color) !important;
+                margin: 0px 6px;
+                transition: font-size 0.1s ease-in-out;
+                }
+                .card__block--hidemark span[data-type~=mark]:active::before {
+                content: "";
+                }
             </component>
         </div>
         <!-- 类remnote复习界面 -->
