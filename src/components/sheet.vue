@@ -80,6 +80,9 @@
                 .card__block .protyle-breadcrumb button {
                 display: none;
                 }
+                .card__block .protyle-breadcrumb {
+                position: relative;
+                }
                 /**/
                 .card__block span.protyle-breadcrumb__item.protyle-breadcrumb__item--active+svg+span {
                 display: none;
