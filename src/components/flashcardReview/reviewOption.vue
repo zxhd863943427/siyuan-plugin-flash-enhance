@@ -1,49 +1,51 @@
 <template>
-    <div>reviewOption</div>
-    <div v-if="optionStatus == 'hiddenCard'">
-        <button @click="prev">prev</button>
-        <button @click="next">next</button>
-        <button @click="show">show</button>
-    </div>
-    <div v-if="optionStatus == 'readingDoc'">
-        <button @click="prev">prev</button>
-        <button @click="next">next</button>
-        <button @click="nextRepetition">next repetition</button>
-        <button @click="finishReading">read finish</button>
-        <button @click="dontReading">don't read</button>
-    </div>
-    <div v-if="optionStatus == 'browerCard'">
-        <button @click="prev">prev</button>
-        <button @click="next">next</button>
-        <button @click="continueReview">Learning</button>
-        <button class="changeRepetition" @click="changeRepetition">change repetition</button>
-    </div>
-    <div v-if="optionStatus == 'reviewcard'">
-        <button @click="prev">prev</button>
-        <button @click="next">next</button>
-        <button @click="()=>{updateStatus(-3)}">skip</button>
-        <button @click="()=>{updateStatus(1)}">bad</button>
-        <button @click="()=>{updateStatus(2)}">normal</button>
-        <button @click="()=>{updateStatus(3)}">good</button>
-        <button @click="()=>{updateStatus(4)}">prefect</button>
-        <button @click="mark">mark</button>
-    </div>
-    <div v-if="optionStatus == 'changeRate'">
-        <button @click="prev">prev</button>
-        <button @click="next">next</button>
-        <button @click="()=>{changeRate(-3)}">skip</button>
-        <button @click="()=>{changeRate(1)}">bad</button>
-        <button @click="()=>{changeRate(2)}">normal</button>
-        <button @click="()=>{changeRate(3)}">good</button>
-        <button @click="()=>{changeRate(4)}">prefect</button>
-        <button @click="mark">mark</button>
-    </div>
-    <div v-if="optionStatus == 'processMark'">
-        <button @click="prev">prev</button>
-        <button @click="next">next</button>
-        <button @click="stop">stop</button>
-        <button @click="deleteCard">delete</button>
-        <button @click="finish">finish</button>
+    <div  @keydown="hotKey" tabindex="0">
+        <div>reviewOption</div>
+        <div v-if="optionStatus == 'hiddenCard'">
+            <button @click="prev">prev</button>
+            <button @click="next">next</button>
+            <button @click="show">show</button>
+        </div>
+        <div v-if="optionStatus == 'readingDoc'">
+            <button @click="prev">prev</button>
+            <button @click="next">next</button>
+            <button @click="nextRepetition">next repetition</button>
+            <button @click="finishReading">read finish</button>
+            <button @click="dontReading">don't read</button>
+        </div>
+        <div v-if="optionStatus == 'browerCard'">
+            <button @click="prev">prev</button>
+            <button @click="next">next</button>
+            <button @click="continueReview">Learning</button>
+            <button class="changeRepetition" @click="changeRepetition">change repetition</button>
+        </div>
+        <div v-if="optionStatus == 'reviewcard'">
+            <button @click="prev">prev</button>
+            <button @click="next">next</button>
+            <button @click="()=>{updateStatus(-3)}">skip</button>
+            <button @click="()=>{updateStatus(1)}">bad</button>
+            <button @click="()=>{updateStatus(2)}">normal</button>
+            <button @click="()=>{updateStatus(3)}">good</button>
+            <button @click="()=>{updateStatus(4)}">prefect</button>
+            <button @click="mark">mark</button>
+        </div>
+        <div v-if="optionStatus == 'changeRate'">
+            <button @click="prev">prev</button>
+            <button @click="next">next</button>
+            <button @click="()=>{changeRate(-3)}">skip</button>
+            <button @click="()=>{changeRate(1)}">bad</button>
+            <button @click="()=>{changeRate(2)}">normal</button>
+            <button @click="()=>{changeRate(3)}">good</button>
+            <button @click="()=>{changeRate(4)}">prefect</button>
+            <button @click="mark">mark</button>
+        </div>
+        <div v-if="optionStatus == 'processMark'">
+            <button @click="prev">prev</button>
+            <button @click="next">next</button>
+            <button @click="stop">stop</button>
+            <button @click="deleteCard">delete</button>
+            <button @click="finish">finish</button>
+        </div>
     </div>
 </template>
 
@@ -256,6 +258,58 @@ async function dontReading(){
     
 }
 
+function hotKey(el){
+    console.log(el)
+    if(props.optionStatus === "reviewcard" || 
+    props.optionStatus === "changeRate"){
+        let keyMapRate = new Map([
+            ["h",-3],
+            ["j",1],
+            ["k",2],
+            ["l",3],
+            [";",4],
+            ["0",-3],
+            ["1",1],
+            ["2",2],
+            ["3",3],
+            ["4",4],
+            [" ",3],
+            ["Enter",3]
+        ])
+        if (keyMapRate.get(el.key)){
+            console.log(keyMapRate.get(el.key))
+            if (props.optionStatus  === "reviewcard"){
+                updateStatus(keyMapRate.get(el.key))
+            }
+                
+            if (props.optionStatus  === "changeRate"){
+                changeRate(keyMapRate.get(el.key))
+            }
+        }
+    }
+    if(props.optionStatus  === "hiddenCard"){
+        let keyMapRate = new Map([
+            [" ",3],
+            ["Enter",3]
+        ])
+        if (keyMapRate.get(el.key)){
+            show()
+        }
+    }
+    let keyMapRate = new Map([
+            [",",1],
+            [".",2]
+        ])
+    if(keyMapRate.get(el.key)){
+        if (keyMapRate.get(el.key) === 1){
+            prev()
+        }
+        if (keyMapRate.get(el.key) === 2){
+            next()
+        }
+    }
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -266,5 +320,8 @@ button{
 }
 .changeRepetition{
     width: 12em;
+}
+[tabindex] {
+    outline: none !important;
 }
 </style>
