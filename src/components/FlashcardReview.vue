@@ -30,8 +30,7 @@ import  card  from "./flashcardReview/card.vue";
 import  reviewOption  from "./flashcardReview/reviewOption.vue";
 import { Protyle, fetchSyncPost } from "siyuan"
 import {ReviewOption, ReviewInfo} from "../utils/type"
-import { plugin, sortByTopo } from "../api/utils";
-import { log } from "fabric/fabric-impl";
+import { plugin, sortByTopo, genTodayDate } from "../api/utils";
 
 
 const allReviewCard:Ref<ReviewInfo[]> = ref([])
@@ -183,23 +182,42 @@ const filterSupendCard =  async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
     filteredCardList = cardList.filter((x)=>{return !supendCard.has(x.blockID)})
     return filteredCardList
 }
+
+const getBlockSQL = (cardList:ReviewInfo[])=>{
+    let blockIDs = cardList.map(reviewInfo=>{return reviewInfo.blockID})
+    let blockSQL = ` block_id in ('${blockIDs.join("','")}')`
+    return blockSQL
+}
+
 //TODO
 // 今日已经读过的文档不在阅读
 const filterTodayReadedDoc = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
-    return cardList
+    let today = genTodayDate()
+    let blockSQL = getBlockSQL(cardList)
+    let disableCardData = await fetchSyncPost("/api/query/sql", {
+        "stmt": `select block_id from attributes
+         where name like '%custom-plugin-reading-last-time%'
+         and value = '${today}'
+         and ${blockSQL}`
+    })
+    let supendCard = new Set(disableCardData.data.map(x=>x['block_id']))
+    let filteredCardList:ReviewInfo[]
+    filteredCardList = cardList.filter((x)=>{return !supendCard.has(x.blockID)})
+
+    return filteredCardList
 }
 
 // 未确认finish之后的文档不会被阅读
 const filterAfterFinishDoc = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
-    console.log("filterAfterFinishDoc")
-    let blockIDs = cardList.map(reviewInfo=>{return reviewInfo.blockID})
-    let blockSQL = ` block_id in ('${blockIDs.join("','")}')`
+    // console.log("filterAfterFinishDoc")
+    let blockSQL = getBlockSQL(cardList)
     let disableCardData = await fetchSyncPost("/api/query/sql", {
         "stmt": `select block_id from attributes
          where name like '%custom-plugin-incremental-reading-enable%'
          and value = 'false'
          and ${blockSQL}`
     })
+    // console.log("filterAfterFinishDoc",blockSQL)
     let supendCard = new Set(disableCardData.data.map(x=>x['block_id']))
     let filteredCardList:ReviewInfo[]
     filteredCardList = cardList.filter((x)=>{return !supendCard.has(x.blockID)})
