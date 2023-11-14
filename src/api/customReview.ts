@@ -138,8 +138,8 @@ async function addOrderReading(data:any,headingLevel:number){
         await fetchSyncPost("/api/attr/setBlockAttrs", {
             "id": headBlockListWithIndex[index].blockData.id,
             "attrs": {
-                "custom-plugin-incremental-reading-prevID": prevID,
-                "custom-plugin-incremental-reading-nextID": nextID,
+                "custom-plugin-incremental-reading-prev-id": prevID,
+                "custom-plugin-incremental-reading-next-id": nextID,
                 "custom-plugin-incremental-reading-source": sourceDocID,
                 "custom-plugin-incremental-reading-enable": enableReading
             }

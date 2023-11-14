@@ -182,7 +182,7 @@ async function enableNextDoc(id:string){
     let blockData = await fetchSyncPost("/api/attr/getBlockAttrs", {
         "id": id
     })
-    let nextID = blockData.data["custom-plugin-incremental-reading-nextID"]
+    let nextID = blockData.data["custom-plugin-incremental-reading-next-id"]
     if (!nextID) {
         console.error(`block ${id} has not next ID!`)
         return
