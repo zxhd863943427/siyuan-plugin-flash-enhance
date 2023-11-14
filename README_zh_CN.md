@@ -45,6 +45,8 @@
 #### 挖空增强
 ![Alt text](img/%E6%8C%96%E7%A9%BA%E5%A2%9E%E5%BC%BA.gif)
 
+点击可显示
+
 #### 类remnote界面
 ![Alt text](img/%E7%B1%BBremnote%E7%95%8C%E9%9D%A2.gif)
 
