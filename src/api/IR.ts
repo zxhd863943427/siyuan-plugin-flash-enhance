@@ -381,14 +381,21 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
         item.setAttribute("data-node-id",getNewID())
         item.querySelectorAll("[data-node-id]").forEach((subNode)=>{subNode.setAttribute("data-node-id",getNewID())})
     }
-    let hollowElement = selected.querySelector("[data-type~='wait']")
+    let tempHollowParent = document.createElement("div")
+    let hollowNodeList = selected.querySelectorAll("[data-type~='wait']")
+    let isAddFirstHollow = false
+    hollowNodeList.forEach(hollowElement=>{
+        //只替换第一个元素为替换为hollow
+        if (!isAddFirstHollow){
     hollowElement.replaceWith(createHollow())
-    // 移除wait的自定义属性
+            isAddFirstHollow = true
+        }
+        // 先保存原有属性并移除wait的自定义属性
     let originType = hollowElement.getAttribute("data-type")
     originType = originType.replace("wait","search-mark").trim()
     hollowElement.setAttribute('data-type',originType);
-    let tempHollowParent = document.createElement("div")
-    tempHollowParent.append(hollowElement)
+        tempHollowParent.append(hollowElement);
+    })
 
     let sourceRoadElement;
     [selected,sourceRoadElement] = extractSourceRoad(selected)
