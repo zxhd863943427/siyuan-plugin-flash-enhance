@@ -355,7 +355,8 @@ function getStdHollowContent(mode:string, protyle:IProtyle){
 
 const createHollow = ():HTMLElement=>{
     let hollow = document.createElement("span")
-    hollow.setAttribute("data-type",'hollow')
+    hollow.setAttribute("data-type",'text')
+    hollow.setAttribute("custom-hollow",'true')
     hollow.innerText = '[...]'
     return hollow
 }
@@ -387,13 +388,13 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
     hollowNodeList.forEach(hollowElement=>{
         //只替换第一个元素为替换为hollow
         if (!isAddFirstHollow){
-    hollowElement.replaceWith(createHollow())
+            hollowElement.replaceWith(createHollow())
             isAddFirstHollow = true
         }
         // 先保存原有属性并移除wait的自定义属性
-    let originType = hollowElement.getAttribute("data-type")
-    originType = originType.replace("wait","search-mark").trim()
-    hollowElement.setAttribute('data-type',originType);
+        let originType = hollowElement.getAttribute("data-type")
+        originType = originType.replace("wait","search-mark").trim()
+        hollowElement.setAttribute('data-type',originType);
         tempHollowParent.append(hollowElement);
     })
 

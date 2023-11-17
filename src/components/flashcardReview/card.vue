@@ -79,7 +79,7 @@ onMounted(async()=>{
  ::v-deep [custom-source-road]>div{
     display: block !important;
  }
- ::v-deep [data-type="hollow"] {
+ ::v-deep [custom-hollow="true"] {
     background: var(--plugin-hollow-background);
     color: var(--plugin-hollow-color);
     font-size: 1.2em;
