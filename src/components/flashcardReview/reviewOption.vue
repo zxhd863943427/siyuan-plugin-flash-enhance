@@ -83,6 +83,9 @@ function next() {
     function show(){
         emit("switchOption","reviewcard")
     }
+    function processMark(){
+        emit("switchOption","processMark")
+    }
     function continueReview(){
         emit("continueReview")
     }
@@ -258,34 +261,53 @@ async function dontReading(){
     
 }
 
+const hotKeyForRate = (el) => {
+    let keyMapRate = new Map([
+        ["h", -3],
+        ["j", 1],
+        ["k", 2],
+        ["l", 3],
+        [";", 4],
+        ["0", -3],
+        ["1", 1],
+        ["2", 2],
+        ["3", 3],
+        ["4", 4],
+        [" ", 3],
+        ["Enter", 3],
+        ["m", 5]
+    ])
+    if (keyMapRate.get(el.key)) {
+        console.log(keyMapRate.get(el.key))
+        let choseItem = keyMapRate.get(el.key)
+        switch (choseItem) {
+            case -3:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                if (props.optionStatus === "reviewcard") {
+                    updateStatus(choseItem)
+                }
+                if (props.optionStatus === "changeRate") {
+                    changeRate(choseItem)
+                }
+                break;
+            case 5:
+                mark();
+                break;
+            default:
+                console.error("error input:", choseItem, el)
+        }
+
+    }
+}
+
 function hotKey(el){
     console.log(el)
     if(props.optionStatus === "reviewcard" || 
     props.optionStatus === "changeRate"){
-        let keyMapRate = new Map([
-            ["h",-3],
-            ["j",1],
-            ["k",2],
-            ["l",3],
-            [";",4],
-            ["0",-3],
-            ["1",1],
-            ["2",2],
-            ["3",3],
-            ["4",4],
-            [" ",3],
-            ["Enter",3]
-        ])
-        if (keyMapRate.get(el.key)){
-            console.log(keyMapRate.get(el.key))
-            if (props.optionStatus  === "reviewcard"){
-                updateStatus(keyMapRate.get(el.key))
-            }
-                
-            if (props.optionStatus  === "changeRate"){
-                changeRate(keyMapRate.get(el.key))
-            }
-        }
+        hotKeyForRate(el)
     }
     if(props.optionStatus  === "hiddenCard"){
         let keyMapRate = new Map([
@@ -294,6 +316,25 @@ function hotKey(el){
         ])
         if (keyMapRate.get(el.key)){
             show()
+        }
+    }
+    if(props.optionStatus  === "browerCard"){
+        let keyMapRate = new Map([
+            [" ",3],
+            ["Enter",3],
+            ["l",4],
+            ["e",5],
+        ])
+        if (keyMapRate.get(el.key)){
+            if(keyMapRate.get(el.key) === 3){
+                changeRepetition()
+            }
+            if(keyMapRate.get(el.key) === 4){
+                continueReview()
+            }
+            if(keyMapRate.get(el.key) === 5){
+                processMark()
+            }
         }
     }
     let keyMapRate = new Map([

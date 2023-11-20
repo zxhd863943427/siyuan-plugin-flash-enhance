@@ -118,7 +118,15 @@ const getCardOption = async (card:ReviewInfo):Promise<ReviewOption>=>{
 }
 
 function switchOption(newOption:ReviewOption){
-    reviewOptionStatus.value = newOption
+    switch(newOption){
+        case "processMark":
+            switchProcessMark();
+            break;
+        default:
+            reviewOptionStatus.value = newOption;
+            break;
+    }
+    
 }
 
 function startNewReview(){
