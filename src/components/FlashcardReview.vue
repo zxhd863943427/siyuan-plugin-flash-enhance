@@ -98,7 +98,7 @@ async function continueReview(){
 }
 function markCurrentCard(){
     let currentCardData = (currentCard.value as ReviewInfo)
-    if (!markCardList.indexOf(currentCardData)){
+    if (markCardList.indexOf(currentCardData) === -1){
         markCardList.push( currentCardData)
     }
 }
