@@ -162,9 +162,9 @@ async function reviewCard(rate:number){
         initReview()
     } 
 }
-function setCardReviewRate(rate: number) {
+async function setCardReviewRate(rate: number) {
 if (rate != -3) {
-fetchSyncPost("/api/riff/reviewRiffCard", {
+await fetchSyncPost("/api/riff/reviewRiffCard", {
 cardID: currentCard.value?.cardID,
 deckID: currentCard.value?.deckID,
 rating: rate,
@@ -172,7 +172,7 @@ reviewedCards: originAllreviewCard
 });
 }
 else {
-fetchSyncPost("/api/riff/skipReviewRiffCard", {
+await fetchSyncPost("/api/riff/skipReviewRiffCard", {
 cardID: currentCard.value?.cardID,
 deckID: currentCard.value?.deckID,
 rating: rate,

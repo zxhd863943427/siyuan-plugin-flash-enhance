@@ -68,12 +68,12 @@ function updateData() {
    loadData[currentImg] = resolveData
 }
 
-function saveData() {
+async function saveData() {
    let savingData = JSON.stringify(loadData)
    if (savingData === "{}"){
       savingData = "";
    }
-   fetchSyncPost("/api/attr/setBlockAttrs",{
+   await fetchSyncPost("/api/attr/setBlockAttrs",{
         "id": currentBlockID,
         "attrs": {
           "custom-plugin-image-occlusion": savingData,
@@ -96,9 +96,9 @@ function getNewOcclusionData(fabricRef:fabric.Canvas){
     return occlusionArr
 }
 
-function occlusion_save_action() {
+async function occlusion_save_action() {
    updateData()
-   saveData()
+   await saveData()
    if (props.closeFunc != undefined)
       props.closeFunc()
 }

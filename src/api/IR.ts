@@ -111,7 +111,7 @@ async function 挖空(protyle: IProtyle) {
         deckID:builtInDeck,
         blockID:subFileID
     }
-    addHollowInfo(subFileID,protyle)
+    await addHollowInfo(subFileID,protyle)
     return cardData
 }
 
@@ -471,7 +471,7 @@ async function addCard(id: string){
         deckID: builtInDeck,
         blockIDs: [id],
     };
-    fetchSyncPost("/api/riff/addRiffCards", body);
+    await fetchSyncPost("/api/riff/addRiffCards", body);
 }
 
 async function addExtractInfo(newDocID:string,protyle: IProtyle) {

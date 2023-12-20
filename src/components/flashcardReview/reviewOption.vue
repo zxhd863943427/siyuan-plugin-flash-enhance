@@ -104,21 +104,21 @@ function next() {
 function changeRate(rate:number){
     emit("changeRate",rate)
 }
-function stop() {
-    fetchSyncPost("/api/attr/setBlockAttrs", {
+async function stop() {
+    await fetchSyncPost("/api/attr/setBlockAttrs", {
         "id": props.currentCard.blockID,
         "attrs": {
             "custom-plugin-card-stop": "true"
         }
     })
 }
-function deleteCard() {
+async function deleteCard() {
     let body = {
         deckID: props.currentCard.deckID,
         blockIDs: [props.currentCard.blockID]
     }
     console.log(body)
-    fetchSyncPost("/api/riff/removeRiffCards", body)
+    await fetchSyncPost("/api/riff/removeRiffCards", body)
 }
 
 const getRefNum = async(id:string):Promise<number> =>{
@@ -256,7 +256,7 @@ async function dontReading(){
 
     await setBlockAttr(blockID,body)
     await enableNextDoc(blockID)
-    stop()
+    await stop()
     updateStatus(-3)
     
 }
