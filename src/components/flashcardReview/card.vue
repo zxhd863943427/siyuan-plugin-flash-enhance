@@ -70,8 +70,8 @@ onMounted(async()=>{
 
 }
 .card__main{
-::v-deep .protyle-wysiwyg { 
-    padding: 16px 10px 144px !important;
+::v-deep div.card__block > div.protyle-content > div.protyle-wysiwyg { 
+    padding: 16px 10px 0px !important;
     max-width: calc(max(50%, 800px));
     margin-left: auto;
     margin-right: auto;
