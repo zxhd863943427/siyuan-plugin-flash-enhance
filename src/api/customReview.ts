@@ -82,7 +82,7 @@ async function addBlockReading(id:string,deck:string = '20230218211946-2kw8jgx')
         deckID: deck,
         blockIDs: [id],
     };
-    fetchSyncPost("/api/riff/addRiffCards", body);
+    await fetchSyncPost("/api/riff/addRiffCards", body);
 }
 
 export function addReadingItem({detail}:any){
