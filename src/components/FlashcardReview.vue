@@ -232,11 +232,45 @@ const filterAfterFinishDoc = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=
     return filteredCardList
 }
 
+const filterExcartSource =async (cardList:ReviewInfo[]) => {
+    let originCardList:ReviewInfo[] = [...cardList]
+    let blockIDs = cardList.map(reviewInfo=>{return reviewInfo.blockID})
+    let blockSQL = ` block_id in ('${blockIDs.join("','")}')`
+    let extractCardData = await fetchSyncPost("/api/query/sql", {
+        "stmt": `select block_id, value from attributes
+         where name like '%custom-extract-source%'
+         and ${blockSQL}
+         LIMIT 10240`
+    })
+    let sourceMap:Map<string,string> = new Map(extractCardData.data.map(x=>{
+        return [x['block_id'], x['value']]
+    }))
+    let filterKeyList:string[] = []
+    let filteredCardList = originCardList.filter(reviewInfo=>{
+        let currentSource = sourceMap.get(reviewInfo.blockID)
+        if(!currentSource){
+            return true
+        }
+        if(filterKeyList.includes(currentSource)){
+            return false
+        }
+        else{
+            filterKeyList.push(currentSource)
+            return true
+        }
+    })
+
+    console.log(sourceMap)
+    // console.log("excart 排序",sortCardList)
+    return filteredCardList
+}
+
 const filterCard = async(cardList:ReviewInfo[]):Promise<ReviewInfo[]>=>{
 
     let filteredCardList = await filterSupendCard(cardList)
     filteredCardList = await filterTodayReadedDoc(filteredCardList)
     filteredCardList = await filterAfterFinishDoc(filteredCardList)
+    filteredCardList = await filterExcartSource(filteredCardList)
     return filteredCardList
 }
 
