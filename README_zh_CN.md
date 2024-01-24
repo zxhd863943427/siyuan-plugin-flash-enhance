@@ -84,6 +84,10 @@
 * [x] 无法一键制卡多种样式的标记
 * [ ] 图片遮挡在界面缩放后会发生移位
 
+### 捐赠
+
+如果觉得不错，可以在[爱发电](https://afdian.net/a/zxhd86)上捐赠我。
+
 ### 感谢名单
 [zuoez02](https://github.com/zuoez02) 大佬创建的 [社区插件系统](https://github.com/zuoez02/siyuan-plugin-system)
 
