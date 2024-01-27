@@ -7,6 +7,10 @@ const TAB_TYPE = "review-enhance"
 let flashReviewRef:App<Element> = null;
 let openedTab:ITab;
 
+const getDocID = (protyle:IProtyle)=>{
+    return protyle.block.rootID
+}
+
 export function customReviewSwitch(plugin:any) {
     let enable = settingList.getSetting()["增强闪卡界面"]
     console.log("review")
@@ -33,6 +37,19 @@ export function customReviewSwitch(plugin:any) {
         hotkey: "⌥U",
         callback: () => {
             openEnhanceReview(plugin);
+        },
+    })
+    plugin.addCommand({
+        langKey:"fileTreeEnhanceReview",
+        hotkey:"⌥I",
+        editorCallback:async(protyle:IProtyle)=>{
+            let treeReviewCardData = await fetchSyncPost('/api/riff/getTreeRiffDueCards',{
+                rootID:getDocID(protyle)
+            })
+            console.log(treeReviewCardData)
+            const {cards} = treeReviewCardData.data
+            console.log(cards)
+            openEnhanceReview(plugin,cards)
         }
     })
     }
@@ -51,11 +68,24 @@ export function customReviewSwitch(plugin:any) {
                     openEnhanceReview(plugin);
                 }
             })
+            plugin.addCommand({
+                langKey:"fileTreeEnhanceReview",
+                hotkey:"⌥I",
+                editorCallback:async(protyle:IProtyle)=>{
+                    let treeReviewCardData = await fetchSyncPost('/api/riff/getTreeRiffDueCards',{
+                        rootID:getDocID(protyle)
+                    })
+                    console.log(treeReviewCardData)
+                    const {cards} = treeReviewCardData.data
+                    console.log(cards)
+                    openEnhanceReview(plugin,cards)
+                }
+            })
         }
     })
 }
 
-async function openEnhanceReview(plugin:any){
+async function openEnhanceReview(plugin:any,cardList:any[]=[]){
 
     if (openedTab!=null){
         openedTab.close()
@@ -68,7 +98,9 @@ async function openEnhanceReview(plugin:any){
             id: plugin.name + TAB_TYPE
         },
     });
-    const flashReview = createApp(FlashReview.default)
+    const flashReview = createApp(FlashReview.default,{
+        initCardList:cardList
+    })
     flashReview.mount(openedTab.panelElement)
     console.log("mount")
     console.log(openedTab.panelElement)

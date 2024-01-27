@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted,onUnmounted, ref, Ref} from "vue"
+import {mergeProps, onMounted,onUnmounted, ref, Ref} from "vue"
 import  topbar  from "./flashcardReview/topbar.vue";
 import  status  from "./flashcardReview/status.vue";
 import  card  from "./flashcardReview/card.vue";
@@ -32,6 +32,10 @@ import { Protyle, fetchSyncPost } from "siyuan"
 import {ReviewOption, ReviewInfo} from "../utils/type"
 import { plugin, sortByTopo, genTodayDate } from "../api/utils";
 
+
+const props = defineProps({
+  initCardList:Array<ReviewInfo>
+})
 
 const allReviewCard:Ref<ReviewInfo[]> = ref([])
 const currentCard:Ref<null|ReviewInfo> = ref(null)
@@ -46,7 +50,8 @@ let reviewedCardList:Set<ReviewInfo> = new Set
 
 async function getDueCard(type:string) {
     if (type === "all"){
-        return await fetchSyncPost("/api/riff/getRiffDueCards",{deckID: ""})
+        let cardData = await fetchSyncPost("/api/riff/getRiffDueCards",{deckID: ""})
+        return cardData.data.cards
     }
 }
 function switchCard(delta:number) {
@@ -310,10 +315,16 @@ async function initReview(){
     originAllreviewCard = []
     markCardList = []
     reviewedCardList.clear()
-    let cardData = await getDueCard("all")
+    let cardData
+    if(props.initCardList && props.initCardList.length!=0){
+        cardData = props.initCardList
+    }
+    else{
+        cardData = await getDueCard("all")
+    }
     if (cardData== undefined) return
 
-    let fiteredCard = await filterCard(cardData.data.cards as ReviewInfo[])
+    let fiteredCard = await filterCard(cardData as ReviewInfo[])
     let sortedCard = await sortCard(fiteredCard)
 
     allReviewCard.value = sortedCard
