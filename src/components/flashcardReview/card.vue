@@ -70,37 +70,40 @@ onMounted(async()=>{
 
 }
 .card__main{
-::v-deep div.card__block > div.protyle-content > div.protyle-wysiwyg { 
-    padding: 16px 10px 0px !important;
-    max-width: calc(max(50%, 800px));
-    margin-left: auto;
-    margin-right: auto;
- }
- ::v-deep [custom-source-road]>div{
-    display: block !important;
- }
- ::v-deep [custom-hollow="true"] {
-    background: var(--plugin-hollow-background);
-    color: var(--plugin-hollow-color);
-    font-size: 1.2em;
-    margin: 0.3em;
-    padding: 0.1em;
-}
-::v-deep div.sb[data-node-id][custom-source-road] {
-    margin-top: 3em;
-    background: var(--b3-theme-surface-light);
-}
-::v-deep div.bq[data-node-id][custom-flash-back] {
-    background-color: transparent!important;
-    border: none;
-    border-radius: 0em !important;
-    margin-top: 1.5em !important;
-    padding-top: 0em !important;
-    padding-bottom: 0em !important;
-    padding-left: 0.1em;
-    margin-left: 0.5em;
-    border-left: 0.2em solid #c31e1e59 !important;
-}
+    ::v-deep div.card__block > div.protyle-content > div.protyle-wysiwyg { 
+        padding: 16px 10px 0px !important;
+        max-width: calc(max(50%, 800px));
+        margin-left: auto;
+        margin-right: auto;
+    }
+    ::v-deep [custom-source-road]>div{
+        display: block !important;
+    }
+    ::v-deep [custom-hollow="true"] {
+        background: var(--plugin-hollow-background);
+        color: var(--plugin-hollow-color);
+        font-size: 1.2em;
+        margin: 0.3em;
+        padding: 0.1em;
+    }
+    ::v-deep div.sb[data-node-id][custom-source-road] {
+        margin-top: 3em;
+        background: var(--b3-theme-surface-light);
+    }
+    ::v-deep div.bq[data-node-id][custom-flash-back] {
+        background-color: transparent!important;
+        border: none;
+        border-radius: 0em !important;
+        margin-top: 1.5em !important;
+        padding-top: 0em !important;
+        padding-bottom: 0em !important;
+        padding-left: 0.1em;
+        margin-left: 0.5em;
+        border-left: 0.2em solid #c31e1e59 !important;
+    }
+    :deep(.card__block--hidesb .protyle-wysiwyg>.sb>div:nth-of-type(n+2):not(.protyle-attr)) {
+        display: none;
+    }
 } 
 </style>
 <style lang="scss">
