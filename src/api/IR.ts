@@ -123,11 +123,15 @@ function 问答() {
     console.log("问答")
 }
 
+const getSourceId = (protyle:IProtyle)=>{
+    return protyle.block.id
+}
+
 const getSourceTitle = (protyle:IProtyle):string=>{
-    if (protyle.options.blockId === protyle.block.parentID && protyle.title){
+    if (getSourceId(protyle) === protyle.block.parentID && protyle.title){
         return protyle.title.editElement.innerText
     }
-    let firstNode = protyle.element.querySelector(`div[data-node-id='${protyle.options.blockId}'] > div:nth-child(1)`) as HTMLElement
+    let firstNode = protyle.element.querySelector(`div[data-node-id='${getSourceId(protyle)}'] > div:nth-child(1)`) as HTMLElement
     if (firstNode){
         return firstNode.innerText.slice(0,30)
     }
@@ -375,7 +379,7 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
     let selected = doc.cloneNode(true) as HTMLElement
     protyle.toolbar.setInlineMark(protyle, "wait", "range")
     // selected.setAttribute("data-node-id",cardID)
-    let source = protyle.options.blockId
+    let source = getSourceId(protyle)
 
     for (let se of selected.childNodes) {    
         let item = se as HTMLElement
@@ -479,7 +483,7 @@ async function addExtractInfo(newDocID:string,protyle: IProtyle) {
         "id": newDocID,
         "attrs": {
             "custom-plugin-incremental-reading": "true",
-            "custom-extract-source":protyle.options.blockId
+            "custom-extract-source":getSourceId(protyle)
         }
       })
 }
@@ -488,7 +492,7 @@ async function addHollowInfo(newDocID:string,protyle: IProtyle) {
     await fetchSyncPost("/api/attr/setBlockAttrs",{
         "id": newDocID,
         "attrs": {
-            "custom-extract-source":protyle.options.blockId
+            "custom-extract-source":getSourceId(protyle)
         }
       })
 }
