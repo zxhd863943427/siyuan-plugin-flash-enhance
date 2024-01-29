@@ -2,6 +2,7 @@ import * as FlashReview from "../components/FlashcardReview.vue"
 import { settingList } from "../utils/config"
 import { watch, createApp, App } from "vue"
 import { fetchSyncPost, IProtyle, openTab,ITab } from "siyuan"
+import { QueryOption } from "../utils/type"
 
 const TAB_TYPE = "review-enhance"
 let flashReviewRef:App<Element> = null;
@@ -36,20 +37,18 @@ export function customReviewSwitch(plugin:any) {
         langKey: "enhanceReview",
         hotkey: "⌥U",
         callback: () => {
-            openEnhanceReview(plugin);
+            openEnhanceReview(plugin,{type:"all"});
         },
     })
     plugin.addCommand({
         langKey:"fileTreeEnhanceReview",
         hotkey:"⌥I",
         editorCallback:async(protyle:IProtyle)=>{
-            let treeReviewCardData = await fetchSyncPost('/api/riff/getTreeRiffDueCards',{
-                rootID:getDocID(protyle)
+
+            openEnhanceReview(plugin,{
+                type:"fileTree",
+                fileTree:getDocID(protyle)
             })
-            console.log(treeReviewCardData)
-            const {cards} = treeReviewCardData.data
-            console.log(cards)
-            openEnhanceReview(plugin,cards)
         }
     })
     }
@@ -65,7 +64,7 @@ export function customReviewSwitch(plugin:any) {
                 langKey: "enhanceReview",
                 hotkey: "⌥U",
                 callback: () => {
-                    openEnhanceReview(plugin);
+                    openEnhanceReview(plugin,{type:"all"});
                 }
             })
             plugin.addCommand({
@@ -85,7 +84,7 @@ export function customReviewSwitch(plugin:any) {
     })
 }
 
-async function openEnhanceReview(plugin:any,cardList:any[]=[]){
+async function openEnhanceReview(plugin:any, queryOption:QueryOption){
 
     if (openedTab!=null){
         openedTab.close()
@@ -99,7 +98,7 @@ async function openEnhanceReview(plugin:any,cardList:any[]=[]){
         },
     });
     const flashReview = createApp(FlashReview.default,{
-        initCardList:cardList
+        initReviewCard:queryOption
     })
     flashReview.mount(openedTab.panelElement)
     console.log("mount")

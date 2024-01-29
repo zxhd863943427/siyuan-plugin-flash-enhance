@@ -29,13 +29,13 @@ import  status  from "./flashcardReview/status.vue";
 import  card  from "./flashcardReview/card.vue";
 import  reviewOption  from "./flashcardReview/reviewOption.vue";
 import { Protyle, fetchSyncPost } from "siyuan"
-import {ReviewOption, ReviewInfo} from "../utils/type"
+import {ReviewOption, ReviewInfo, QueryOption} from "../utils/type"
 import { plugin, sortByTopo, genTodayDate } from "../api/utils";
 
 
-const props = defineProps({
-  initCardList:Array<ReviewInfo>
-})
+const props =defineProps<{
+    initReviewCard:QueryOption
+}>()
 
 const allReviewCard:Ref<ReviewInfo[]> = ref([])
 const currentCard:Ref<null|ReviewInfo> = ref(null)
@@ -48,10 +48,17 @@ let originAllreviewCard:ReviewInfo[] = []
 let markCardList:ReviewInfo[] = []
 let reviewedCardList:Set<ReviewInfo> = new Set
 
-async function getDueCard(type:string) {
-    if (type === "all"){
+async function getDueCard(queryOption:QueryOption) {
+    if (queryOption.type === "all"){
         let cardData = await fetchSyncPost("/api/riff/getRiffDueCards",{deckID: ""})
         return cardData.data.cards
+    }
+    if (queryOption.type === "fileTree"){
+        let treeReviewCardData = await fetchSyncPost('/api/riff/getTreeRiffDueCards',{
+                        rootID:queryOption.fileTree
+                    })
+        const {cards} = treeReviewCardData.data
+        return cards
     }
 }
 function switchCard(delta:number) {
@@ -316,11 +323,13 @@ async function initReview(){
     markCardList = []
     reviewedCardList.clear()
     let cardData
-    if(props.initCardList && props.initCardList.length!=0){
-        cardData = props.initCardList
+    if(props.initReviewCard ){
+        cardData = await getDueCard(props.initReviewCard)
     }
     else{
-        cardData = await getDueCard("all")
+        cardData = await getDueCard({
+            type:"all"
+        })
     }
     if (cardData== undefined) return
 

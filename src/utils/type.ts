@@ -17,3 +17,8 @@ export type ReviewOption =
 |"readingDoc"   //渐进阅读文档
 |"browerCard"   //使用前后移动浏览卡片
 |"processMark"  //处理被标记的卡片
+
+export interface QueryOption {
+  type:string;
+  fileTree?:string;
+}
