@@ -170,8 +170,7 @@ async function getMultSelectionContent(root:HTMLElement,mode:string,protyle:IPro
     for (let se of select) {    
         let item = se.cloneNode(true) as HTMLElement
         source = se.getAttribute("data-node-id")
-        item.setAttribute("data-node-id",getNewID())
-        item.querySelectorAll("[data-node-id]").forEach((subNode)=>{subNode.setAttribute("data-node-id",getNewID())})
+        item = cleanNodeID(item)
         AllSelection.appendChild(item)
         await updateBlockStyle(se)
     }
@@ -382,9 +381,7 @@ function getSmHollowContent(mode:string, protyle:IProtyle){
     let source = getSourceId(protyle)
 
     for (let se of selected.childNodes) {    
-        let item = se as HTMLElement
-        item.setAttribute("data-node-id",getNewID())
-        item.querySelectorAll("[data-node-id]").forEach((subNode)=>{subNode.setAttribute("data-node-id",getNewID())})
+        let item = cleanNodeID(se as HTMLElement)
     }
     let tempHollowParent = document.createElement("div")
     let hollowNodeList = selected.querySelectorAll("[data-type~='wait']")
@@ -467,7 +464,17 @@ function extractSourceRoad(node:HTMLElement):[HTMLElement,HTMLElement]{
     }
     sourceRoadElement.remove()
     sourceRoadElement.querySelector('[custom-make-date]')?.remove()
+    sourceRoadElement = cleanNodeID(sourceRoadElement as HTMLElement)
     return [cloneNode as HTMLElement,sourceRoadElement as HTMLElement]
+}
+
+function cleanNodeID(originNode:HTMLElement){
+    let node = originNode.cloneNode(true) as HTMLElement
+    if(node.getAttribute("data-type")){
+        node.setAttribute("data-node-id",getNewID())
+    }
+    node.querySelectorAll("[data-node-id]").forEach((subNode)=>{subNode.setAttribute("data-node-id",getNewID())})
+    return node
 }
 
 async function addCard(id: string){
