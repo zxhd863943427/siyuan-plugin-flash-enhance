@@ -102,7 +102,7 @@
             <component is="style">
                 /* 层级闪卡 v0.01 */
                 /* 隐藏二级以下的列表 */
-                .card__block div.li>div.list>div.li>div.list>div.li {
+                .card__block div.li>div.list>div.li[custom-riff-decks]>div.list>div.li {
                 display: none;
                 }
             </component>
