@@ -8,6 +8,7 @@ import {
     isParentIsList,
     isDosuperBlockCard,
     isDoImageOcclusion,
+    isParagraph,
 } from "../lib/status"
 import { foreach } from "../lib/utils"
 import { settingList } from "../utils/config"
@@ -61,10 +62,12 @@ function makeListCard(item: any) {
     let ListCardMarked = isHasListCardMark(item)
     let parentIsList = isParentIsList(item)
     let carded = isParentCarded(item)
+    let paragraphed = isParagraph(item)
     let needMakeCard = ((type === "insert" || type === "update") && ListCarded && !carded)
-    let needDelCard = (type === "update" && parentIsList && carded && !ListCarded && !ListCardMarked)
+    let needDelCard = (type === "update" && parentIsList && carded && !ListCarded && !ListCardMarked && paragraphed)
     // console.log(item.id, "操作类型:", item.action,
     //     "\n是否父元素为列表:\t", parentIsList,
+    //     "\n是否当前元素为段落:\t", paragraphed,
     //     "\n是否使用列表标记:\t", ListCarded,
     //     "\n是否存在原始列表标记:\t", ListCardMarked,
     //     "\n是否已经制卡:\t", carded,

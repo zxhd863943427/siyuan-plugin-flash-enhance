@@ -28,7 +28,7 @@ export function isDoImageOcclusion(item: any) {
     // console.log(item.data)
     return Object.keys(item.data.new).indexOf("custom-plugin-image-occlusion")!=-1
 }
-function isParagraph(item:any):boolean{
+export function isParagraph(item:any):boolean{
     if (!item.data){
         return false
     }
@@ -115,6 +115,12 @@ export function isDosuperBlockCard(item:any):boolean{
     }
     return DoListCard
 }
+
+export function isList(item:HTMLElement) {
+    let dataType = item ? item.getAttribute("data-type") : "none"
+    return dataType === "NodeList"
+}
+
 
 export function isParentIsSuperBlock(item:any):boolean{
 
