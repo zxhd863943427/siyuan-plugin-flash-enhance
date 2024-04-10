@@ -60,14 +60,15 @@ export function occasionLoad({detail}: any){
     if (!open){
         return;
     }
-    if (!detail.element.classList.contains("card__block")){
+    let protyle = detail.protyle
+    if (!protyle.element.classList.contains("card__block")){
         return
     }
     console.log("启动遮挡")
     let imgToCanvasHashMap = {};
-    let container = getOcclusionContainer(detail.element);
+    let container = getOcclusionContainer(protyle.element);
 
-    let imagesContainer = Array.from(detail.element.querySelectorAll("[custom-plugin-image-occlusion]"))
+    let imagesContainer = Array.from(protyle.element.querySelectorAll("[custom-plugin-image-occlusion]"))
     let ImagesOccasionData:[string,Occasion[]][] = imagesContainer
     .map((elem:HTMLElement)=>{
         let rawData:OcclusionList = JSON.parse(elem.getAttribute("custom-plugin-image-occlusion"))

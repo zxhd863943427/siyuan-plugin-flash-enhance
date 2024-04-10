@@ -21,7 +21,7 @@ export default class PluginSample extends Plugin {
         this.data = {}
         this.init()
         this.eventBus.on("ws-main", this.wsEvent)
-        this.eventBus.on("loaded-protyle", occasionLoad)
+        this.eventBus.on("loaded-protyle-static", occasionLoad)
         this.eventBus.on("open-menu-image", occasionEdit)
         this.eventBus.on("click-blockicon",addReadingItem)
         this.eventBus.on("click-editortitleicon",addReadingItem)
