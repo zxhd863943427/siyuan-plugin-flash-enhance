@@ -61,6 +61,13 @@ Vertical Super Block, Horizontal Super Block
 
 ![Alt text](img/%E6%95%B0%E5%AD%A6%E5%9D%97%E5%88%B6%E5%8D%A1.gif)
 
+> Conditions for the math block card creation feature:  
+> This feature only takes effect when the answer is hidden. Specifically, the card content must include at least one highlight, with the default shortcut "Alt+D". If there is only a standalone formula block without being highlighted, it will not generate a valid card.  
+> In short, to ensure the math block card creation feature works properly, make sure your card content meets the following criteria:  
+>* The math block card marking option must be enabled.  
+>* At least one highlight marking must be included to hide the answer.  
+>* A formula block alone cannot serve as the card content.  
+
 #### Immersive Card Making (Unstable)
 
 ![Alt text](img/%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%88%B6%E5%8D%A1.gif)
